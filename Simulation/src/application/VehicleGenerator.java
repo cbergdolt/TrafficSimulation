@@ -1,10 +1,28 @@
 package application;
 
+import java.awt.Point;
+
 public class VehicleGenerator {
+	Point location; //determines initial location of generated vehicles
+	int delay;
+	private int currentTime;
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+	VehicleGenerator(Point loc, int d) {
+		location = loc;
+		delay = d;
+		currentTime = 0;
+	}
+	
+	public Vehicle generateVehicle() {
+		if (currentTime < delay) {
+			currentTime++;	//increment time; progress in generator cycle
+			return null;	//delay cycle not complete, don't make a new vehicle
+		} else {
+			currentTime = 0; //reset generator cycle
+			
+			//determine parameters of vehicle somehow
+			return new Vehicle(1, 3, 1, 1, 'E', location);
+		}
 	}
 
 }

@@ -5,13 +5,22 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class Vehicle extends Observable implements Observer{
-	int maxVelocity;
-	int breakDistance;
-	int stopDistance;
-	int length;
-	char direction;
-	Point location;
+	int maxVelocity;	//probably cells/timestep
+	int breakDistance;	//# cells between vehicle and other vehicle/intersection before slowing down 
+	int stopDistance;	//# cells between vehicle and other vehicle/intersection at complete stop
+	int length;			//length of vehicle ... not sure what units
+	char direction;		//N, S, E, W -- direction of travel; not sure if this is necessary?
+	Point location;		//current location of vehicle
 	Point route[];
+	
+	Vehicle(int mv, int bd, int sd, int len, char dir, Point loc) {
+		maxVelocity = mv;
+		breakDistance = bd;
+		stopDistance = sd;
+		length = len;
+		direction = dir;
+		location = loc;
+	}
 	
 	void removeObserver(Observer o) {
 		
@@ -49,19 +58,19 @@ public class Vehicle extends Observable implements Observer{
 		
 	}
 	
-	void stop() {
+	private void stop() {
 		
 	}
 	
-	void decelerate() {
+	private void decelerate() {
 		
 	}
 	
-	void changeState() {
+	private void changeState() {
 		
 	}
 	
-	void turn(String direcion) {
+	private void turn(String direcion) {
 		
 	}
 	
@@ -72,6 +81,22 @@ public class Vehicle extends Observable implements Observer{
 	@Override
 	public void update(Observable o, Object arg) {
 		// TODO Auto-generated method stub
+		if (o instanceof Vehicle) {
+			//check what's up with the observed vehicle, and adjust speed accordingly
+			System.out.println("updated vehicle from Vehicle observable");
+		} else if (o instanceof RoadSegment) {
+			//check the status of the stoplight at the intersection at the end of the road segment that the vehicle is driving towards
+			//also check how close that intersection is
+			//then adjust speed accordingly
+			System.out.println("updated vehicle from RoadSegment observable");
+		}
 		
+	}
+
+	public void step() {
+		// TODO Auto-generated method stub
+		//update location based on current location, direction of travel, velocity, etc. 
+		notifyObservers();
+		System.out.println("performed step for vehicle");
 	}
 }

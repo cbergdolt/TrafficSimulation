@@ -9,6 +9,12 @@ public class RoadSegment extends Observable{
 	Intersection intB;
 	char direction; //'N' for N/S, 'E' for E/W; I don't know if this is even necessary?
 	
+	RoadSegment(Intersection a, Intersection b) {
+		id = 0; //another auto-increment thing?
+		intA = a;
+		intB = b;
+	}
+	
 	void registerObserver(Observer o) {
 		
 	}
@@ -19,5 +25,12 @@ public class RoadSegment extends Observable{
 	
 	void removeObserver() {
 		
+	}
+
+	public void updateRoads() {
+		// TODO Auto-generated method stub
+		intA.updateIntersection();
+		intB.updateIntersection();
+		System.out.println("updated road segment " + id);
 	}
 }

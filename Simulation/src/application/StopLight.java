@@ -14,7 +14,7 @@ public class StopLight {
 	
 	StopLight(LightState initialState, Point loc, int gns, int yns, int gew, int yew) {
 		state = initialState;
-		//id = ???
+		id = 0;	//not sure how we can auto-increment this
 		location = loc;
 		timePassed = 0;
 		greenNS = gns;
@@ -27,7 +27,7 @@ public class StopLight {
 		return state;
 	}
 	
-	void update() {
+	public void update() {
 		//updates the state of the light based on the time passed since last state change
 		//and the static values of greenNS/EW / yellowNS/EW
 		timePassed++; //increment time
@@ -61,5 +61,6 @@ public class StopLight {
 			//if the state is something other than these four options, we have a serious issue...
 			System.out.println("something has gone horribly wrong"); 
 		}
+		System.out.println("updated stoplight " + id);
 	}
 }
