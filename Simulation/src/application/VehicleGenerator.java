@@ -6,11 +6,13 @@ public class VehicleGenerator {
 	Point location; //determines initial location of generated vehicles
 	int delay;
 	private int currentTime;
+	char dir;
 
-	VehicleGenerator(Point loc, int d) {
+	VehicleGenerator(Point loc, int d, char direction) {
 		location = loc;
 		delay = d;
 		currentTime = 0;
+		dir = direction;
 	}
 	
 	public Vehicle generateVehicle() {
