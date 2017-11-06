@@ -23,7 +23,7 @@ public class VehicleGenerator {
 			currentTime = 0; //reset generator cycle
 			
 			//determine parameters of vehicle somehow
-			return new Vehicle(1, 3, 1, 1, 'E', location);
+			return new Vehicle(1, 3, 1, 1, dir, location);
 		}
 	}
 

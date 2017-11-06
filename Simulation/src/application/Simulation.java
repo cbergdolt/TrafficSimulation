@@ -22,7 +22,18 @@ public class Simulation extends Observable{
 		//create vehicle generator for each entry/exit point
 		Point[] ee = m.getEntryExit();
 		for (int i = 0; i < ee.length; i++) {
-			vg[i] = new VehicleGenerator(ee[i], delay);
+			if (ee[i].y == 0) {
+				vg[i] = new VehicleGenerator(ee[i], delay, 'S');
+			}
+			else if (ee[i].y == 49) {
+				vg[i] = new VehicleGenerator(ee[i], delay, 'N');
+			}
+			else if (ee[i].x == 0) {
+				vg[i] = new VehicleGenerator(ee[i], delay, 'E');
+			}
+			else if (ee[i].x == 49) {
+				vg[i] = new VehicleGenerator(ee[i], delay, 'W');
+			}
 		}
 		
 		rg = new RouteGenerator();
