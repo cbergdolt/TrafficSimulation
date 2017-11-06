@@ -78,6 +78,7 @@ public class UserInterface extends Application implements Observer{
 		
 		//then, after everything is updated properly:
 		display();
+		System.out.println("updated UserInterface from Observable update");
 	}
 
 

@@ -45,7 +45,7 @@ public class Simulation extends Observable{
 			//for each vehicle, update the vehicle
 			Iterator<Vehicle> it = vehicles.iterator();
 			while(it.hasNext()) {
-				it.next().step();
+				it.next().updateVehicle();
 			}
 			
 			//update other things, too, like the stoplights
