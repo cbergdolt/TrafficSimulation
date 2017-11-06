@@ -5,7 +5,8 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class Vehicle extends Observable implements Observer{
-	int maxVelocity;	//probably cells/timestep
+	int maxVelocity;	//probably cells/timestep (max possible velocity)
+	int curVelocity;	//
 	int breakDistance;	//# cells between vehicle and other vehicle/intersection before slowing down 
 	int stopDistance;	//# cells between vehicle and other vehicle/intersection at complete stop
 	int length;			//length of vehicle ... not sure what units
@@ -93,9 +94,27 @@ public class Vehicle extends Observable implements Observer{
 		
 	}
 
-	public void step() {
+	public void updateVehicle() {
 		// TODO Auto-generated method stub
-		//update location based on current location, direction of travel, velocity, etc. 
+		//update location based on current location, direction of travel, velocity, etc.
+		//if (location != null) { 
+		switch (direction) {
+		case 'N':
+			location.translate(0, 1);
+			break;
+		case 'S':
+			location.translate(0, -1);
+			break;
+		case 'E':
+			location.translate(1, 0);
+			break;
+		case 'W':
+			location.translate(-1, 0);
+			break;
+		default:
+			System.out.println("something has gone horribly wrong");	
+		}
+		
 		notifyObservers();
 		System.out.println("performed step for vehicle");
 	}
