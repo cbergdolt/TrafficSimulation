@@ -1,9 +1,10 @@
 package application;
 
 import java.awt.Point;
+import java.util.Observable;
 import java.util.Observer;
 
-public class Vehicle {
+public class Vehicle extends Observable implements Observer{
 	int maxVelocity;
 	int breakDistance;
 	int stopDistance;
@@ -20,7 +21,7 @@ public class Vehicle {
 		
 	}
 
-	void addObserver(Observer o) {
+	public void addObserver(Observer o) {
 		
 	}
 	
@@ -65,6 +66,12 @@ public class Vehicle {
 	}
 	
 	void start() {
+		
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		// TODO Auto-generated method stub
 		
 	}
 }
