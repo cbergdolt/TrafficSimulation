@@ -106,6 +106,6 @@ public class Vehicle extends Observable implements Observer{
 		}
 
 		notifyObservers();
-		System.out.println("performed step for vehicle");
+		System.out.println("performed step for vehicle" + location);
 	}
 }
