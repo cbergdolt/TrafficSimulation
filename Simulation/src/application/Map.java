@@ -16,16 +16,31 @@ public class Map {
 			entry_exit[i] = pt;
 		}
 		int eeCount = 0;
-		//1 = grass, 2 = street
+		int iCount = 0;
+		
+		//1 = grass, 2 = street, 3 = vehicle generator, 4 = stoplight, 5 = stop sign
 		Grid grid = new Grid();
 		routeGrid = grid.getRouteGrid();
-		int count = 0;
 		for (int i = 0; i < 50; i++) {	//y
 			for (int j = 0; j < 50; j++) {	//x
 				if (routeGrid[i][j] == 3) {
-					entry_exit[count].x = j;
-					entry_exit[count].y = i;
-					count += 1;
+					entry_exit[eeCount].x = j;
+					entry_exit[eeCount].y = i;
+					eeCount += 1;
+				} else if (routeGrid[i][j] == 4) {
+					Point p = new Point();
+					p.x = j;
+					p.y = j;
+					StopLight sl = new StopLight(LightState.GNS_REW, p, 10, 10, 10, 10);
+					//intersections[iCount] = new Intersection(p, sl, null);
+					iCount += 1;
+				} else if (routeGrid[i][j] == 5) {
+					Point p = new Point();
+					p.x = j;
+					p.y = j;
+					TrafficSign t = new TrafficSign(SignType.STOP);
+					//intersections[iCount] = new Intersection(p, null, t);
+					iCount += 1;
 				}
 				//System.out.print(routeGrid[j][i] + " ");
 			}

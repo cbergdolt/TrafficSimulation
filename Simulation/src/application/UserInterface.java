@@ -61,13 +61,14 @@ public class UserInterface extends Application implements Observer{
 				Rectangle tile = new Rectangle(i*scale, j*scale, scale, scale);
 				if (sim.m.routeGrid[i][j] == 1) {
 					tile.setFill(Color.ALICEBLUE);
-					//root.getChildren().add(tile);
 				} else if(sim.m.routeGrid[i][j] == 2) {
 					tile.setFill(Color.DARKGRAY);
-					//root.getChildren().add(tile);
-				} else if (sim.m.routeGrid[i][j] == 3) {
-					tile.setFill(Color.ORANGE);
-					
+				} else if (sim.m.routeGrid[i][j] == 3) { //ONLY TO SEE WHERE GENERATORS ARE
+					tile.setFill(Color.ORANGE);	
+				} else if (sim.m.routeGrid[i][j] == 4) { //ONLY TO SEE WHERE INTERSECTIONS ARE
+					tile.setFill(Color.RED);	
+				} else if (sim.m.routeGrid[i][j] == 5) { //ONLY TO SEE WHERE INTERSECTIONS ARE
+					tile.setFill(Color.GREEN);	
 				}
 				root.getChildren().add(tile);
 			}

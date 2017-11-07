@@ -7,12 +7,16 @@ public class Intersection {
 	Point location;
 	StopLight light;
 	TrafficSign sign;
+	char type;
+	Object object;
 	Queue<Vehicle> vehicleQueue;
 	
-	Intersection(Point loc, StopLight l, TrafficSign s) {
+	Intersection(Point loc, StopLight sl, TrafficSign t) {
 		location = loc;
-		light = l;
-		sign = s;
+		//object = obj;
+		//type = t;
+		light = sl;
+		sign = t;
 	}
 	
 	public void updateIntersection() {
