@@ -3,14 +3,17 @@ package application;
 
 import java.util.Observable;
 import java.util.Observer;
-
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.beans.property.LongProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
@@ -24,6 +27,7 @@ public class UserInterface extends Application implements Observer{
 	Image GrassImage;
 	int dimensions = 50;
 	int scale = 15;
+	Simulation sim;
 	
 	ObservableList<Node> obsList;
 	
@@ -51,9 +55,10 @@ public class UserInterface extends Application implements Observer{
 		BorderPane root = new BorderPane();
 		obsList = root.getChildren();
 		
-		initialize();
+		//initialize();
 		
-		Simulation sim = new Simulation(25, 3, 500);	//runtime, delay, steplength
+		//Simulation sim = new Simulation(25, 3, 500);	//runtime, delay, steplength
+		sim = new Simulation(25, 3, 500);	//runtime, delay, steplength
 		sim.addObserver(this);	//make the UI observe the simulation
 		
 		for (int i = 0; i < dimensions; i++) {
@@ -85,17 +90,27 @@ public class UserInterface extends Application implements Observer{
 		//	we need to get user input on the map/sim specs. 
 		//	and then perhaps these specs should be passed to the Simulation constructor
 		
-		sim.run();	//run the simulation!!!
+		startAnimation();
+		//sim.run();	//run the simulation!!!
 		
 		//once the sim finishes, close the stage
 		//primaryStage.close();
 	}
 
-
-	private void initialize() {
+    private void startAnimation(){
+	    	final AnimationTimer timer = new AnimationTimer() {
+	    		@Override
+	    		public void handle(final long now) {
+	    			sim.run();
+	    		}
+	    	}; 
+	    	timer.start();
+    }
+    
+	/*private void initialize() {
 		// TODO Auto-generated method stub
 		//import/create images and image views, add to ObsList
-	}
+	}*/
 
 	@Override
 	public void update(Observable o, Object arg) {

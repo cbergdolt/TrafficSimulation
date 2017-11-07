@@ -43,7 +43,7 @@ public class Simulation extends Observable{
 	
 	void run() {
 		int time = 0;	//clock tick implementation
-		while(time <= runTime) { //I honestly have no idea. But I think there should be a loop controlling the marjority of the simulation 
+		//while(time <= runTime) { //I honestly have no idea. But I think there should be a loop controlling the marjority of the simulation 
 			//sleep (proper clock timing, based on stepLength specification
 			try {
 				Thread.sleep(stepLength);
@@ -68,7 +68,7 @@ public class Simulation extends Observable{
 			time++;	//time keeps on ticking
 			notifyObservers();	//notify the observing UserInterface
 			System.out.println("completed another simulation iteration; time = " + time);
-		}
+	//	}
 		
 	}
 
