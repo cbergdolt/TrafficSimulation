@@ -6,15 +6,13 @@ import java.util.Queue;
 public class Intersection {
 	Point location;
 	StopLight light;
-	TrafficSign sign;
 	char type;
 	Queue<Vehicle> vehicleQueue;
 	
-	Intersection(Point loc, StopLight sl, TrafficSign t) {
-		location = loc;
+	Intersection(Point loc, StopLight sl) {
+		location = loc; 
 		//type = t;
 		light = sl;
-		sign = t;
 	}
 	
 	public void updateIntersection() {
