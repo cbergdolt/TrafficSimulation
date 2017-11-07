@@ -34,13 +34,7 @@ public class Map {
 					StopLight sl = new StopLight(LightState.GNS_REW, p, 10, 10, 10, 10);
 					intersections[iCount] = new Intersection(p, sl, null);
 					iCount += 1;
-				} else if (routeGrid[i][j] == 5) { //instantiates intersection where signed intersection is
-					p.x = j;
-					p.y = i;
-					TrafficSign t = new TrafficSign(SignType.STOP);
-					intersections[iCount] = new Intersection(p, null, t);
-					iCount += 1;
-				}
+				} 
 				//System.out.print(routeGrid[j][i] + " ");
 			}
 			//System.out.print("\n");
