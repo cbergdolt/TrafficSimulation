@@ -23,7 +23,7 @@ public class VehicleGenerator {
 			currentTime = 0; //reset generator cycle
 			// need a random generated number to get the vehicle type
 			//determine parameters of vehicle somehow
-			return new Vehicle(1, 3, 1, 1, dir, location);
+			return new Vehicle(1, 3, 1, 1, dir, new Point(location));
 		}
 	}
 
