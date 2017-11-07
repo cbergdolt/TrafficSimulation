@@ -68,6 +68,7 @@ public class Simulation extends Observable{
 			newVehicles();
 			
 			time++;	//time keeps on ticking
+			setChanged();
 			notifyObservers();	//notify the observing UserInterface
 			System.out.println("completed another simulation iteration; time = " + time);
 	//	}

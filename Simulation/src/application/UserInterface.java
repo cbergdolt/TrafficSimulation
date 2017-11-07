@@ -1,6 +1,7 @@
 package application;
 
 
+import java.util.Iterator;
 import java.util.Observable;
 import java.util.Observer;
 import javafx.animation.AnimationTimer;
@@ -78,7 +79,7 @@ public class UserInterface extends Application implements Observer{
 				} else if (sim.m.routeGrid[i][j] == 5) { //ONLY TO SEE WHERE INTERSECTIONS ARE
 					tile.setFill(Color.GREEN);	
 				}
-				root.getChildren().add(tile);
+				obsList.add(tile);
 			}
 		}
 		
@@ -121,9 +122,22 @@ public class UserInterface extends Application implements Observer{
 		
 		//then, after everything is updated properly:
 		display();
+		updateImageViews();
 		System.out.println("updated UserInterface from Observable update");
 	}
 
-
+	private void updateImageViews() {
+		Iterator<VehicleView> it = sim.vehicles.iterator();
+		while (it.hasNext()) {
+			if (it.next().imageView == null) {
+				Image vImage = new Image("images.sprites.Reindeer.MovingLeft/Left1.png", scale, scale, true, true);
+				it.next().imageView = new ImageView(vImage);
+				obsList.add(it.next().imageView);
+			}
+			it.next().imageView.setX(it.next().vehicle.location.x*scale);
+			it.next().imageView.setY(it.next().vehicle.location.y*scale);
+		}
+		//sim.vehicles;
+	}
 
 }
