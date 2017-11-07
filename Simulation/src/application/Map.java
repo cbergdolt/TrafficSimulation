@@ -11,20 +11,28 @@ public class Map {
 	Point[] entry_exit = new Point[8];
 	
 	Map() {
-		//1 = grass, 2 = street
-		Grid grid = new Grid();
-		routeGrid = grid.getRouteGrid();
-		for (int i = 0; i < 50; i++) {	//y
-			for (int j = 0; j < 50; j++) {	//x
-				System.out.print(routeGrid[j][i] + " ");
-			}
-			System.out.print("\n");
-		}
-		
 		Point pt = new Point(0, 0);
 		for (int i = 0; i < entry_exit.length; i++) {
 			entry_exit[i] = pt;
 		}
+		int eeCount = 0;
+		//1 = grass, 2 = street
+		Grid grid = new Grid();
+		routeGrid = grid.getRouteGrid();
+		int count = 0;
+		for (int i = 0; i < 50; i++) {	//y
+			for (int j = 0; j < 50; j++) {	//x
+				if (routeGrid[i][j] == 3) {
+					entry_exit[count].x = j;
+					entry_exit[count].y = i;
+					count += 1;
+				}
+				//System.out.print(routeGrid[j][i] + " ");
+			}
+			//System.out.print("\n");
+		}
+		
+		
 		System.out.println("the new point is at " + pt.x + ", " + entry_exit[0].y);
 		//I guess this is where the grid(s) are hard-coded
 		//And are the landmarks generated here, or passed in?

@@ -23,7 +23,7 @@ public class UserInterface extends Application implements Observer{
 	ImageView GrassImageView;
 	Image GrassImage;
 	int dimensions = 50;
-	int scale = 20;
+	int scale = 15;
 	
 	ObservableList<Node> obsList;
 	
@@ -61,11 +61,15 @@ public class UserInterface extends Application implements Observer{
 				Rectangle tile = new Rectangle(i*scale, j*scale, scale, scale);
 				if (sim.m.routeGrid[i][j] == 1) {
 					tile.setFill(Color.ALICEBLUE);
-					root.getChildren().add(tile);
+					//root.getChildren().add(tile);
 				} else if(sim.m.routeGrid[i][j] == 2) {
 					tile.setFill(Color.DARKGRAY);
-					root.getChildren().add(tile);
+					//root.getChildren().add(tile);
+				} else if (sim.m.routeGrid[i][j] == 3) {
+					tile.setFill(Color.ORANGE);
+					
 				}
+				root.getChildren().add(tile);
 			}
 		}
 		

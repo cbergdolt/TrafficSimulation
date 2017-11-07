@@ -21,7 +21,7 @@ public class VehicleGenerator {
 			return null;	//delay cycle not complete, don't make a new vehicle
 		} else {
 			currentTime = 0; //reset generator cycle
-			
+			// need a random generated number to get the vehicle type
 			//determine parameters of vehicle somehow
 			return new Vehicle(1, 3, 1, 1, dir, location);
 		}
