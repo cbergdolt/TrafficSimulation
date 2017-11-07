@@ -32,7 +32,7 @@ public class Map {
 					p.x = j;
 					p.y = i;
 					StopLight sl = new StopLight(LightState.GNS_REW, p, 10, 10, 10, 10);
-					intersections[iCount] = new Intersection(p, sl, null);
+					intersections[iCount] = new Intersection(p, sl);
 					iCount += 1;
 				} 
 				//System.out.print(routeGrid[j][i] + " ");
