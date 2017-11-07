@@ -23,18 +23,6 @@ public class Vehicle extends Observable implements Observer{
 		location = loc;
 	}
 	
-	void removeObserver(Observer o) {
-		
-	}
-	
-	void updateObservers() {
-		
-	}
-
-	public void addObserver(Observer o) {
-		
-	}
-	
 	void setMaxVelocity(int v) {
 		this.maxVelocity = v;
 	}
@@ -59,7 +47,7 @@ public class Vehicle extends Observable implements Observer{
 		
 	}
 	
-	private void stop() {
+	private void stop() {	
 		this.curVelocity = 0;
 	}
 	
@@ -91,7 +79,9 @@ public class Vehicle extends Observable implements Observer{
 			//then adjust speed accordingly
 			System.out.println("updated vehicle from RoadSegment observable");
 		}
-		
+		/*while (this.curVelocity < 0 && this.curVelocity > this.maxVelocity/this.breakDistance) {
+		this.decelerate();
+	}*/
 	}
 
 	public void updateVehicle() {
@@ -114,7 +104,7 @@ public class Vehicle extends Observable implements Observer{
 		default:
 			System.out.println("something has gone horribly wrong");	
 		}
-		
+
 		notifyObservers();
 		System.out.println("performed step for vehicle");
 	}

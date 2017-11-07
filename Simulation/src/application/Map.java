@@ -28,13 +28,13 @@ public class Map {
 					entry_exit[eeCount].x = j;
 					entry_exit[eeCount].y = i;
 					eeCount += 1;
-				} else if (routeGrid[i][j] == 4) {
+				} else if (routeGrid[i][j] == 4) {//instantiates intersection where stoplight intersection is
 					p.x = j;
 					p.y = i;
 					StopLight sl = new StopLight(LightState.GNS_REW, p, 10, 10, 10, 10);
 					intersections[iCount] = new Intersection(p, sl, null);
 					iCount += 1;
-				} else if (routeGrid[i][j] == 5) {
+				} else if (routeGrid[i][j] == 5) { //instantiates intersection where signed intersection is
 					p.x = j;
 					p.y = i;
 					TrafficSign t = new TrafficSign(SignType.STOP);
