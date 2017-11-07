@@ -11,7 +11,8 @@ public class Simulation extends Observable{
 	int stepLength;	//simulation time step (ms)
 	Map m;
 	VehicleGenerator[] vg = new VehicleGenerator[8];
-	Vector<Vehicle> vehicles = new Vector<Vehicle>();
+	//Vector<Vehicle> vehicles = new Vector<Vehicle>();
+	Vector<VehicleView> vehicles = new Vector<VehicleView>();
 	RouteGenerator rg;
 	
 	Simulation(int rt, int d, int sl) {
@@ -55,9 +56,9 @@ public class Simulation extends Observable{
 			}
 			
 			//for each vehicle, update the vehicle
-			Iterator<Vehicle> it = vehicles.iterator();
+			Iterator<VehicleView> it = vehicles.iterator();
 			while(it.hasNext()) {
-				it.next().updateVehicle();
+				it.next().vehicle.updateVehicle();
 			}
 			
 			//update other things, too, like the stoplights
@@ -89,14 +90,17 @@ public class Simulation extends Observable{
 		if (v != null) {
 			Point[] route = generateRoute(v.location);
 			v.route = route;
-			vehicles.add(v);
+			VehicleView vv = new VehicleView(v);
+			vehicles.add(vv);
 		}
 		
 		//clean out vehicles that are out of bounds
-		Iterator<Vehicle> it = vehicles.iterator();
+		Iterator<VehicleView> it = vehicles.iterator();
 		while(it.hasNext()) {
 			//check it.Next().location
-			Point loc = it.next().location;
+			VehicleView vehv = it.next();
+			Point loc = vehv.vehicle.location;
+			if (loc.x < 0 || loc.x > 49 || loc.y < 0 || loc.y > 49) vehicles.remove(vehv);	//vehicle out of map bounds, remove from simulation
 			//if loc is out of map bounds, do vehicles.remove(loc);
 		}
 	}
