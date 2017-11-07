@@ -57,6 +57,9 @@ public class UserInterface extends Application implements Observer{
 		
 		//initialize();
 		
+		//somehow before this point, and probably even before we display the initial map, 
+		//	we need to get user input on the map/sim specs. 
+		//	and then perhaps these specs should be passed to the Simulation constructor
 		//Simulation sim = new Simulation(25, 3, 500);	//runtime, delay, steplength
 		sim = new Simulation(25, 3, 500);	//runtime, delay, steplength
 		sim.addObserver(this);	//make the UI observe the simulation
@@ -79,16 +82,14 @@ public class UserInterface extends Application implements Observer{
 			}
 		}
 		
-		Scene scene = new Scene(root,400,400);
+		Scene scene = new Scene(root,dimensions*scale,dimensions*scale);
 		//scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("Traffic Simulation");
 		primaryStage.show();	//this should be the blank map, ready to go (TODO implement initialize)
 		
 		
-		//somehow before this point, and probably even before we display the initial map, 
-		//	we need to get user input on the map/sim specs. 
-		//	and then perhaps these specs should be passed to the Simulation constructor
+
 		
 		startAnimation();
 		//sim.run();	//run the simulation!!!

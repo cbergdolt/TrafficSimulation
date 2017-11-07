@@ -8,12 +8,10 @@ public class Intersection {
 	StopLight light;
 	TrafficSign sign;
 	char type;
-	Object object;
 	Queue<Vehicle> vehicleQueue;
 	
 	Intersection(Point loc, StopLight sl, TrafficSign t) {
 		location = loc;
-		//object = obj;
 		//type = t;
 		light = sl;
 		sign = t;
