@@ -5,7 +5,7 @@ import java.awt.Point;
 public class Map {
 	int[][] routeGrid;
 	int[][] trackingGrid;
-	RoadSegment[] roads = new RoadSegment[12];	//I have no idea how many road segments we will have, but the number should be constant once we get the map figured out
+	//RoadSegment[] roads = new RoadSegment[12];	//I have no idea how many road segments we will have, but the number should be constant once we get the map figured out
 	Intersection[] intersections = new Intersection[56];
 	Landmark[] landmarks;
 	Point[] entry_exit = new Point[8];
@@ -58,12 +58,15 @@ public class Map {
 	}*/
 
 	public void updateMap() {
-		System.out.println("roads.length = " + roads.length);
+		System.out.println("roads.length = " + intersections.length);
 		/*for (int i = 0; i < roads.length; i++) {
 			System.out.println("i = " + i + " updating map...");
 			roads[i].updateRoads();
 		}*/ //this for loop will be a problem unless all elements of the roads array are filled with legitmate road segments
 		//roads[0].updateRoads();
+		
+		//update all intersections (not roads, because those don't exist anymore)
+		
 		System.out.println("updated map");
 	}
 	

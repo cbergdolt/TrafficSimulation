@@ -1,9 +1,10 @@
 package application;
 
 import java.awt.Point;
+import java.util.Observable;
 import java.util.Queue;
 
-public class Intersection {
+public class Intersection extends Observable{
 	Point location;
 	StopLight light;
 	char type;

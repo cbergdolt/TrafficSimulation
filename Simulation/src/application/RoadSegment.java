@@ -31,6 +31,7 @@ public class RoadSegment extends Observable{
 		// TODO Auto-generated method stub
 		intA.updateIntersection();
 		intB.updateIntersection();
+		notifyObservers();
 		System.out.println("updated road segment " + id);
 	}
 }

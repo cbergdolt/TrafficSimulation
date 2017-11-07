@@ -73,7 +73,7 @@ public class Vehicle extends Observable implements Observer{
 		if (o instanceof Vehicle) {
 			//check what's up with the observed vehicle, and adjust speed accordingly
 			System.out.println("updated vehicle from Vehicle observable");
-		} else if (o instanceof RoadSegment) {
+		} else if (o instanceof Intersection) {
 			//check the status of the stoplight at the intersection at the end of the road segment that the vehicle is driving towards
 			//also check how close that intersection is
 			//then adjust speed accordingly
