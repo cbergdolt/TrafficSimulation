@@ -90,10 +90,10 @@ public class Vehicle extends Observable implements Observer{
 		//if (location != null) { 
 		switch (direction) {
 		case 'N':
-			location.translate(0, 1);
+			location.translate(0, -1);
 			break;
 		case 'S':
-			location.translate(0, -1);
+			location.translate(0, 1);
 			break;
 		case 'E':
 			location.translate(1, 0);
