@@ -13,6 +13,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -29,6 +30,7 @@ public class UserInterface extends Application implements Observer{
 	int dimensions = 50;
 	int scale = 15;
 	Simulation sim;
+	AnchorPane root;
 	
 	ObservableList<Node> obsList;
 	
@@ -53,7 +55,7 @@ public class UserInterface extends Application implements Observer{
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		BorderPane root = new BorderPane();
+		root = new AnchorPane();
 		obsList = root.getChildren();
 		
 		//initialize();
@@ -79,7 +81,7 @@ public class UserInterface extends Application implements Observer{
 				} else if (sim.m.routeGrid[i][j] == 5) { //ONLY TO SEE WHERE INTERSECTIONS ARE
 					tile.setFill(Color.GREEN);	
 				}
-				obsList.add(tile);
+				root.getChildren().add(tile);
 			}
 		}
 		
@@ -130,10 +132,15 @@ public class UserInterface extends Application implements Observer{
 		Iterator<VehicleView> it = sim.vehicles.iterator();
 		while (it.hasNext()) {
 			if (it.next().imageView == null) {
-				Image vImage = new Image("images.sprites.Reindeer.MovingLeft/Left1.png", scale, scale, true, true);
+				System.out.println("here 1");
+				Image vImage = new Image("images/sprites/Elf1.jpg", scale, scale, true, true);
+				System.out.println("here 2");
 				it.next().imageView = new ImageView(vImage);
-				obsList.add(it.next().imageView);
+				System.out.println("here 2.5");
+				root.getChildren().add(it.next().imageView);
+				System.out.println("here 2.7");
 			}
+			System.out.println("here 3");
 			it.next().imageView.setX(it.next().vehicle.location.x*scale);
 			it.next().imageView.setY(it.next().vehicle.location.y*scale);
 		}
