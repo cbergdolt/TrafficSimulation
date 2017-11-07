@@ -74,7 +74,7 @@ public class Simulation extends Observable{
 
 	private void newVehicles() {
 		//generate new vehicles at each entry/exit point
-		for (int i = 0; i < vg.length; i++) {
+		/*for (int i = 0; i < vg.length; i++) {
 			Vehicle v = vg[i].generateVehicle();
 			if (v == null) continue;	//no vehicle generated
 			else {
@@ -82,6 +82,13 @@ public class Simulation extends Observable{
 				v.route = route;	//assign route to vehicle
 				vehicles.add(v);	//add newly generated vehicle to vehicle list
 			}
+		}*/
+		
+		Vehicle v = vg[0].generateVehicle();
+		if (v != null) {
+			Point[] route = generateRoute(v.location);
+			v.route = route;
+			vehicles.add(v);
 		}
 		
 		//clean out vehicles that are out of bounds
