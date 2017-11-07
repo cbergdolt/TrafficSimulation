@@ -23,7 +23,7 @@ public class UserInterface extends Application implements Observer{
 	ImageView GrassImageView;
 	Image GrassImage;
 	int dimensions = 50;
-	int scale = 25;
+	int scale = 20;
 	
 	ObservableList<Node> obsList;
 	
