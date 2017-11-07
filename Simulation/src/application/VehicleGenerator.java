@@ -8,11 +8,11 @@ public class VehicleGenerator {
 	private int currentTime;
 	char dir;
 
-	VehicleGenerator(Point loc, int d, char direction) {
+	VehicleGenerator(Point loc, int d) {
 		location = loc;
 		delay = d;
 		currentTime = 0;
-		dir = direction;
+		//dir = direction;
 	}
 	
 	public Vehicle generateVehicle() {

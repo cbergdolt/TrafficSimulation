@@ -83,7 +83,7 @@ public class UserInterface extends Application implements Observer{
 		sim.run();	//run the simulation!!!
 		
 		//once the sim finishes, close the stage
-		primaryStage.close();
+		//primaryStage.close();
 	}
 
 
