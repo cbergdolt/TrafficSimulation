@@ -138,13 +138,15 @@ public class UserInterface extends Application implements Observer{
 				root.getChildren().add(h.imageView);
 			}
 			Point loc = new Point((int) h.imageView.getX(), (int) h.imageView.getY());
-			if ((loc.x < 0 || loc.x > 49 || loc.y < 0 || loc.y > 49) && h.moveCount > 0){
+			System.out.println(loc.y);
+			if ((loc.x < 0 || loc.x > 49*scale || loc.y < 0 || loc.y > 49*scale)){
 				root.getChildren().remove(h.imageView);
 				//vehicles.remove(h);	//vehicle out of map bounds, remove from simulation
 			} else {
 				h.imageView.setX(h.vehicle.location.x*scale);
 				h.imageView.setY(h.vehicle.location.y*scale);
 			}
+			
 		}
 	}
 
