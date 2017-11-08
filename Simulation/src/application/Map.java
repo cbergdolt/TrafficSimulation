@@ -6,7 +6,7 @@ public class Map {
 	int[][] routeGrid;
 	int[][] trackingGrid;
 	//RoadSegment[] roads = new RoadSegment[12];	//I have no idea how many road segments we will have, but the number should be constant once we get the map figured out
-	Intersection[] intersections = new Intersection[56];
+	Intersection[] intersections = new Intersection[14];
 	Landmark[] landmarks;
 	Point[] entry_exit = new Point[8];
 	
@@ -30,11 +30,13 @@ public class Map {
 					//entry_exit[eeCount].x = j;
 					//entry_exit[eeCount].y = i;
 					eeCount += 1;
-				} else if (routeGrid[j][i] == 4) {//instantiates intersection where stoplight intersection is
+					//top right, bottom right, top left, bottom left
+				} else if (routeGrid[j][i] == 4 && routeGrid[j][i+1] == 4 && routeGrid[j+1][i] == 4 && routeGrid[j+1][i+1] == 4) {//instantiates intersection where stoplight intersection is
+					Point[] ipoints = {new Point(j, i), new Point(j, i+1), new Point(j+1, i), new Point(j+1, i+1)};
 					p.x = j;
 					p.y = i;
-					StopLight sl = new StopLight(LightState.GNS_REW, new Point(p), 10, 10, 10, 10);
-					intersections[iCount] = new Intersection(new Point(p), sl);
+					StopLight sl = new StopLight(LightState.GNS_REW, ipoints, 10, 10, 10, 10);
+					intersections[iCount] = new Intersection(ipoints, sl);
 					iCount += 1;
 				} 
 				//System.out.print(routeGrid[j][i] + " ");

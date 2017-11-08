@@ -5,14 +5,14 @@ import java.awt.Point;
 public class StopLight {
 	LightState state;
 	int id;
-	Point location;
+	Point[] location = new Point[4];
 	int timePassed; //since last light change
 	int greenNS; // time spent in state GNS_REW
 	int yellowNS; // time spent in state YNS_REW
 	int greenEW; // time spent in state RNS_GEW
 	int yellowEW; // time spent in state RNS_YEW
 	
-	StopLight(LightState initialState, Point loc, int gns, int yns, int gew, int yew) {
+	StopLight(LightState initialState, Point[] loc, int gns, int yns, int gew, int yew) {
 		state = initialState;
 		id = 0;	//not sure how we can auto-increment this
 		location = loc;

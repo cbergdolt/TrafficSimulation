@@ -160,18 +160,19 @@ public class Simulation extends Observable{
 	private boolean upcomingIntersection(Intersection intersection, Vehicle va) {
 		// TODO Auto-generated method stub		
 		switch(va.direction) {
+		case 'W':
+			if (va.location.x > intersection.location[0].x && va.location.y == intersection.location[0].y) return true;
+			else return false;
 		case 'N':
-			if (va.location.x == intersection.location.x && va.location.y > intersection.location.y) return true;
+			if (va.location.x == intersection.location[1].x && va.location.y > intersection.location[1].y) return true;
 			else return false;
 		case 'S':
-			if (va.location.x == intersection.location.x && va.location.y < intersection.location.y) return true;
+			if (va.location.x == intersection.location[2].x && va.location.y < intersection.location[2].y) return true;
 			else return false;
 		case 'E':
-			if (va.location.x < intersection.location.x && va.location.y == intersection.location.y) return true;
+			if (va.location.x < intersection.location[3].x && va.location.y == intersection.location[3].y) return true;
 			else return false;
-		case 'W':
-			if (va.location.x > intersection.location.x && va.location.y == intersection.location.y) return true;
-			else return false;
+
 		default:
 			System.out.println("something has gone horribly wrong");
 			return false;
@@ -187,8 +188,8 @@ public class Simulation extends Observable{
 			locb = ((Vehicle)b).location;
 		}
 		else if (a instanceof Intersection && b instanceof Intersection) {
-			loca = ((Intersection)a).location;
-			locb = ((Intersection)b).location;
+			loca = ((Intersection)a).location[0];
+			locb = ((Intersection)b).location[0];
 		}
 		else return null;
 		
