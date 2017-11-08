@@ -129,22 +129,14 @@ public class UserInterface extends Application implements Observer{
 	}
 
 	private void updateImageViews() {
-		Iterator<VehicleView> it = sim.vehicles.iterator();
-		while (it.hasNext()) {
-			if (it.next().imageView == null) {
-				System.out.println("here 1");
-				Image vImage = new Image("images/sprites/Elf1.jpg", scale, scale, true, true);
-				System.out.println("here 2");
-				it.next().imageView = new ImageView(vImage);
-				System.out.println("here 2.5");
-				root.getChildren().add(it.next().imageView);
-				System.out.println("here 2.7");
-			}
-			System.out.println("here 3");
-			it.next().imageView.setX(it.next().vehicle.location.x*scale);
-			it.next().imageView.setY(it.next().vehicle.location.y*scale);
-		}
 		//sim.vehicles;
+		for (VehicleView h: sim.vehicles) {
+			if (h.imageView == null) {
+				Image vImage = new Image("images/sprites/Reindeer/MovingLeft/Left1.png", scale, scale, true, true);
+				h.imageView = new ImageView(vImage);
+				root.getChildren().add(h.imageView);
+			}
+		}
 	}
 
 }
