@@ -135,8 +135,8 @@ public class UserInterface extends Application implements Observer{
 				root.getChildren().add(vv.imageView);
 			}
 			Point l = new Point((int) vv.imageView.getX(), (int) vv.imageView.getY());
-			if (vv.moveCount > 0) {
-				if ((l.x < 0 || l.x > 49 || l.y < 0 || l.y > 49)){
+			if (vv.moveCount > 1) {
+				if ((l.x < 0 || l.x > 49*scale || l.y < 0 || l.y > 49*scale)){
 					root.getChildren().remove(vv.imageView);
 					sim.vehicles.remove(it);
 					System.out.println("HECK YEAH I AM HERE");
