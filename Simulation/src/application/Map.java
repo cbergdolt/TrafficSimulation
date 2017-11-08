@@ -32,9 +32,8 @@ public class Map {
 				} else if (routeGrid[i][j] == 5) {//instantiates intersection where stoplight intersection is
 					p.x = j;
 					p.y = i;
-					StopLight sl = new StopLight(LightState.GNS_REW, p, 10, 10, 10, 10);
+					StopLight sl = new StopLight(LightState.GNS_REW, new Point(p), 10, 10, 10, 10);
 					intersections[iCount] = new Intersection(new Point(p), sl);
-					System.out.println("created intersection; its location is " + intersections[iCount].location);
 					iCount += 1;
 				} 
 				//System.out.print(routeGrid[j][i] + " ");
@@ -43,7 +42,6 @@ public class Map {
 		}
 		
 		
-		System.out.println("the new point is at " + pt.x + ", " + entry_exit[0].y);
 		//I guess this is where the grid(s) are hard-coded
 		//And are the landmarks generated here, or passed in?
 		// once we have the list of landmarks, we can iterate through that and place them on the grid(s)
@@ -68,9 +66,9 @@ public class Map {
 		//roads[0].updateRoads();
 		
 		//update all intersections (not roads, because those don't exist anymore)
-		/*for (int i = 0; i < intersections.length; i++) {
+		for (int i = 0; i < intersections.length; i++) {
 			intersections[i].updateIntersection();
-		}*/
+		}
 		
 		System.out.println("updated map");
 	}

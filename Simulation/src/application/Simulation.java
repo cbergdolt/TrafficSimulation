@@ -104,7 +104,6 @@ public class Simulation extends Observable{
 			Intersection closestIntersection = null;
 			for (int i = 0; i < m.intersections.length; i++) { //find its nearest intersection
 				Intersection intersection = m.intersections[i];
-				System.out.println("intersection # " + i);
 				if (upcomingIntersection (intersection, va)) {	//if vehicle will cross this intersection if it keeps going straight
 					if (closestIntersection == null) closestIntersection = intersection;
 					else closestIntersection  = (Intersection)shorterDistance(va, intersection, closestIntersection);
@@ -171,10 +170,7 @@ public class Simulation extends Observable{
 	
 	//HELPER FUNCTIONS FOR ASSIGNING OBSERVERS TO VEHICLES AND INTERSECTION
 	private boolean upcomingIntersection(Intersection intersection, Vehicle va) {
-		// TODO Auto-generated method stub
-		if (intersection == null) System.out.println("intersection was null");
-		else if (va == null) System.out.println("vehicle was null");
-		
+		// TODO Auto-generated method stub		
 		switch(va.direction) {
 		case 'N':
 			if (va.location.x == intersection.location.x && va.location.y > intersection.location.y) return true;
