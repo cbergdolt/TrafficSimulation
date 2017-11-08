@@ -16,7 +16,6 @@ public class Intersection extends Observable{
 	
 	Intersection(Point[] loc, StopLight sl) {
 		location = loc; 
-		//type = t;
 		light = sl;
 	}
 	
