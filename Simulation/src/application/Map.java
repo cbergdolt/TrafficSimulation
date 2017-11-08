@@ -25,14 +25,16 @@ public class Map {
 		for (int i = 0; i < 50; i++) {	//y
 			for (int j = 0; j < 50; j++) {	//x
 				if (routeGrid[i][j] == 3) {
-					entry_exit[eeCount].x = j;
-					entry_exit[eeCount].y = i;
+					entry_exit[eeCount] = new Point(j, i);
+					//entry_exit[eeCount].x = j;
+					//entry_exit[eeCount].y = i;
 					eeCount += 1;
-				} else if (routeGrid[i][j] == 4) {//instantiates intersection where stoplight intersection is
+				} else if (routeGrid[i][j] == 5) {//instantiates intersection where stoplight intersection is
 					p.x = j;
 					p.y = i;
 					StopLight sl = new StopLight(LightState.GNS_REW, p, 10, 10, 10, 10);
-					intersections[iCount] = new Intersection(p, sl);
+					intersections[iCount] = new Intersection(new Point(p), sl);
+					System.out.println("created intersection; its location is " + intersections[iCount].location);
 					iCount += 1;
 				} 
 				//System.out.print(routeGrid[j][i] + " ");
@@ -58,7 +60,7 @@ public class Map {
 	}*/
 
 	public void updateMap() {
-		System.out.println("roads.length = " + intersections.length);
+		System.out.println("intersections.length = " + intersections.length);
 		/*for (int i = 0; i < roads.length; i++) {
 			System.out.println("i = " + i + " updating map...");
 			roads[i].updateRoads();
@@ -66,6 +68,9 @@ public class Map {
 		//roads[0].updateRoads();
 		
 		//update all intersections (not roads, because those don't exist anymore)
+		/*for (int i = 0; i < intersections.length; i++) {
+			intersections[i].updateIntersection();
+		}*/
 		
 		System.out.println("updated map");
 	}
