@@ -5,12 +5,16 @@ import java.util.Observable;
 import java.util.Queue;
 
 public class Intersection extends Observable{
-	Point location;
+	Point[] location = new Point [4]; //West, North, South, East (see Diagram below)
+	// |S|W|
+	// |E|N|
 	StopLight light;
+	int id;
+	char dir;
 	char type;
 	Queue<Vehicle> vehicleQueue;
 	
-	Intersection(Point loc, StopLight sl) {
+	Intersection(Point[] loc, StopLight sl) {
 		location = loc; 
 		//type = t;
 		light = sl;
