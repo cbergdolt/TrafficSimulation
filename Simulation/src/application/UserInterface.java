@@ -68,18 +68,18 @@ public class UserInterface extends Application implements Observer{
 		sim = new Simulation(25, 3, 500);	//runtime, delay, steplength
 		sim.addObserver(this);	//make the UI observe the simulation
 		
-		for (int i = 0; i < dimensions; i++) {
-			for (int j = 0; j < dimensions; j++) {
-				Rectangle tile = new Rectangle(i*scale, j*scale, scale, scale);
-				if (sim.m.routeGrid[i][j] == 1) {
+		for (int j = 0; j < dimensions; j++) {
+			for (int i = 0; i < dimensions; i++) {
+				Rectangle tile = new Rectangle(j*scale, i*scale, scale, scale);
+				if (sim.m.routeGrid[j][i] == 1) {
 					tile.setFill(Color.ALICEBLUE);
-				} else if(sim.m.routeGrid[i][j] == 2) {
+				} else if(sim.m.routeGrid[j][i] == 2) {
 					tile.setFill(Color.DARKGRAY);
-				} else if (sim.m.routeGrid[i][j] == 3) { //ONLY TO SEE WHERE GENERATORS ARE
+				} else if (sim.m.routeGrid[j][i] == 3) { //ONLY TO SEE WHERE GENERATORS ARE
 					tile.setFill(Color.ORANGE);	
-				} else if (sim.m.routeGrid[i][j] == 4) { //ONLY TO SEE WHERE INTERSECTIONS ARE
+				} else if (sim.m.routeGrid[j][i] == 4) { //ONLY TO SEE WHERE INTERSECTIONS ARE
 					tile.setFill(Color.RED);	
-				} else if (sim.m.routeGrid[i][j] == 5) { //ONLY TO SEE WHERE INTERSECTIONS ARE
+				} else if (sim.m.routeGrid[j][i] == 5) { //ONLY TO SEE WHERE INTERSECTIONS ARE
 					tile.setFill(Color.GREEN);	
 				}
 				root.getChildren().add(tile);
