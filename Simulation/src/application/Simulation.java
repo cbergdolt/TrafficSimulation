@@ -100,9 +100,9 @@ public class Simulation extends Observable{
 //		while(it.hasNext()) {
 		for (VehicleView h: vehicles) {
 			//check it.Next().location
-			VehicleView vehv = h;
-			Point loc = vehv.vehicle.location;
-			if (loc.x < 0 || loc.x > 49 || loc.y < 0 || loc.y > 49) vehicles.remove(vehv);	//vehicle out of map bounds, remove from simulation
+//			VehicleView vehv = h;
+			Point loc = h.vehicle.location;
+			if (loc.x < 0 || loc.x > 49 || loc.y < 0 || loc.y > 49) vehicles.remove(h);	//vehicle out of map bounds, remove from simulation
 			//if loc is out of map bounds, do vehicles.remove(loc);
 		}
 	}
