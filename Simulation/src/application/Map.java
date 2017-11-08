@@ -18,7 +18,7 @@ public class Map {
 		int eeCount = 0;
 		int iCount = 0;
 		
-		//1 = grass, 2 = street, 3 = vehicle generator, 4 = stoplight, 5 = stop sign
+		//1 = grass, 2 = street, 3 = vehicle generator, 4 = stop sign
 		Grid grid = new Grid();
 		routeGrid = grid.getRouteGrid();
 		Point p = new Point();

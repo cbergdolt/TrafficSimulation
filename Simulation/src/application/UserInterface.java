@@ -79,9 +79,7 @@ public class UserInterface extends Application implements Observer{
 					tile.setFill(Color.ORANGE);	
 				} else if (sim.m.routeGrid[j][i] == 4) { //ONLY TO SEE WHERE INTERSECTIONS ARE
 					tile.setFill(Color.RED);	
-				} else if (sim.m.routeGrid[j][i] == 5) { //ONLY TO SEE WHERE INTERSECTIONS ARE
-					tile.setFill(Color.GREEN);	
-				}
+				} 
 				root.getChildren().add(tile);
 			}
 		}
