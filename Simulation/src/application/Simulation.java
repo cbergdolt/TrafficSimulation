@@ -103,18 +103,25 @@ public class Simulation extends Observable{
 	
 	private void checkBounds() {
 		//clean out vehicles that are out of bounds
-//		Iterator<VehicleView> it = vehicles.iterator();
-//		while(it.hasNext()) {
-		for (VehicleView h: vehicles) {
+		for(Iterator<VehicleView> it = vehicles.iterator(); it.hasNext();){ 
+			VehicleView vv = it.next(); 
+			Point loc = vv.vehicle.location;
+			if (loc.x < 0 || loc.x > 49 || loc.y < 0 || loc.y > 49) { 
+				it.remove(); // right call  
+			}
+		}
+
+		//this is wrong and results in a ConcurrentModificationException when you try to delete from vehicles
+		//the above iteration will work properly
+		/*for (VehicleView h: vehicles) {
 			//check it.Next().location
-//			VehicleView vehv = h;
 			Point loc = h.vehicle.location;
 			if (loc.x < 0 || loc.x > 49 || loc.y < 0 || loc.y > 49) {
-				
+			
 				vehicles.remove(h);	//vehicle out of map bounds, remove from simulation
 			}
 			//if loc is out of map bounds, do vehicles.remove(loc);
-		}
+		}*/
 	}
 
 	private Point[] generateRoute(Point start) {
