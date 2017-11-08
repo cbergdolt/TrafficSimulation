@@ -136,6 +136,8 @@ public class UserInterface extends Application implements Observer{
 				h.imageView = new ImageView(vImage);
 				root.getChildren().add(h.imageView);
 			}
+			h.imageView.setX(h.vehicle.location.x*scale);
+			h.imageView.setY(h.vehicle.location.y*scale);
 		}
 	}
 

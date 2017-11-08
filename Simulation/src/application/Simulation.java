@@ -96,10 +96,11 @@ public class Simulation extends Observable{
 		}
 		
 		//clean out vehicles that are out of bounds
-		Iterator<VehicleView> it = vehicles.iterator();
-		while(it.hasNext()) {
+//		Iterator<VehicleView> it = vehicles.iterator();
+//		while(it.hasNext()) {
+		for (VehicleView h: vehicles) {
 			//check it.Next().location
-			VehicleView vehv = it.next();
+			VehicleView vehv = h;
 			Point loc = vehv.vehicle.location;
 			if (loc.x < 0 || loc.x > 49 || loc.y < 0 || loc.y > 49) vehicles.remove(vehv);	//vehicle out of map bounds, remove from simulation
 			//if loc is out of map bounds, do vehicles.remove(loc);
