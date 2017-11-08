@@ -30,7 +30,7 @@ public class Map {
 					//entry_exit[eeCount].x = j;
 					//entry_exit[eeCount].y = i;
 					eeCount += 1;
-				} else if (routeGrid[j][i] == 5) {//instantiates intersection where stoplight intersection is
+				} else if (routeGrid[j][i] == 4) {//instantiates intersection where stoplight intersection is
 					p.x = j;
 					p.y = i;
 					StopLight sl = new StopLight(LightState.GNS_REW, new Point(p), 10, 10, 10, 10);
