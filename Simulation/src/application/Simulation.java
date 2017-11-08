@@ -65,7 +65,10 @@ public class Simulation extends Observable{
 			m.updateMap();
 			
 			// generate new vehicles (and so also routes)
-			newVehicles();
+			if (vehicles.size()<=0) {
+				newVehicles();
+			}
+			checkBounds();
 			
 			time++;	//time keeps on ticking
 			setChanged();
@@ -95,6 +98,10 @@ public class Simulation extends Observable{
 			vehicles.add(vv);
 		}
 		
+		
+	}
+	
+	private void checkBounds() {
 		//clean out vehicles that are out of bounds
 //		Iterator<VehicleView> it = vehicles.iterator();
 //		while(it.hasNext()) {
@@ -102,7 +109,10 @@ public class Simulation extends Observable{
 			//check it.Next().location
 //			VehicleView vehv = h;
 			Point loc = h.vehicle.location;
-			if (loc.x < 0 || loc.x > 49 || loc.y < 0 || loc.y > 49) vehicles.remove(h);	//vehicle out of map bounds, remove from simulation
+			if (loc.x < 0 || loc.x > 49 || loc.y < 0 || loc.y > 49) {
+				
+				vehicles.remove(h);	//vehicle out of map bounds, remove from simulation
+			}
 			//if loc is out of map bounds, do vehicles.remove(loc);
 		}
 	}

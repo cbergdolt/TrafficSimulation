@@ -1,6 +1,7 @@
 package application;
 
 
+import java.awt.Point;
 import java.util.Iterator;
 import java.util.Observable;
 import java.util.Observer;
@@ -136,8 +137,14 @@ public class UserInterface extends Application implements Observer{
 				h.imageView = new ImageView(vImage);
 				root.getChildren().add(h.imageView);
 			}
-			h.imageView.setX(h.vehicle.location.x*scale);
-			h.imageView.setY(h.vehicle.location.y*scale);
+			Point loc = new Point((int) h.imageView.getX(), (int) h.imageView.getY());
+			if (loc.x < 0 || loc.x > 49 || loc.y < 0 || loc.y > 49) {
+				root.getChildren().remove(h.imageView);
+				//vehicles.remove(h);	//vehicle out of map bounds, remove from simulation
+			} else {
+				h.imageView.setX(h.vehicle.location.x*scale);
+				h.imageView.setY(h.vehicle.location.y*scale);
+			}
 		}
 	}
 
