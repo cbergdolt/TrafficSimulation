@@ -131,7 +131,7 @@ public class Simulation extends Observable{
 			vehicles.add(vv);
 		}
 		
-		
+
 	}
 	
 	private void checkBounds() {

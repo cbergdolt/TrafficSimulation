@@ -90,9 +90,6 @@ public class UserInterface extends Application implements Observer{
 		primaryStage.setTitle("Traffic Simulation");
 		primaryStage.show();	//this should be the blank map, ready to go (TODO implement initialize)
 		
-		
-
-		
 		startAnimation();
 		//sim.run();	//run the simulation!!!
 		
@@ -124,28 +121,33 @@ public class UserInterface extends Application implements Observer{
 		//then, after everything is updated properly:
 		display();
 		updateImageViews();
-		System.out.println("updated UserInterface from Observable update");
+		//System.out.println("updated UserInterface from Observable update");
 	}
 
 	private void updateImageViews() {
 		//sim.vehicles;
-		for (VehicleView h: sim.vehicles) {
-			if (h.imageView == null) {
+		
+		for(Iterator<VehicleView> it = sim.vehicles.iterator(); it.hasNext();){
+			VehicleView vv = it.next(); 
+			if (vv.imageView == null) {
 				Image vImage = new Image("images/sprites/Reindeer/MovingLeft/Left1.png", scale, scale, true, true);
-				h.imageView = new ImageView(vImage);
-				root.getChildren().add(h.imageView);
+				vv.imageView = new ImageView(vImage);
+				root.getChildren().add(vv.imageView);
 			}
-			Point loc = new Point((int) h.imageView.getX(), (int) h.imageView.getY());
-			System.out.println(loc.y);
-			if ((loc.x < 0 || loc.x > 49*scale || loc.y < 0 || loc.y > 49*scale)){
-				root.getChildren().remove(h.imageView);
-				//vehicles.remove(h);	//vehicle out of map bounds, remove from simulation
-			} else {
-				h.imageView.setX(h.vehicle.location.x*scale);
-				h.imageView.setY(h.vehicle.location.y*scale);
+			Point l = new Point((int) vv.imageView.getX(), (int) vv.imageView.getY());
+			if (vv.moveCount > 0) {
+				if ((l.x < 0 || l.x > 49 || l.y < 0 || l.y > 49)){
+					root.getChildren().remove(vv.imageView);
+					sim.vehicles.remove(it);
+					System.out.println("HECK YEAH I AM HERE");
+					//vehicles.remove(h);	//vehicle out of map bounds, remove from simulation
+				} 
 			}
-			
+			vv.imageView.setX(vv.vehicle.location.x*scale);
+			vv.imageView.setY(vv.vehicle.location.y*scale);
+			vv.moveCount+=1;
 		}
+		
 	}
 
 }
