@@ -70,6 +70,9 @@ public class Simulation extends Observable{
 			}
 			checkBounds();
 			
+			//assign observing vehicles to observable vehicles and intersections
+			assignObservers();
+			
 			time++;	//time keeps on ticking
 			setChanged();
 			notifyObservers();	//notify the observing UserInterface
@@ -77,6 +80,41 @@ public class Simulation extends Observable{
 	//	}
 		
 	}
+
+	private void assignObservers() {
+		//iterates through vehicles and assigns each vehicle as an observer to both another vehicle and an intersection
+		//	based on the closest vehicle and closest intersection (in the same direction as the vehicle is travelling, of course)
+		
+		//I think a result of this might be that some vehicles are observing the same vehicle/intersection multiple times
+		//	also that vehicles will be observing vehicles and intersections long after they're supposed to
+		//	we will need something that goes through and removes all the current observers before new observers are added
+		
+		for(Iterator<VehicleView> ita = vehicles.iterator(); ita.hasNext();){ //for each vehicle
+			Vehicle va = ita.next().vehicle;
+			Vehicle closestVehicle = null;
+			for(Iterator<VehicleView> itb = vehicles.iterator(); itb.hasNext();){ //find its nearest neighboring vehicle
+				Vehicle vb = itb.next().vehicle;
+				if (vb.direction == va.direction && sameRoad(va, vb) && aheadOf(vb, va)) {	//vehicles going same direction and on same road and vb is ahead of va
+					if (closestVehicle == null) closestVehicle = vb;
+					else closestVehicle = (Vehicle)shorterDistance(va, vb, closestVehicle);
+				}
+			}
+			if (closestVehicle != null) closestVehicle.addObserver(va);
+			
+			Intersection closestIntersection = null;
+			for (int i = 0; i < m.intersections.length; i++) { //find its nearest intersection
+				Intersection intersection = m.intersections[i];
+				System.out.println("intersection # " + i);
+				if (upcomingIntersection (intersection, va)) {	//if vehicle will cross this intersection if it keeps going straight
+					if (closestIntersection == null) closestIntersection = intersection;
+					else closestIntersection  = (Intersection)shorterDistance(va, intersection, closestIntersection);
+				}
+			}
+			if (closestIntersection != null) closestIntersection.addObserver(va);
+		}
+	}
+
+	
 
 	private void newVehicles() {
 		//generate new vehicles at each entry/exit point
@@ -131,6 +169,89 @@ public class Simulation extends Observable{
 		//return null;
 	}
 	
-	
+	//HELPER FUNCTIONS FOR ASSIGNING OBSERVERS TO VEHICLES AND INTERSECTION
+	private boolean upcomingIntersection(Intersection intersection, Vehicle va) {
+		// TODO Auto-generated method stub
+		if (intersection == null) System.out.println("intersection was null");
+		else if (va == null) System.out.println("vehicle was null");
+		
+		switch(va.direction) {
+		case 'N':
+			if (va.location.x == intersection.location.x && va.location.y > intersection.location.y) return true;
+			else return false;
+		case 'S':
+			if (va.location.x == intersection.location.x && va.location.y < intersection.location.y) return true;
+			else return false;
+		case 'E':
+			if (va.location.x < intersection.location.x && va.location.y == intersection.location.y) return true;
+			else return false;
+		case 'W':
+			if (va.location.x > intersection.location.x && va.location.y == intersection.location.y) return true;
+			else return false;
+		default:
+			System.out.println("something has gone horribly wrong");
+			return false;
+		}
+	}
+
+	private Object shorterDistance(Vehicle target, Object a, Object b) {	//determines whether object a or object b is closer to target
+		// TODO Auto-generated method stub
+		Point loca;
+		Point locb;
+		if (a instanceof Vehicle && b instanceof Vehicle) {
+			loca = ((Vehicle)a).location;
+			locb = ((Vehicle)b).location;
+		}
+		else if (a instanceof Intersection && b instanceof Intersection) {
+			loca = ((Intersection)a).location;
+			locb = ((Intersection)b).location;
+		}
+		else return null;
+		
+		double dista = distance(target.location, loca);
+		double distb = distance(target.location, locb);
+		if (dista < distb) return a;
+		else return b;
+	}
+
+	private double distance(Point pta, Point ptb) {
+		// TODO Auto-generated method stub
+		double xdiff = pta.x - ptb.x;
+		double ydiff = pta.y - ptb.y;
+		double square_sum = Math.pow(xdiff, 2) + Math.pow(ydiff, 2);
+		return Math.sqrt(square_sum);
+	}
+
+	private boolean aheadOf(Vehicle vb, Vehicle va) {  //determines whether vehicle b (vb) is ahead of vehicle a (va)
+		// TODO Auto-generated method stub
+		if (!sameRoad(va, vb)) return false; //just in case; vehicle b can only be ahead of vehicle a if they are on the same road
+		char dir = vb.direction;
+		switch (dir) {
+		case 'N':
+			if (vb.location.y < va.location.y) return true;
+			else return false;
+		case 'S':
+			if (vb.location.y > va.location.y) return true;
+			else return false;
+		case 'E':
+			if (vb.location.x > va.location.x) return true;
+			else return false;
+		case 'W':
+			if (vb.location.x < va.location.x) return true;
+			else return false;
+		default:
+			System.out.println("something has gone horribly wrong");
+			return false;
+		}
+	}
+
+	private boolean sameRoad(Vehicle va, Vehicle vb) {
+		// TODO Auto-generated method stub
+		if (va.direction != vb.direction) return false; //just in case; vehicle a and vehicle b can only be on the same road if they are headed the same direction
+		char dir = va.direction;
+		if((dir == 'N' || dir == 'S') && va.location.x == vb.location.x) return true;
+		else if((dir == 'E' || dir == 'W') && va.location.y == vb.location.y) return true;
+		else return false;
+	}
 	
 }
