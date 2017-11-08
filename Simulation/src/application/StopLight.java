@@ -61,6 +61,6 @@ public class StopLight {
 			//if the state is something other than these four options, we have a serious issue...
 			System.out.println("something has gone horribly wrong"); 
 		}
-		System.out.println("updated stoplight " + id);
+		//System.out.println("updated stoplight " + id);
 	}
 }

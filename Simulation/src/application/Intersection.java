@@ -20,6 +20,6 @@ public class Intersection extends Observable{
 		// TODO Auto-generated method stub
 		if (light != null) light.update();
 		notifyObservers();
-		System.out.println("updated intersection");
+		//System.out.println("updated intersection");
 	}
 }
