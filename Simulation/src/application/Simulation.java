@@ -39,7 +39,7 @@ public class Simulation extends Observable{
 		}
 		
 		rg = new RouteGenerator();
-		
+		//newVehicles();
 		//other pesky initialization things?
 	}
 	
@@ -64,11 +64,14 @@ public class Simulation extends Observable{
 			//update other things, too, like the stoplights
 			m.updateMap();
 			
+			
 			// generate new vehicles (and so also routes)
-			if (vehicles.size()<=0) {
+			if (vehicles.size()==0) {
 				newVehicles();
 			}
-			checkBounds();
+			/*if (vehicles.size() > 0) {
+				checkBounds();
+			}*/
 			
 			//assign observing vehicles to observable vehicles and intersections
 			assignObservers();
@@ -76,7 +79,10 @@ public class Simulation extends Observable{
 			time++;	//time keeps on ticking
 			setChanged();
 			notifyObservers();	//notify the observing UserInterface
-			System.out.println("completed another simulation iteration; time = " + time);
+			
+			
+			
+			//System.out.println("completed another simulation iteration; time = " + time);
 	//	}
 		
 	}
@@ -116,17 +122,7 @@ public class Simulation extends Observable{
 	
 
 	private void newVehicles() {
-		//generate new vehicles at each entry/exit point
-		/*for (int i = 0; i < vg.length; i++) {
-			Vehicle v = vg[i].generateVehicle();
-			if (v == null) continue;	//no vehicle generated
-			else {
-				Point[] route = generateRoute(v.location);	//generate route starting at vehicle's location
-				v.route = route;	//assign route to vehicle
-				vehicles.add(v);	//add newly generated vehicle to vehicle list
-			}
-		}*/
-		
+		//generate new vehicles at each entry/exit point		
 		Vehicle v = vg[0].generateVehicle();
 		if (v != null) {
 			Point[] route = generateRoute(v.location);
@@ -143,22 +139,14 @@ public class Simulation extends Observable{
 		for(Iterator<VehicleView> it = vehicles.iterator(); it.hasNext();){ 
 			VehicleView vv = it.next(); 
 			Point loc = vv.vehicle.location;
-			if (loc.x < 0 || loc.x > 49 || loc.y < 0 || loc.y > 49) { 
-				it.remove(); // right call  
+			System.out.println("vv loc " + vv.vehicle.location );
+			if (vv.moveCount > 0) {
+				if (loc.x < 0 || loc.x > 49 || loc.y < 0 || loc.y > 49) { 
+					vv.inSimulation = false;
+				}
 			}
 		}
-
-		//this is wrong and results in a ConcurrentModificationException when you try to delete from vehicles
-		//the above iteration will work properly
-		/*for (VehicleView h: vehicles) {
-			//check it.Next().location
-			Point loc = h.vehicle.location;
-			if (loc.x < 0 || loc.x > 49 || loc.y < 0 || loc.y > 49) {
-			
-				vehicles.remove(h);	//vehicle out of map bounds, remove from simulation
-			}
-			//if loc is out of map bounds, do vehicles.remove(loc);
-		}*/
+		
 	}
 
 	private Point[] generateRoute(Point start) {
