@@ -30,4 +30,7 @@ public class Intersection extends Observable{
 	public LightState getState() {
 		return light.getState();
 	}
+	public Point[] getLocation() {
+		return location;
+	}
 }

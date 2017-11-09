@@ -25,16 +25,16 @@ public class Simulation extends Observable{
 		for (int i = 0; i < ee.length; i++) {
 			System.out.println("location for generator: " + ee[i]);
 			if (ee[i].y == 0) {
-				vg[i] = new VehicleGenerator(new Point(ee[i]), delay, 'S');
+				vg[i] = new VehicleGenerator(new Point(ee[i]), 0, 'S');
 			}
 			else if (ee[i].y == 49) {
-				vg[i] = new VehicleGenerator(new Point(ee[i]), delay, 'N');
+				vg[i] = new VehicleGenerator(new Point(ee[i]), 0, 'N');
 			}
 			else if (ee[i].x == 0) {
-				vg[i] = new VehicleGenerator(new Point(ee[i]), delay, 'E');
+				vg[i] = new VehicleGenerator(new Point(ee[i]), 0, 'E');
 			}
 			else if (ee[i].x == 49) {
-				vg[i] = new VehicleGenerator(new Point(ee[i]), delay, 'W');
+				vg[i] = new VehicleGenerator(new Point(ee[i]), 0, 'W');
 			}
 		}
 		

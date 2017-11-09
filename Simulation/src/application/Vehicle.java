@@ -21,6 +21,7 @@ public class Vehicle extends Observable implements Observer{
 		length = len;
 		direction = dir;
 		location = loc;
+		curVelocity = mv;
 	}
 	
 	void setMaxVelocity(int v) {
@@ -77,7 +78,77 @@ public class Vehicle extends Observable implements Observer{
 			//check the status of the stoplight at the intersection at the end of the road segment that the vehicle is driving towards
 			//also check how close that intersection is
 			//then adjust speed accordingly
+			LightState lstate = ((Intersection) o).light.getState();
+			Point[] loc = ((Intersection) o).getLocation();
+			
+			switch (direction) { //South, East, West, North
+			case 'N':
+				if ((lstate == LightState.RNS_GEW) || (lstate == LightState.RNS_YEW))  {
+					if (distance(loc[3], location) <= this.stopDistance){
+						this.stop();
+					}
+				}
+				else if (lstate == LightState.YNS_REW) {
+					if (distance(loc[3], location) <= this.breakDistance){
+						this.decelerate();
+					}
+					else if (distance(loc[3], location) <= this.stopDistance){
+						this.stop();
+					}
+				}
+				break;
+			case 'S':
+				System.out.println("I AM HERE");
+				if ((lstate == LightState.RNS_GEW) || (lstate == LightState.RNS_YEW))  {
+					if (distance(loc[0], location) <= this.stopDistance){
+						this.stop();
+					}
+				}
+				else if (lstate == LightState.YNS_REW) {
+					if (distance(loc[0], location) <= this.breakDistance){
+						this.decelerate();
+					}
+					else if (distance(loc[0], location) <= this.stopDistance){
+						this.stop();
+					}
+				}
+				break;
+			case 'E':
+				if ((lstate == LightState.GNS_REW) || (lstate == LightState.YNS_REW))  {
+					if (distance(loc[1], location) <= this.stopDistance){
+						this.stop();
+					}
+				}
+				else if (lstate == LightState.YNS_REW) {
+					if (distance(loc[1], location) <= this.breakDistance){
+						this.decelerate();
+					}
+					else if (distance(loc[1], location) <= this.stopDistance){
+						this.stop();
+					}
+				}
+				break;
+			case 'W':
+				if ((lstate == LightState.GNS_REW) || (lstate == LightState.YNS_REW))  {
+					if (distance(loc[2], location) <= this.stopDistance){
+						this.stop();
+					}
+				}
+				else if (lstate == LightState.YNS_REW) {
+					if (distance(loc[2], location) <= this.breakDistance){
+						this.decelerate();
+					}
+					else if (distance(loc[2], location) <= this.stopDistance){
+						this.stop();
+					}
+				}
+				break;
+			default:
+				System.out.println("something has gone horribly wrong");	
+			}
+				//if (((Intersection) o).light.getState() == )
 			System.out.println("updated vehicle from Intersection observable");
+			System.out.println(this.curVelocity);
 		}
 		/*while (this.curVelocity < 0 && this.curVelocity > this.maxVelocity/this.breakDistance) {
 		this.decelerate();
@@ -90,16 +161,20 @@ public class Vehicle extends Observable implements Observer{
 		//if (location != null) { 
 		switch (direction) {
 		case 'N':
-			location.translate(0, -1);
+			location.y -= this.curVelocity;
+			//location.translate(0, -1);
 			break;
 		case 'S':
-			location.translate(0, 1);
+			location.y += this.curVelocity;
+			//location.translate(0, 1);
 			break;
 		case 'E':
-			location.translate(1, 0);
+			location.x += this.curVelocity;
+			//location.translate(1, 0);
 			break;
 		case 'W':
-			location.translate(-1, 0);
+			location.y -= this.curVelocity;
+			//location.translate(-1, 0);
 			break;
 		default:
 			System.out.println("something has gone horribly wrong");	
@@ -108,4 +183,12 @@ public class Vehicle extends Observable implements Observer{
 		notifyObservers();
 		System.out.println("performed step for vehicle" + location);
 	}
+	private double distance(Point pta, Point ptb) {
+		// TODO Auto-generated method stub
+		double xdiff = pta.x - ptb.x;
+		double ydiff = pta.y - ptb.y;
+		double square_sum = Math.pow(xdiff, 2) + Math.pow(ydiff, 2);
+		return Math.sqrt(square_sum);
+	}
+
 }
