@@ -5,7 +5,7 @@ import java.util.Observable;
 import java.util.Queue;
 
 public class Intersection extends Observable{
-	Point[] location = new Point [4]; //West, North, South, East (see Diagram below)
+	Point[] location = new Point [4]; //South, East, West, North (see Diagram below)
 	// |S|W|
 	// |E|N|
 	StopLight light;
@@ -22,6 +22,7 @@ public class Intersection extends Observable{
 	public void updateIntersection() {
 		// TODO Auto-generated method stub
 		if (light != null) light.update();
+		setChanged();
 		notifyObservers();
 		//System.out.println("updated intersection");
 	}

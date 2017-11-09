@@ -30,7 +30,7 @@ public class Map {
 					//entry_exit[eeCount].x = j;
 					//entry_exit[eeCount].y = i;
 					eeCount += 1;
-					//top right, bottom right, top left, bottom left
+					//top right, bottom right, top left, bottom left (on actual map, not on route grid)
 				} else if (routeGrid[j][i] == 4 && routeGrid[j][i+1] == 4 && routeGrid[j+1][i] == 4 && routeGrid[j+1][i+1] == 4) {//instantiates intersection where stoplight intersection is
 					Point[] ipoints = {new Point(j, i), new Point(j, i+1), new Point(j+1, i), new Point(j+1, i+1)};
 					p.x = j;

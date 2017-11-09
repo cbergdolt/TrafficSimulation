@@ -77,7 +77,7 @@ public class Vehicle extends Observable implements Observer{
 			//check the status of the stoplight at the intersection at the end of the road segment that the vehicle is driving towards
 			//also check how close that intersection is
 			//then adjust speed accordingly
-			System.out.println("updated vehicle from RoadSegment observable");
+			System.out.println("updated vehicle from Intersection observable");
 		}
 		/*while (this.curVelocity < 0 && this.curVelocity > this.maxVelocity/this.breakDistance) {
 		this.decelerate();

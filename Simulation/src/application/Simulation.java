@@ -44,7 +44,7 @@ public class Simulation extends Observable{
 	}
 	
 	void run() {
-		int time = 0;	//clock tick implementation
+		//int time = 0;	//clock tick implementation
 		//while(time <= runTime) { //I honestly have no idea. But I think there should be a loop controlling the marjority of the simulation 
 			//sleep (proper clock timing, based on stepLength specification
 			try {
@@ -76,7 +76,7 @@ public class Simulation extends Observable{
 			//assign observing vehicles to observable vehicles and intersections
 			assignObservers();
 			
-			time++;	//time keeps on ticking
+			//time++;	//time keeps on ticking
 			setChanged();
 			notifyObservers();	//notify the observing UserInterface
 			
@@ -91,13 +91,13 @@ public class Simulation extends Observable{
 		//iterates through vehicles and assigns each vehicle as an observer to both another vehicle and an intersection
 		//	based on the closest vehicle and closest intersection (in the same direction as the vehicle is traveling, of course)
 		
-		//remove previous observers of all vehicles and intersections
+		/*//remove previous observers of all vehicles and intersections
 		for (int i = 0; i < vehicles.size(); i++) {
 			vehicles.get(i).vehicle.deleteObservers();
 		}
 		for (int i = 0; i < m.intersections.length; i++) {
 			m.intersections[i].deleteObservers();
-		}
+		}*/
 		
 		//reassign correct observers to vehicles and intersections
 		for(Iterator<VehicleView> ita = vehicles.iterator(); ita.hasNext();){ //for each vehicle
@@ -165,17 +165,17 @@ public class Simulation extends Observable{
 	private boolean upcomingIntersection(Intersection intersection, Vehicle va) {
 		// TODO Auto-generated method stub		
 		switch(va.direction) {
-		case 'W':
-			if (va.location.x > intersection.location[0].x && va.location.y == intersection.location[0].y) return true;
-			else return false;
-		case 'N':
-			if (va.location.x == intersection.location[1].x && va.location.y > intersection.location[1].y) return true;
-			else return false;
 		case 'S':
-			if (va.location.x == intersection.location[2].x && va.location.y < intersection.location[2].y) return true;
+			if (va.location.x == intersection.location[0].x && va.location.y < intersection.location[0].y) return true;
 			else return false;
 		case 'E':
-			if (va.location.x < intersection.location[3].x && va.location.y == intersection.location[3].y) return true;
+			if (va.location.x < intersection.location[1].x && va.location.y == intersection.location[1].y) return true;
+			else return false;
+		case 'W':
+			if (va.location.x > intersection.location[2].x && va.location.y == intersection.location[2].y) return true;
+			else return false;
+		case 'N':
+			if (va.location.x == intersection.location[3].x && va.location.y > intersection.location[3].y) return true;
 			else return false;
 
 		default:
@@ -200,6 +200,7 @@ public class Simulation extends Observable{
 		
 		double dista = distance(target.location, loca);
 		double distb = distance(target.location, locb);
+		
 		if (dista < distb) return a;
 		else return b;
 	}
