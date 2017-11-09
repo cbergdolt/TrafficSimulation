@@ -89,12 +89,17 @@ public class Simulation extends Observable{
 
 	private void assignObservers() {
 		//iterates through vehicles and assigns each vehicle as an observer to both another vehicle and an intersection
-		//	based on the closest vehicle and closest intersection (in the same direction as the vehicle is travelling, of course)
+		//	based on the closest vehicle and closest intersection (in the same direction as the vehicle is traveling, of course)
 		
-		//I think a result of this might be that some vehicles are observing the same vehicle/intersection multiple times
-		//	also that vehicles will be observing vehicles and intersections long after they're supposed to
-		//	we will need something that goes through and removes all the current observers before new observers are added
+		//remove previous observers of all vehicles and intersections
+		for (int i = 0; i < vehicles.size(); i++) {
+			vehicles.get(i).vehicle.deleteObservers();
+		}
+		for (int i = 0; i < m.intersections.length; i++) {
+			m.intersections[i].deleteObservers();
+		}
 		
+		//reassign correct observers to vehicles and intersections
 		for(Iterator<VehicleView> ita = vehicles.iterator(); ita.hasNext();){ //for each vehicle
 			Vehicle va = ita.next().vehicle;
 			Vehicle closestVehicle = null;
