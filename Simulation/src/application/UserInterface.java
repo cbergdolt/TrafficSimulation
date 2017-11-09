@@ -127,8 +127,10 @@ public class UserInterface extends Application implements Observer{
 	private void updateImageViews() {
 		//sim.vehicles;
 		
-		for(Iterator<VehicleView> it = sim.vehicles.iterator(); it.hasNext();){
-			VehicleView vv = it.next(); 
+		System.out.println("size of vehicles = " + sim.vehicles.size());
+		
+		for (int i = 0; i < sim.vehicles.size(); i++) {
+			VehicleView vv = sim.vehicles.get(i); 
 			if (vv.imageView == null) {
 				Image vImage = new Image("images/sprites/Reindeer/MovingLeft/Left1.png", scale, scale, true, true);
 				vv.imageView = new ImageView(vImage);
@@ -138,8 +140,9 @@ public class UserInterface extends Application implements Observer{
 			if (vv.moveCount > 1) {
 				if ((l.x < 0 || l.x > 49*scale || l.y < 0 || l.y > 49*scale)){
 					root.getChildren().remove(vv.imageView);
-					sim.vehicles.remove(it);
+					sim.vehicles.remove(i);
 					System.out.println("HECK YEAH I AM HERE");
+					System.out.println("size of vehicles after remove(i) = " + sim.vehicles.size());
 					//vehicles.remove(h);	//vehicle out of map bounds, remove from simulation
 				} 
 			}
