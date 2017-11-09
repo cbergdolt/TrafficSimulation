@@ -91,13 +91,13 @@ public class Simulation extends Observable{
 		//iterates through vehicles and assigns each vehicle as an observer to both another vehicle and an intersection
 		//	based on the closest vehicle and closest intersection (in the same direction as the vehicle is traveling, of course)
 		
-		/*//remove previous observers of all vehicles and intersections
+		//remove previous observers of all vehicles and intersections
 		for (int i = 0; i < vehicles.size(); i++) {
 			vehicles.get(i).vehicle.deleteObservers();
 		}
 		for (int i = 0; i < m.intersections.length; i++) {
 			m.intersections[i].deleteObservers();
-		}*/
+		}
 		
 		//reassign correct observers to vehicles and intersections
 		for(Iterator<VehicleView> ita = vehicles.iterator(); ita.hasNext();){ //for each vehicle
