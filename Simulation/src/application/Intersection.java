@@ -26,4 +26,8 @@ public class Intersection extends Observable{
 		notifyObservers();
 		//System.out.println("updated intersection");
 	}
+	
+	public LightState getState() {
+		return light.getState();
+	}
 }

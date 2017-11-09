@@ -24,10 +24,18 @@ import javafx.stage.Stage;
 public class UserInterface extends Application implements Observer{
 	ImageView views[];
 	Image images[];
+	
 	ImageView RoadImageView;
 	Image RoadImage;
 	ImageView GrassImageView;
 	Image GrassImage;
+	
+	Image gns_rewImage;
+	Image yns_rewImage;
+	Image rns_gewImage;
+	Image rns_yewImage;
+	ImageView[] stoplightViews = new ImageView[14]; //as many stoplightViews as intersections
+	
 	int dimensions = 50;
 	int scale = 15;
 	Simulation sim;
@@ -59,7 +67,7 @@ public class UserInterface extends Application implements Observer{
 		root = new AnchorPane();
 		obsList = root.getChildren();
 		
-		//initialize();
+
 		
 		//somehow before this point, and probably even before we display the initial map, 
 		//	we need to get user input on the map/sim specs. 
@@ -67,6 +75,8 @@ public class UserInterface extends Application implements Observer{
 		//Simulation sim = new Simulation(25, 3, 500);	//runtime, delay, steplength
 		sim = new Simulation(25, 3, 500);	//runtime, delay, steplength
 		sim.addObserver(this);	//make the UI observe the simulation
+		
+		initializeImages();	//has to happen after the Simulation instantiation, because it depends on intersection locations
 		
 		for (int j = 0; j < dimensions; j++) {
 			for (int i = 0; i < dimensions; i++) {
@@ -78,11 +88,13 @@ public class UserInterface extends Application implements Observer{
 				} else if (sim.m.routeGrid[j][i] == 3) { //ONLY TO SEE WHERE GENERATORS ARE
 					tile.setFill(Color.ORANGE);	
 				} else if (sim.m.routeGrid[j][i] == 4) { //ONLY TO SEE WHERE INTERSECTIONS ARE
-					tile.setFill(Color.RED);	
+					tile.setFill(Color.DARKGRAY);//RED);	
 				} 
 				root.getChildren().add(tile);
 			}
 		}
+		
+		updateImageViews();
 		
 		Scene scene = new Scene(root,dimensions*scale,dimensions*scale);
 		//scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
@@ -97,7 +109,9 @@ public class UserInterface extends Application implements Observer{
 		//primaryStage.close();
 	}
 
-    private void startAnimation(){
+
+
+	private void startAnimation(){
 	    	final AnimationTimer timer = new AnimationTimer() {
 	    		@Override
 	    		public void handle(final long now) {
@@ -107,10 +121,52 @@ public class UserInterface extends Application implements Observer{
 	    	timer.start();
     }
     
-	/*private void initialize() {
-		// TODO Auto-generated method stub
+	private void initializeImages() {
 		//import/create images and image views, add to ObsList
-	}*/
+		//System.out.println(x);
+		//StopLight images
+		gns_rewImage = new Image("images/sprites/Lights/gns_rew.png", scale*2, scale*2, true, true);
+		yns_rewImage = new Image("images/sprites/Lights/yns_rew.png", scale*2, scale*2, true, true);
+		rns_gewImage = new Image("images/sprites/Lights/rns_gew.png", scale*2, scale*2, true, true);
+		rns_yewImage = new Image("images/sprites/Lights/rns_yew.png", scale*2, scale*2, true, true);
+		//StopLight ImageViews
+		for (int i = 0; i < stoplightViews.length; i++) {
+			Point loc = sim.m.intersections[i].location[0];
+			stoplightViews[i] = new ImageView(gns_rewImage); //start as green N/S, red E/W. this will be updated before it's an issue
+			root.getChildren().add(stoplightViews[i]);
+			//set correct location for the image view (this location will never change)
+			stoplightViews[i].setX(loc.x*scale);
+			stoplightViews[i].setY(loc.y*scale);
+
+		}
+		
+		//other images?
+	}
+	
+    private void updateImageViews() {
+		// TODO Auto-generated method stub
+		//Updates the static image views in the scene (stopLights, ...?)
+    	for (int i = 0; i < stoplightViews.length; i++) {
+    		//since the image views were set up with indices corresponding to the intersection indices, we can assume that is still the case
+    		switch(sim.m.intersections[i].getState()) {
+    		case GNS_REW:
+    			stoplightViews[i].setImage(gns_rewImage);
+    			break;
+    		case YNS_REW:
+    			stoplightViews[i].setImage(yns_rewImage);
+    			break;
+    		case RNS_GEW:
+    			stoplightViews[i].setImage(rns_gewImage);
+    			break;
+    		case RNS_YEW:
+    			stoplightViews[i].setImage(rns_yewImage);
+    			break;
+    		default:
+    			System.out.println("something has gone horribly wrong");
+    		}
+    		stoplightViews[i].toFront();
+    	}
+	}
 
 	@Override
 	public void update(Observable o, Object arg) {
@@ -119,13 +175,16 @@ public class UserInterface extends Application implements Observer{
 		
 		
 		//then, after everything is updated properly:
-		display();
+		//display();
+		updateVehicleViews();
 		updateImageViews();
 		//System.out.println("updated UserInterface from Observable update");
 	}
 
-	private void updateImageViews() {
+	private void updateVehicleViews() {
 		//sim.vehicles;
+		//Updates the ImageView of each VehicleView object contained in vehicles
+		//Also deletes the VehicleView and removes its ImageView from the scene's child nodes if Vehicle is out of map bounds
 		
 		System.out.println("size of vehicles = " + sim.vehicles.size());
 		
