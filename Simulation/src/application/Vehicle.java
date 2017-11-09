@@ -95,6 +95,8 @@ public class Vehicle extends Observable implements Observer{
 					else if (distance(loc[3], location) <= this.stopDistance){
 						this.stop();
 					}
+				} else {
+					this.curVelocity = this.maxVelocity;
 				}
 				break;
 			case 'S':
@@ -111,6 +113,8 @@ public class Vehicle extends Observable implements Observer{
 					else if (distance(loc[0], location) <= this.stopDistance){
 						this.stop();
 					}
+				} else {
+					this.curVelocity = this.maxVelocity;
 				}
 				break;
 			case 'E':
@@ -127,6 +131,9 @@ public class Vehicle extends Observable implements Observer{
 						this.stop();
 					}
 				}
+				else {
+					this.curVelocity = this.maxVelocity;
+				}
 				break;
 			case 'W':
 				if ((lstate == LightState.GNS_REW) || (lstate == LightState.YNS_REW))  {
@@ -141,6 +148,8 @@ public class Vehicle extends Observable implements Observer{
 					else if (distance(loc[2], location) <= this.stopDistance){
 						this.stop();
 					}
+				} else {
+					this.curVelocity = this.maxVelocity;
 				}
 				break;
 			default:
