@@ -182,7 +182,7 @@ public class Vehicle extends Observable implements Observer{
 			//location.translate(1, 0);
 			break;
 		case 'W':
-			location.y -= this.curVelocity;
+			location.x -= this.curVelocity;
 			//location.translate(-1, 0);
 			break;
 		default:
