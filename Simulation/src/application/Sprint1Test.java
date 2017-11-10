@@ -12,20 +12,23 @@ public class Sprint1Test {
 	@Test
 	public void test1() {
 		Vector<Vehicle> vehicles = new Vector<Vehicle>();
-		VehicleGenerator vg = new VehicleGenerator(null, 0, 'S');
+		Point p = new Point(0,0);
+		VehicleGenerator vg = new VehicleGenerator(p, 0, 'S');
 		Vehicle v = vg.generateVehicle();
 		vehicles.add(v);
 		System.out.println(vehicles.size());
 		assert(vehicles.size() == 1);
 	}
 	
-	//@Test
-	/*public void test2() {
+	@Test
+	public void test2() {
 		Vector<Vehicle> vehicles = new Vector<Vehicle>();
-		VehicleGenerator vg = new VehicleGenerator(null, 0, 'S');
+		Point p = new Point(0,0);
+		VehicleGenerator vg = new VehicleGenerator(p, 0, 'S');
 		Vehicle v = vg.generateVehicle();
 		vehicles.add(v);
-		assert(vehicles.size() == 1);
-	}*/
+		vehicles.remove(v);
+		assert(vehicles.size() == 0);
+	}
 
 }
