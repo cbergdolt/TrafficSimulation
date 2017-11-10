@@ -16,7 +16,7 @@ public class VehicleGenerator {
 	}
 	
 	public Vehicle generateVehicle() {
-		System.out.println("direction is " + dir);
+		//System.out.println("direction is " + dir);
 		if (currentTime < delay) {
 			currentTime++;	//increment time; progress in generator cycle
 			return null;	//delay cycle not complete, don't make a new vehicle

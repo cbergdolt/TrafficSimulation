@@ -156,8 +156,8 @@ public class Vehicle extends Observable implements Observer{
 				System.out.println("something has gone horribly wrong");	
 			}
 				//if (((Intersection) o).light.getState() == )
-			System.out.println("updated vehicle from Intersection observable");
-			System.out.println(this.curVelocity);
+			//System.out.println("updated vehicle from Intersection observable");
+			//System.out.println(this.curVelocity);
 		}
 		/*while (this.curVelocity < 0 && this.curVelocity > this.maxVelocity/this.breakDistance) {
 		this.decelerate();
@@ -190,7 +190,7 @@ public class Vehicle extends Observable implements Observer{
 		}
 
 		notifyObservers();
-		System.out.println("performed step for vehicle" + location);
+		//System.out.println("performed step for vehicle" + location);
 	}
 	private double distance(Point pta, Point ptb) {
 		// TODO Auto-generated method stub
