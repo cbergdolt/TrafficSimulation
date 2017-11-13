@@ -5,6 +5,15 @@ import java.util.Iterator;
 import java.util.Observable;
 import java.util.Vector;
 
+/**
+ * The Simulation class is in charge of making sure the vehicles are observing the correct 
+ * vehicles in front of it and is in the same road segment.   
+ * This class also generates new vehicles in different vehicle generators. 
+ * 
+ * @author Femgineers
+ *
+ */
+
 public class Simulation extends Observable{
 	int runTime;	//length of simulation from start to finish (number of stepLengths)
 	int delay;		//rate at which generators generate cars (stepLengths/car)

@@ -2,6 +2,13 @@ package application;
 
 import java.awt.Point;
 
+/**
+ * The VehicleGenerator generates current vehicles.  
+ * 
+ * @author ChuchafinotaFace
+ *
+ */
+
 public class VehicleGenerator {
 	Point location; //determines initial location of generated vehicles
 	int delay;

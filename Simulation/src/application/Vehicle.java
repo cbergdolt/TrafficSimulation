@@ -4,6 +4,16 @@ import java.awt.Point;
 import java.util.Observable;
 import java.util.Observer;
 
+/**
+ * The Vehicle class is responsible for updating the location of the vehicles. 
+ * It also determines whether or not it needs to stop because of a change in the 
+ * state of the stop light. The location of the vehicles is updated depending on 
+ * the direction it is moving. 
+ * 
+ * @author Femgineers
+ *
+ */
+
 public class Vehicle extends Observable implements Observer{
 	int maxVelocity;	//probably cells/timestep (max possible velocity)
 	int curVelocity;	//
