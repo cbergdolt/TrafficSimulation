@@ -2,6 +2,13 @@ package application;
 
 import java.awt.Point;
 
+/**
+ * The StopLight class updates the stop light state. 
+ * 
+ * @author Femgineers
+ *
+ */
+
 public class StopLight {
 	LightState state;
 	int id;

@@ -1,5 +1,17 @@
 package application;
 
+/**
+ * Hard-coded grid instance, useful for isolating map changes and cleaning up the UserInterface class
+ * Grid Key:
+ * 1 = "negative space," map area that is nothing in particular: not road, not landmark, not generation point, not intersection
+ * 2 = standard road
+ * 3 = vehicle generation point (where the vehicles enter the simulation)
+ * 4 = intersection with a stoplight
+ * 
+ * @author Carolyn
+ *
+ */
+
 public class Grid {
 	int[][] routeGrid = {
 			 {1,1,1,1,1, 1,1,1,1,1, 1,1,1,1,1, 1,1,1,1,1, 1,1,2,3,1, 1,1,1,1,1, 1,1,1,1,1, 1,1,1,1,1, 1,1,1,1,1, 1,1,1,1,1},

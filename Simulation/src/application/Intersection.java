@@ -4,6 +4,13 @@ import java.awt.Point;
 import java.util.Observable;
 import java.util.Queue;
 
+/**
+ * Intersection class holds the state of the lights and its location.  
+ * 
+ * @author ChuchafinotaFace
+ *
+ */
+
 public class Intersection extends Observable{
 	Point[] location = new Point [4]; //South, East, West, North (see Diagram below)
 	// |S|W|

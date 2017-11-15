@@ -2,6 +2,16 @@ package application;
 
 import java.awt.Point;
 
+/***
+ * The Map class is the main map generator for the simulation.
+ * It calls the Grid class where the map is hard-coded in and saved as the routegrid data member. 
+ * The most important data members of the Map class includes the Intersections array
+ * and the Landmark  array that hold the location of intersections and landmarks, respectively. 
+ * The trackingGrid array will allow us to keep track of the location of our map elements.    
+ * @author Femgineers
+ *
+ */
+
 public class Map {
 	int[][] routeGrid;
 	int[][] trackingGrid;

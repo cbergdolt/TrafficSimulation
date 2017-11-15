@@ -1,6 +1,5 @@
 package application;
 
-
 import java.awt.Point;
 import java.util.Iterator;
 import java.util.Observable;
@@ -22,6 +21,18 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+
+/***
+ * The UserInterface class is the main running class that controls the entire simulation. 
+ * This is the class that must be run to start the simulation. 
+ * The stop lights are each assigned images depending on which state it currently is in.
+ * The routegrid from the Map class is used to determine what to render in the specified grid spot.
+ * The updateVehicles class updates the ImageView of each VehicleView object contained in the vehicles array
+ * It also deletes the VehicleView and removes its ImageView from the scene's child nodes if Vehicle is out of bounds
+ *   
+ * @author Femgineers
+ *
+ */
 
 public class UserInterface extends Application implements Observer{
 	ImageView views[];
