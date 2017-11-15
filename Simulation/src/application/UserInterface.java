@@ -5,6 +5,8 @@ import java.awt.Point;
 import java.util.Iterator;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Vector;
+
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.beans.property.LongProperty;
@@ -29,6 +31,9 @@ public class UserInterface extends Application implements Observer{
 	Image RoadImage;
 	ImageView GrassImageView;
 	Image GrassImage;
+	Image PortalImage;
+	Vector<ImageView> mapImageViews = new Vector();
+	
 	
 	Image gns_rewImage;
 	Image yns_rewImage;
@@ -76,24 +81,7 @@ public class UserInterface extends Application implements Observer{
 		sim = new Simulation(25, 3, 500);	//runtime, delay, steplength
 		sim.addObserver(this);	//make the UI observe the simulation
 		
-		initializeImages();	//has to happen after the Simulation instantiation, because it depends on intersection locations
-		
-		for (int j = 0; j < dimensions; j++) {
-			for (int i = 0; i < dimensions; i++) {
-				Rectangle tile = new Rectangle(j*scale, i*scale, scale, scale);
-				if (sim.m.routeGrid[j][i] == 1) {
-					tile.setFill(Color.ALICEBLUE);
-				} else if(sim.m.routeGrid[j][i] == 2) {
-					tile.setFill(Color.DARKGRAY);
-				} else if (sim.m.routeGrid[j][i] == 3) { //ONLY TO SEE WHERE GENERATORS ARE
-					tile.setFill(Color.ORANGE);	
-				} else if (sim.m.routeGrid[j][i] == 4) { //ONLY TO SEE WHERE INTERSECTIONS ARE
-					tile.setFill(Color.DARKGRAY);//RED);	
-				} 
-				root.getChildren().add(tile);
-			}
-		}
-		
+		initializeImages();	//has to happen after the Simulation instantiation, because it depends on intersection locations		
 		updateImageViews();
 		
 		Scene scene = new Scene(root,dimensions*scale,dimensions*scale);
@@ -124,6 +112,11 @@ public class UserInterface extends Application implements Observer{
 	private void initializeImages() {
 		//import/create images and image views, add to ObsList
 		//System.out.println(x);
+		//road, snow, and portal images
+		RoadImage = new Image("RoadTexture.png", scale, scale, true, true);
+		GrassImage = new Image("images/textures/Snow.jpg", scale, scale, true, true);
+		PortalImage = new Image("images/textures/wreathPortal.png", scale, scale, true, true);
+		
 		//StopLight images
 		gns_rewImage = new Image("images/sprites/Lights/gns_rew.png", scale*2, scale*2, true, true);
 		yns_rewImage = new Image("images/sprites/Lights/yns_rew.png", scale*2, scale*2, true, true);
@@ -139,8 +132,26 @@ public class UserInterface extends Application implements Observer{
 			stoplightViews[i].setY(loc.y*scale);
 
 		}
-		
-		//other images?
+		int imageViewCount = 0;
+		for (int j = 0; j < dimensions; j++) {
+			for (int i = 0; i < dimensions; i++) {
+				if (sim.m.routeGrid[j][i] == 1) {			
+					mapImageViews.add(new ImageView(GrassImage));
+				} else if(sim.m.routeGrid[j][i] == 2) {
+					mapImageViews.add(new ImageView(RoadImage));	
+				} else if (sim.m.routeGrid[j][i] == 3) { //ONLY TO SEE WHERE GENERATORS ARE
+					mapImageViews.add(new ImageView(PortalImage));
+				
+				} else if (sim.m.routeGrid[j][i] == 4) { //ONLY TO SEE WHERE INTERSECTIONS ARE
+					mapImageViews.add(new ImageView(RoadImage));	
+				} 
+				mapImageViews.get(imageViewCount).setX(j*scale);
+				mapImageViews.get(imageViewCount).setY(i*scale);
+				root.getChildren().add(mapImageViews.get(imageViewCount));
+				imageViewCount += 1;
+			
+			}
+		}
 	}
 	
     private void updateImageViews() {
@@ -200,8 +211,8 @@ public class UserInterface extends Application implements Observer{
 				if ((l.x < 0 || l.x > 49*scale || l.y < 0 || l.y > 49*scale)){
 					root.getChildren().remove(vv.imageView);
 					sim.vehicles.remove(i);
-					System.out.println("HECK YEAH I AM HERE");
-					System.out.println("size of vehicles after remove(i) = " + sim.vehicles.size());
+		
+					//System.out.println("size of vehicles after remove(i) = " + sim.vehicles.size());
 					//vehicles.remove(h);	//vehicle out of map bounds, remove from simulation
 				} 
 			}
