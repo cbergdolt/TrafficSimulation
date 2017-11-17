@@ -16,14 +16,16 @@ public class Intersection extends Observable{
 	// |S|W|
 	// |E|N|
 	StopLight light;
+	TrafficSign sign;
 	int id;
 	char dir;
-	char type;
+	char type;	//F=four way, T=three way, R=roundabout ??? not sure if this is necessary, just check light/sign values
 	Queue<Vehicle> vehicleQueue;
 	
-	Intersection(Point[] loc, StopLight sl) {
+	Intersection(Point[] loc, StopLight sl, TrafficSign ts) {
 		location = loc; 
 		light = sl;
+		sign = ts;
 	}
 	
 	public void updateIntersection() {
@@ -35,7 +37,8 @@ public class Intersection extends Observable{
 	}
 	
 	public LightState getState() {
-		return light.getState();
+		if (light == null) return LightState.NONE;
+		else return light.getState();
 	}
 	public Point[] getLocation() {
 		return location;

@@ -42,6 +42,7 @@ public class UserInterface extends Application implements Observer{
 	Image RoadImage;
 	ImageView RoundaboutImageView;
 	Image RoundaboutImage;
+	boolean foundRAB = false;	// found roundabout; ignore other roundabout values
 	ImageView GrassImageView;
 	Image GrassImage;
 	Image PortalImage;
@@ -52,10 +53,12 @@ public class UserInterface extends Application implements Observer{
 	Image yns_rewImage;
 	Image rns_gewImage;
 	Image rns_yewImage;
-	ImageView[] stoplightViews = new ImageView[14]; //as many stoplightViews as intersections
+	Image stopImage;
+	Image yieldImage;
+	ImageView[] intersectionViews;// = new ImageView[14]; //as many intersectionViews as 4-way intersections
 	
 	int dimensions = 50;
-	int scale = 15;
+	int scale = 20;//15;
 	Simulation sim;
 	AnchorPane root;
 	
@@ -93,6 +96,8 @@ public class UserInterface extends Application implements Observer{
 		//Simulation sim = new Simulation(25, 3, 500);	//runtime, delay, steplength
 		sim = new Simulation(25, 3, 500);	//runtime, delay, steplength
 		sim.addObserver(this);	//make the UI observe the simulation
+		
+		intersectionViews = new ImageView[sim.m.intersections.length];
 		
 		initializeImages();	//has to happen after the Simulation instantiation, because it depends on intersection locations		
 		updateImageViews();
@@ -132,23 +137,43 @@ public class UserInterface extends Application implements Observer{
 		
 		//roundabout image and image view
 		RoundaboutImage = new Image("images/textures/Roundabout.png", scale*6, scale*6, true, true);
-		RoundaboutImageView = new ImageView(RoundaboutImage);	//this isn't actually being displayed at all!!!
+		RoundaboutImageView = new ImageView(RoundaboutImage);
 		
 		//StopLight images
 		gns_rewImage = new Image("images/sprites/Lights/gns_rew.png", scale*2, scale*2, true, true);
 		yns_rewImage = new Image("images/sprites/Lights/yns_rew.png", scale*2, scale*2, true, true);
 		rns_gewImage = new Image("images/sprites/Lights/rns_gew.png", scale*2, scale*2, true, true);
 		rns_yewImage = new Image("images/sprites/Lights/rns_yew.png", scale*2, scale*2, true, true);
-		//StopLight ImageViews
-		for (int i = 0; i < stoplightViews.length; i++) {
+		stopImage    = new Image("images/sprites/Lights/stopsign.png", scale*2, scale*2, true, true);
+		yieldImage   = new Image("images/sprites/Lights/yieldsign.png", scale*2, scale*2, true, true);
+		
+		//StopLight/TrafficSign ImageViews
+		for (int i = 0; i < intersectionViews.length; i++) {
 			Point loc = sim.m.intersections[i].location[0];
-			stoplightViews[i] = new ImageView(gns_rewImage); //start as green N/S, red E/W. this will be updated before it's an issue
-			root.getChildren().add(stoplightViews[i]);
-			//set correct location for the image view (this location will never change)
-			stoplightViews[i].setX(loc.x*scale);
-			stoplightViews[i].setY(loc.y*scale);
+			if (sim.m.intersections[i].sign != null) {
+				switch (sim.m.intersections[i].sign.type) {
+				case STOP:
+					intersectionViews[i] = new ImageView(stopImage);
+					break;
+				case YIELD:
+					intersectionViews[i] = new ImageView(yieldImage);
+					break;
+				default:
+					System.out.println("something has gone horribly wrong");
+				}
 
+				//continue;	//eventually put stop signs in here... :/
+			}
+			else if (sim.m.intersections[i].light != null) {
+				intersectionViews[i] = new ImageView(gns_rewImage); //start as green N/S, red E/W. this will be updated before it's an issue
+			}
+			//add image view to root observable list
+			root.getChildren().add(intersectionViews[i]);
+			//set correct location for the image view (this location will never change)
+			intersectionViews[i].setX(loc.x*scale);
+			intersectionViews[i].setY(loc.y*scale);
 		}
+		
 		int imageViewCount = 0;
 		for (int j = 0; j < dimensions; j++) {
 			for (int i = 0; i < dimensions; i++) {
@@ -156,15 +181,16 @@ public class UserInterface extends Application implements Observer{
 					mapImageViews.add(new ImageView(GrassImage));
 				} else if(sim.m.routeGrid[j][i] == 2 || sim.m.routeGrid[j][i] == 6) {
 					mapImageViews.add(new ImageView(RoadImage));	
-					if (sim.m.routeGrid[j][i] == 6) {
+					if (sim.m.routeGrid[j][i] == 6 && !foundRAB) {
 						RoundaboutImageView.setX(j*scale);
 						RoundaboutImageView.setY(i*scale);
 						root.getChildren().add(RoundaboutImageView);
+						foundRAB = true;
 					}
 				} else if (sim.m.routeGrid[j][i] == 3) { //ONLY TO SEE WHERE GENERATORS ARE
 					mapImageViews.add(new ImageView(PortalImage));
 				
-				} else if (sim.m.routeGrid[j][i] == 4) { //ONLY TO SEE WHERE INTERSECTIONS ARE
+				} else if (sim.m.routeGrid[j][i] == 4 || sim.m.routeGrid[j][i] == 5 || sim.m.routeGrid[j][i] == 7) { //ONLY TO SEE WHERE INTERSECTIONS ARE
 					mapImageViews.add(new ImageView(RoadImage));	
 				} 
 				mapImageViews.get(imageViewCount).setX(j*scale);
@@ -180,29 +206,29 @@ public class UserInterface extends Application implements Observer{
     private void updateImageViews() {
 		// TODO Auto-generated method stub
 		//Updates the static image views in the scene (stopLights, ...?)
-    	for (int i = 0; i < stoplightViews.length; i++) {
+    	for (int i = 0; i < intersectionViews.length; i++) {
     		//since the image views were set up with indices corresponding to the intersection indices, we can assume that is still the case
     		switch(sim.m.intersections[i].getState()) {
     		case GNS_REW:
-    			stoplightViews[i].setImage(gns_rewImage);
+    			intersectionViews[i].setImage(gns_rewImage);
     			break;
     		case YNS_REW:
-    			stoplightViews[i].setImage(yns_rewImage);
+    			intersectionViews[i].setImage(yns_rewImage);
     			break;
     		case RNS_GEW:
-    			stoplightViews[i].setImage(rns_gewImage);
+    			intersectionViews[i].setImage(rns_gewImage);
     			break;
     		case RNS_YEW:
-    			stoplightViews[i].setImage(rns_yewImage);
+    			intersectionViews[i].setImage(rns_yewImage);
+    			break;
+    		case NONE:	//no light, nothing to update 
     			break;
     		default:
     			System.out.println("something has gone horribly wrong");
     		}
-    		stoplightViews[i].toFront();
+    		intersectionViews[i].toFront();
     	}
     	
-    	//bring roundabout image to front
-		//RoundaboutImageView.toFront();
 	}
 
 	@Override
@@ -228,7 +254,7 @@ public class UserInterface extends Application implements Observer{
 		for (int i = 0; i < sim.vehicles.size(); i++) {
 			VehicleView vv = sim.vehicles.get(i); 
 			if (vv.imageView == null) {
-				Image vImage = new Image("whiteReindeer/Left1.png", scale, scale, true, true);
+				Image vImage = new Image("images/sprites/WhiteReindeer/Left1.png", scale, scale, true, true);
 				vv.imageView = new ImageView(vImage);
 				root.getChildren().add(vv.imageView);
 			}

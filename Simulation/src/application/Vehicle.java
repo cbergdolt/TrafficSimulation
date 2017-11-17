@@ -20,7 +20,7 @@ public class Vehicle extends Observable implements Observer{
 	int breakDistance;	//# cells between vehicle and other vehicle/intersection before slowing down 
 	int stopDistance;	//# cells between vehicle and other vehicle/intersection at complete stop
 	int length;			//length of vehicle ... not sure what units
-	char direction;		//N, S, E, W -- direction of travel; not sure if this is necessary?
+	char direction;		//N, S, E, W -- direction of travel -or- R -- roundabout
 	Point location;		//current location of vehicle
 	Point route[];
 	
@@ -88,6 +88,7 @@ public class Vehicle extends Observable implements Observer{
 			//check the status of the stoplight at the intersection at the end of the road segment that the vehicle is driving towards
 			//also check how close that intersection is
 			//then adjust speed accordingly
+			if (((Intersection)o).light == null) return;
 			LightState lstate = ((Intersection) o).light.getState();
 			Point[] loc = ((Intersection) o).getLocation();
 			
@@ -161,6 +162,9 @@ public class Vehicle extends Observable implements Observer{
 				} else {
 					this.curVelocity = this.maxVelocity;
 				}
+				break;
+			case 'R':	//roundabout
+				
 				break;
 			default:
 				System.out.println("something has gone horribly wrong");	

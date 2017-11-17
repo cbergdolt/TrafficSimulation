@@ -34,6 +34,10 @@ public class StopLight {
 		return state;
 	}
 	
+	void setState(LightState ls) {
+		state = ls;
+	}
+	
 	public void update() {
 		//updates the state of the light based on the time passed since last state change
 		//and the static values of greenNS/EW / yellowNS/EW

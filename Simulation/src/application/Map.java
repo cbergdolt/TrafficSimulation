@@ -16,7 +16,10 @@ public class Map {
 	int[][] routeGrid;
 	int[][] trackingGrid;
 	//RoadSegment[] roads = new RoadSegment[12];	//I have no idea how many road segments we will have, but the number should be constant once we get the map figured out
-	Intersection[] intersections = new Intersection[14];
+	Intersection[] intersections = new Intersection[18];
+	int fourWayInt;
+	int threeWayInt;
+	int roundaboutInt;
 	Landmark[] landmarks;
 	Point[] entry_exit = new Point[8];
 	
@@ -27,28 +30,51 @@ public class Map {
 		}
 		int eeCount = 0;
 		int iCount = 0;
+		fourWayInt = 0;
+		threeWayInt = 0;
+		roundaboutInt = 0;
 		
-		//1 = grass, 2 = street, 3 = vehicle generator, 4 = stop sign
+		//1 = grass, 2 = street, 3 = vehicle generator, 4 = stop light, 5 = stop sign, 6 = roundabout street, 7 = yield sign
 		Grid grid = new Grid();
 		routeGrid = grid.getRouteGrid();
 		Point p = new Point();
 		for (int i = 0; i < 50; i++) {	//y
 			for (int j = 0; j < 50; j++) {	//x
-				if (routeGrid[j][i] == 3) {
+				if (routeGrid[j][i] == 3) {	//ENTRY EXIT POINTS (location of vehicle generators
 					entry_exit[eeCount] = new Point(j, i);
 					System.out.println("NEW EE: "+entry_exit[eeCount]);
 					//entry_exit[eeCount].x = j;
 					//entry_exit[eeCount].y = i;
 					eeCount += 1;
 					//top right, bottom right, top left, bottom left (on actual map, not on route grid)
-				} else if (routeGrid[j][i] == 4 && routeGrid[j][i+1] == 4 && routeGrid[j+1][i] == 4 && routeGrid[j+1][i+1] == 4) {//instantiates intersection where stoplight intersection is
-					Point[] ipoints = {new Point(j, i), new Point(j, i+1), new Point(j+1, i), new Point(j+1, i+1)};
-					p.x = j;
-					p.y = i;
-					StopLight sl = new StopLight(LightState.GNS_REW, ipoints, 10, 10, 10, 10);
-					intersections[iCount] = new Intersection(ipoints, sl);
-					iCount += 1;
 				} 
+				//INTERSECTIONS
+				//four-way; stop light
+				else if (routeGrid[j][i] == 4 && routeGrid[j][i+1] == 4 && routeGrid[j+1][i] == 4 && routeGrid[j+1][i+1] == 4) {//instantiate intersection where stop light intersection is
+					Point[] ipoints = {new Point(j, i), new Point(j, i+1), new Point(j+1, i), new Point(j+1, i+1)};
+					StopLight sl = new StopLight(LightState.GNS_REW, ipoints, 10, 10, 10, 10);
+					intersections[iCount] = new Intersection(ipoints, sl, null);
+					iCount += 1;
+					fourWayInt += 1;
+				} 
+				//three-way; stop sign
+				else if (routeGrid[j][i] == 5 && routeGrid[j][i+1] == 5 && routeGrid[j+1][i] == 5 && routeGrid[j+1][i+1] == 5) {//instantiate intersection where stop sign intersection is
+					Point[] ipoints = {new Point(j, i), new Point(j, i+1), new Point(j+1, i), new Point(j+1, i+1)};
+					//StopLight sl = new StopLight(LightState.GNS_REW, ipoints, 10, 10, 10, 10);
+					TrafficSign ts = new TrafficSign(SignType.STOP);
+					intersections[iCount] = new Intersection(ipoints, null, ts);
+					iCount += 1;
+					threeWayInt += 1;
+				} 
+				//roundabout; yield sign
+				else if (routeGrid[j][i] == 7 && routeGrid[j][i+1] == 7 && routeGrid[j+1][i] == 7 && routeGrid[j+1][i+1] == 7) {//instantiate intersection where yield sign intersection is
+					Point[] ipoints = {new Point(j, i), new Point(j, i+1), new Point(j+1, i), new Point(j+1, i+1)};
+					//StopLight sl = new StopLight(LightState.GNS_REW, ipoints, 10, 10, 10, 10);
+					TrafficSign ts = new TrafficSign(SignType.YIELD);
+					intersections[iCount] = new Intersection(ipoints, null, ts);
+					iCount += 1;
+					roundaboutInt += 1;
+				}
 				//System.out.print(routeGrid[j][i] + " ");
 			}
 			//System.out.print("\n");
