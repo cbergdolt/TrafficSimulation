@@ -6,4 +6,8 @@ public class TrafficSign {
 	TrafficSign(SignType t) {
 		type = t;
 	}
+	
+	public SignType getType() {
+		return type;
+	}
 }

@@ -88,86 +88,26 @@ public class Vehicle extends Observable implements Observer{
 			//check the status of the stoplight at the intersection at the end of the road segment that the vehicle is driving towards
 			//also check how close that intersection is
 			//then adjust speed accordingly
-			if (((Intersection)o).light == null) return;
-			LightState lstate = ((Intersection) o).light.getState();
-			Point[] loc = ((Intersection) o).getLocation();
 			
-			switch (direction) { //South, East, West, North
-			case 'N':
-				if ((lstate == LightState.RNS_GEW) || (lstate == LightState.RNS_YEW))  {
-					if (distance(loc[3], location) <= this.stopDistance){
-						this.stop();
-					}
-				}
-				else if (lstate == LightState.YNS_REW) {
-					if (distance(loc[3], location) <= this.breakDistance){
-						this.decelerate();
-					}
-					else if (distance(loc[3], location) <= this.stopDistance){
-						this.stop();
-					}
-				} else {
-					this.curVelocity = this.maxVelocity;
-				}
-				break;
-			case 'S':
-				System.out.println("I AM HERE");
-				if ((lstate == LightState.RNS_GEW) || (lstate == LightState.RNS_YEW))  {
-					if (distance(loc[0], location) <= this.stopDistance){
-						this.stop();
-					}
-				}
-				else if (lstate == LightState.YNS_REW) {
-					if (distance(loc[0], location) <= this.breakDistance){
-						this.decelerate();
-					}
-					else if (distance(loc[0], location) <= this.stopDistance){
-						this.stop();
-					}
-				} else {
-					this.curVelocity = this.maxVelocity;
-				}
-				break;
-			case 'E':
-				if ((lstate == LightState.GNS_REW) || (lstate == LightState.YNS_REW))  {
-					if (distance(loc[1], location) <= this.stopDistance){
-						this.stop();
-					}
-				}
-				else if (lstate == LightState.YNS_REW) {
-					if (distance(loc[1], location) <= this.breakDistance){
-						this.decelerate();
-					}
-					else if (distance(loc[1], location) <= this.stopDistance){
-						this.stop();
-					}
-				}
-				else {
-					this.curVelocity = this.maxVelocity;
-				}
-				break;
-			case 'W':
-				if ((lstate == LightState.GNS_REW) || (lstate == LightState.YNS_REW))  {
-					if (distance(loc[2], location) <= this.stopDistance){
-						this.stop();
-					}
-				}
-				else if (lstate == LightState.YNS_REW) {
-					if (distance(loc[2], location) <= this.breakDistance){
-						this.decelerate();
-					}
-					else if (distance(loc[2], location) <= this.stopDistance){
-						this.stop();
-					}
-				} else {
-					this.curVelocity = this.maxVelocity;
-				}
-				break;
-			case 'R':	//roundabout
-				
-				break;
-			default:
-				System.out.println("something has gone horribly wrong");	
+			//if the intersection has a light
+			if (((Intersection)o).light != null) {
+				StopLight light = ((Intersection) o).light;
+				Point[] lightLoc = ((Intersection) o).getLocation();
+				lightResponse(light, lightLoc);
+			}
+			//if the intersection has a sign
+			else if (((Intersection)o).sign != null) {
+				TrafficSign sign = ((Intersection) o).sign;
+				Point[] signLoc = ((Intersection) o).getLocation();
+				signResponse(sign, signLoc);
+				//this currently makes them stop at the right times, I have to figure out a way
+				// to get them started again at the right time. I need to use the vehicle queue
+				// in Intersection, but I'm not sure how to do that. I may need a way to add the
+				// observed intersection to the vehicle so it can add itself to the intersection's
+				// vehicle queue when it stops there. 
+				//then I think the intersection will need to be in charge of releasing the vehicles
+				// from the queue. There will be some impressive vehicle/intersection communication
+				// going on here
 			}
 				//if (((Intersection) o).light.getState() == )
 			//System.out.println("updated vehicle from Intersection observable");
@@ -176,6 +116,106 @@ public class Vehicle extends Observable implements Observer{
 		/*while (this.curVelocity < 0 && this.curVelocity > this.maxVelocity/this.breakDistance) {
 		this.decelerate();
 	}*/
+	}
+
+	private void signResponse(TrafficSign sign, Point[] loc) {
+		//changes the vehicle's velocity based on its direction and proximity to the sign (and the sign type)
+		SignType stype = sign.getType();
+		double dist;
+		
+		switch (direction) { //South, East, West, North
+		case 'N':
+			dist = distance(loc[3], location);
+			if (stype == SignType.STOP)  {
+				if (dist <= this.stopDistance) this.stop();
+			} else if (stype == SignType.YIELD) {
+				if (dist <= this.breakDistance && dist > this.stopDistance) this.decelerate();
+				else if (dist <= this.stopDistance && dist > 0) this.stop();
+			} else this.curVelocity = this.maxVelocity;
+			break;
+		case 'S':
+			dist = distance(loc[0], location);
+			if (stype == SignType.STOP)  {
+				if (dist <= this.stopDistance) this.stop();
+			} else if (stype == SignType.YIELD) {
+				if (dist <= this.breakDistance && dist > this.stopDistance) this.decelerate();
+				else if (dist <= this.stopDistance && dist > 0) this.stop();
+			} else this.curVelocity = this.maxVelocity;
+			break;
+		case 'E':
+			dist = distance(loc[1], location);
+			if (stype == SignType.STOP)  {
+				if (dist <= this.stopDistance) this.stop();
+			} else if (stype == SignType.YIELD) {
+				if (dist <= this.breakDistance && dist > this.stopDistance) this.decelerate();
+				else if (dist <= this.stopDistance && dist > 0) this.stop();
+			} else this.curVelocity = this.maxVelocity;
+			break;
+		case 'W':
+			dist = distance(loc[2], location);
+			if (stype == SignType.STOP)  {
+				if (dist <= this.stopDistance) this.stop();
+			} else if (stype == SignType.YIELD) {
+				if (dist <= this.breakDistance && dist > this.stopDistance) this.decelerate();
+				else if (dist <= this.stopDistance && dist > 0) this.stop();
+			} else this.curVelocity = this.maxVelocity;
+			break;
+		case 'R':	//roundabout
+			//not sure if we actually need this case?
+			break;
+		default:
+			System.out.println("something has gone horribly wrong");	
+		}
+	}
+
+	private void lightResponse(StopLight sl, Point[] loc) {
+		//changes the vehicle's velocity based on its direction and proximity to the stoplight (and the stoplight's state)
+		LightState lstate = sl.getState();
+		double dist;
+		
+		switch (direction) { //South, East, West, North
+		case 'N':
+			dist = distance(loc[3], location);
+			if ((lstate == LightState.RNS_GEW) || (lstate == LightState.RNS_YEW))  {
+				if (dist <= this.stopDistance) this.stop();
+			} else if (lstate == LightState.YNS_REW) {
+				if (dist <= this.breakDistance && dist > this.stopDistance) this.decelerate();
+				else if (dist <= this.stopDistance && dist > 0) this.stop();
+			} else this.curVelocity = this.maxVelocity;
+			break;
+		case 'S':
+			dist = distance(loc[0], location);
+			if ((lstate == LightState.RNS_GEW) || (lstate == LightState.RNS_YEW))  {
+				if (dist <= this.stopDistance) this.stop();
+			} else if (lstate == LightState.YNS_REW) {
+				if (dist <= this.breakDistance && dist > this.stopDistance) this.decelerate();
+				else if (dist <= this.stopDistance && dist > 0) this.stop();
+			} else this.curVelocity = this.maxVelocity;
+			break;
+		case 'E':
+			dist = distance(loc[1], location);
+			if ((lstate == LightState.GNS_REW) || (lstate == LightState.YNS_REW))  {
+				if (dist <= this.stopDistance) this.stop();
+			} else if (lstate == LightState.YNS_REW) {
+				if (dist <= this.breakDistance && dist > this.stopDistance) this.decelerate();
+				else if (dist <= this.stopDistance && dist > 0) this.stop();
+			} else this.curVelocity = this.maxVelocity;
+			break;
+		case 'W':
+			dist = distance(loc[2], location);
+			if ((lstate == LightState.GNS_REW) || (lstate == LightState.YNS_REW))  {
+				if (dist <= this.stopDistance) this.stop();
+			} else if (lstate == LightState.YNS_REW) {
+				if (dist <= this.breakDistance && dist > this.stopDistance) this.decelerate();
+				else if (dist <= this.stopDistance && dist > 0) this.stop();
+			} else this.curVelocity = this.maxVelocity;
+			break;
+		case 'R':	//roundabout
+			//not sure if we actually need this case?
+			break;
+		default:
+			System.out.println("something has gone horribly wrong");	
+		}
 	}
 
 	public void updateVehicle() {

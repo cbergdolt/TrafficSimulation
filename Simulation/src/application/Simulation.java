@@ -121,6 +121,9 @@ public class Simulation extends Observable{
 			}
 			if (closestVehicle != null) closestVehicle.addObserver(va);
 			
+			//TODO I don't want vehicles to observe roundabout intersections while in the roundabout. 
+			//once in the roundabout, they can move and exit freely, and THEN they need to start observing an intersection again...
+			//I'm not sure how to keep track of that yet. 
 			Intersection closestIntersection = null;
 			for (int i = 0; i < m.intersections.length; i++) { //find its nearest intersection
 				Intersection intersection = m.intersections[i];
