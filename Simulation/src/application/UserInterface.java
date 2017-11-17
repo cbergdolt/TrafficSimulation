@@ -45,7 +45,7 @@ public class UserInterface extends Application implements Observer{
 	ImageView GrassImageView;
 	Image GrassImage;
 	Image PortalImage;
-	Vector<ImageView> mapImageViews = new Vector();
+	Vector<ImageView> mapImageViews = new Vector<ImageView>();
 	
 	
 	Image gns_rewImage;
@@ -154,8 +154,13 @@ public class UserInterface extends Application implements Observer{
 			for (int i = 0; i < dimensions; i++) {
 				if (sim.m.routeGrid[j][i] == 1) {			
 					mapImageViews.add(new ImageView(GrassImage));
-				} else if(sim.m.routeGrid[j][i] == 2) {
+				} else if(sim.m.routeGrid[j][i] == 2 || sim.m.routeGrid[j][i] == 6) {
 					mapImageViews.add(new ImageView(RoadImage));	
+					if (sim.m.routeGrid[j][i] == 6) {
+						RoundaboutImageView.setX(j*scale);
+						RoundaboutImageView.setY(i*scale);
+						root.getChildren().add(RoundaboutImageView);
+					}
 				} else if (sim.m.routeGrid[j][i] == 3) { //ONLY TO SEE WHERE GENERATORS ARE
 					mapImageViews.add(new ImageView(PortalImage));
 				
@@ -169,6 +174,7 @@ public class UserInterface extends Application implements Observer{
 			
 			}
 		}
+		RoundaboutImageView.toFront();
 	}
 	
     private void updateImageViews() {
@@ -194,6 +200,9 @@ public class UserInterface extends Application implements Observer{
     		}
     		stoplightViews[i].toFront();
     	}
+    	
+    	//bring roundabout image to front
+		//RoundaboutImageView.toFront();
 	}
 
 	@Override
@@ -219,7 +228,7 @@ public class UserInterface extends Application implements Observer{
 		for (int i = 0; i < sim.vehicles.size(); i++) {
 			VehicleView vv = sim.vehicles.get(i); 
 			if (vv.imageView == null) {
-				Image vImage = new Image("images/sprites/Reindeer/MovingLeft/Left1.png", scale, scale, true, true);
+				Image vImage = new Image("whiteReindeer/Left1.png", scale, scale, true, true);
 				vv.imageView = new ImageView(vImage);
 				root.getChildren().add(vv.imageView);
 			}
