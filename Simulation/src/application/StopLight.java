@@ -1,6 +1,7 @@
 package application;
 
 import java.awt.Point;
+import java.util.Random;
 
 /**
  * The StopLight class updates the stop light state. 
@@ -36,6 +37,24 @@ public class StopLight {
 	
 	void setState(LightState ls) {
 		state = ls;
+	}
+	
+	void randInit() {
+		//sets time and state values for light randomly
+		//intended for re-initialization, but nothing prevents it from being used any other time
+		Random rand = new Random();
+		
+		//determine state
+		int newState = rand.nextInt(4); //random number between 0 and 3
+		if (newState == 0) state = LightState.GNS_REW;
+		else if (newState == 1) state = LightState.RNS_GEW;
+		else if (newState == 2) state = LightState.RNS_YEW;
+		else if (newState == 3) state = LightState.YNS_REW;
+		else System.out.println("something has gone horribly wrong");
+		
+		//determine timePassed
+		timePassed = rand.nextInt(10); //random number between 0 and 9
+		
 	}
 	
 	public void update() {

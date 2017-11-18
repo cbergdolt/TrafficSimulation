@@ -52,7 +52,8 @@ public class Map {
 				//four-way; stop light
 				else if (routeGrid[j][i] == 4 && routeGrid[j][i+1] == 4 && routeGrid[j+1][i] == 4 && routeGrid[j+1][i+1] == 4) {//instantiate intersection where stop light intersection is
 					Point[] ipoints = {new Point(j, i), new Point(j, i+1), new Point(j+1, i), new Point(j+1, i+1)};
-					StopLight sl = new StopLight(LightState.GNS_REW, ipoints, 10, 10, 10, 10);
+					StopLight sl = new StopLight(LightState.GNS_REW, ipoints, 10, 10, 10, 10);	//standard init (durations will not change)
+					sl.randInit();	//re-initialize light state and time based on its position
 					intersections[iCount] = new Intersection(ipoints, sl, null);
 					iCount += 1;
 					fourWayInt += 1;
@@ -60,7 +61,6 @@ public class Map {
 				//three-way; stop sign
 				else if (routeGrid[j][i] == 5 && routeGrid[j][i+1] == 5 && routeGrid[j+1][i] == 5 && routeGrid[j+1][i+1] == 5) {//instantiate intersection where stop sign intersection is
 					Point[] ipoints = {new Point(j, i), new Point(j, i+1), new Point(j+1, i), new Point(j+1, i+1)};
-					//StopLight sl = new StopLight(LightState.GNS_REW, ipoints, 10, 10, 10, 10);
 					TrafficSign ts = new TrafficSign(SignType.STOP);
 					intersections[iCount] = new Intersection(ipoints, null, ts);
 					iCount += 1;
@@ -69,7 +69,6 @@ public class Map {
 				//roundabout; yield sign
 				else if (routeGrid[j][i] == 7 && routeGrid[j][i+1] == 7 && routeGrid[j+1][i] == 7 && routeGrid[j+1][i+1] == 7) {//instantiate intersection where yield sign intersection is
 					Point[] ipoints = {new Point(j, i), new Point(j, i+1), new Point(j+1, i), new Point(j+1, i+1)};
-					//StopLight sl = new StopLight(LightState.GNS_REW, ipoints, 10, 10, 10, 10);
 					TrafficSign ts = new TrafficSign(SignType.YIELD);
 					intersections[iCount] = new Intersection(ipoints, null, ts);
 					iCount += 1;
@@ -90,7 +89,6 @@ public class Map {
 		//roads[0] = new RoadSegment(intersections[0], intersections[1]);
 	}
 	
-
 	public void updateMap() {
 		//System.out.println("intersections.length = " + intersections.length);
 		/*for (int i = 0; i < roads.length; i++) {
