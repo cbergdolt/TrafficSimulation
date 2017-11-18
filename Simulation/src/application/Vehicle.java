@@ -24,6 +24,9 @@ public class Vehicle extends Observable implements Observer{
 	Point location;		//current location of vehicle
 	Point route[];
 	
+	Intersection observedIntersection;	//so vehicle can add itself to a sign-governed intersection's vehicleQueue
+	boolean startRequested;	//used to momentarily prevent stop() being called and changing the curVelocity back to 0
+	
 	Vehicle(int mv, int bd, int sd, int len, char dir, Point loc) {
 		maxVelocity = mv;
 		breakDistance = bd;
@@ -32,6 +35,9 @@ public class Vehicle extends Observable implements Observer{
 		direction = dir;
 		location = loc;
 		curVelocity = mv;
+		
+		observedIntersection = null;
+		startRequested = false;
 	}
 	
 	void setMaxVelocity(int v) {
@@ -58,8 +64,12 @@ public class Vehicle extends Observable implements Observer{
 		
 	}
 	
-	private void stop() {	
+	private void stop() {
 		this.curVelocity = 0;
+		//stopIterations += 1;
+		if (observedIntersection.sign != null) {
+			observedIntersection.vehicleQueue.add(this);
+		}
 	}
 	
 	private void decelerate() {
@@ -75,7 +85,18 @@ public class Vehicle extends Observable implements Observer{
 	}
 	
 	void start() {
-		
+		this.curVelocity = this.maxVelocity;
+		startRequested = true;
+	}
+	
+	public Intersection getObservedIntersection() {
+		return observedIntersection;
+	}
+	
+	public void setObservedIntersection(Intersection intersection) {
+		observedIntersection = intersection;
+		startRequested = false;	//a start has not been requested for this observed intersection yet
+			//^^^this assumes setObservedIntersection is only called once per new observed intersection
 	}
 
 	@Override
@@ -100,16 +121,7 @@ public class Vehicle extends Observable implements Observer{
 				TrafficSign sign = ((Intersection) o).sign;
 				Point[] signLoc = ((Intersection) o).getLocation();
 				signResponse(sign, signLoc);
-				//this currently makes them stop at the right times, I have to figure out a way
-				// to get them started again at the right time. I need to use the vehicle queue
-				// in Intersection, but I'm not sure how to do that. I may need a way to add the
-				// observed intersection to the vehicle so it can add itself to the intersection's
-				// vehicle queue when it stops there. 
-				//then I think the intersection will need to be in charge of releasing the vehicles
-				// from the queue. There will be some impressive vehicle/intersection communication
-				// going on here
 			}
-				//if (((Intersection) o).light.getState() == )
 			//System.out.println("updated vehicle from Intersection observable");
 			//System.out.println(this.curVelocity);
 		}
@@ -120,45 +132,29 @@ public class Vehicle extends Observable implements Observer{
 
 	private void signResponse(TrafficSign sign, Point[] loc) {
 		//changes the vehicle's velocity based on its direction and proximity to the sign (and the sign type)
-		SignType stype = sign.getType();
-		double dist;
+		//SignType stype = sign.getType();
+		double dist = 0;
 		
 		switch (direction) { //South, East, West, North
 		case 'N':
 			dist = distance(loc[3], location);
-			if (stype == SignType.STOP)  {
-				if (dist <= this.stopDistance) this.stop();
-			} else if (stype == SignType.YIELD) {
-				if (dist <= this.breakDistance && dist > this.stopDistance) this.decelerate();
-				else if (dist <= this.stopDistance && dist > 0) this.stop();
-			} else this.curVelocity = this.maxVelocity;
+			if (dist <= this.breakDistance && dist > this.stopDistance) this.decelerate();
+			else if (dist <= this.stopDistance && dist > 0 && !startRequested) this.stop();
 			break;
 		case 'S':
 			dist = distance(loc[0], location);
-			if (stype == SignType.STOP)  {
-				if (dist <= this.stopDistance) this.stop();
-			} else if (stype == SignType.YIELD) {
-				if (dist <= this.breakDistance && dist > this.stopDistance) this.decelerate();
-				else if (dist <= this.stopDistance && dist > 0) this.stop();
-			} else this.curVelocity = this.maxVelocity;
+			if (dist <= this.breakDistance && dist > this.stopDistance) this.decelerate();
+			else if (dist <= this.stopDistance && dist > 0 && !startRequested) this.stop();
 			break;
 		case 'E':
 			dist = distance(loc[1], location);
-			if (stype == SignType.STOP)  {
-				if (dist <= this.stopDistance) this.stop();
-			} else if (stype == SignType.YIELD) {
-				if (dist <= this.breakDistance && dist > this.stopDistance) this.decelerate();
-				else if (dist <= this.stopDistance && dist > 0) this.stop();
-			} else this.curVelocity = this.maxVelocity;
+			if (dist <= this.breakDistance && dist > this.stopDistance) this.decelerate();
+			else if (dist <= this.stopDistance && dist > 0 && !startRequested) this.stop();
 			break;
 		case 'W':
 			dist = distance(loc[2], location);
-			if (stype == SignType.STOP)  {
-				if (dist <= this.stopDistance) this.stop();
-			} else if (stype == SignType.YIELD) {
-				if (dist <= this.breakDistance && dist > this.stopDistance) this.decelerate();
-				else if (dist <= this.stopDistance && dist > 0) this.stop();
-			} else this.curVelocity = this.maxVelocity;
+			if (dist <= this.breakDistance && dist > this.stopDistance) this.decelerate();
+			else if (dist <= this.stopDistance && dist > 0 && !startRequested) this.stop();
 			break;
 		case 'R':	//roundabout
 			//not sure if we actually need this case?
@@ -244,8 +240,8 @@ public class Vehicle extends Observable implements Observer{
 		}
 
 		notifyObservers();
-		//System.out.println("performed step for vehicle" + location);
 	}
+	
 	private double distance(Point pta, Point ptb) {
 		// TODO Auto-generated method stub
 		double xdiff = pta.x - ptb.x;

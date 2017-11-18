@@ -132,7 +132,13 @@ public class Simulation extends Observable{
 					else closestIntersection  = (Intersection)shorterDistance(va, intersection, closestIntersection);
 				}
 			}
-			if (closestIntersection != null) closestIntersection.addObserver(va);
+			if (closestIntersection != null) {
+				closestIntersection.addObserver(va);
+				
+				//tell the vehicle which intersection it is observing, but only if it is a new intersection
+				if (va.getObservedIntersection() != closestIntersection)
+					va.setObservedIntersection(closestIntersection);
+			}
 		}
 	}
 

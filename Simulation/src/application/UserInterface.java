@@ -249,7 +249,7 @@ public class UserInterface extends Application implements Observer{
 		//Updates the ImageView of each VehicleView object contained in vehicles
 		//Also deletes the VehicleView and removes its ImageView from the scene's child nodes if Vehicle is out of map bounds
 		
-		System.out.println("size of vehicles = " + sim.vehicles.size());
+		//System.out.println("size of vehicles = " + sim.vehicles.size());
 		
 		for (int i = 0; i < sim.vehicles.size(); i++) {
 			VehicleView vv = sim.vehicles.get(i); 

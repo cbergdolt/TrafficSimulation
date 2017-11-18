@@ -90,14 +90,9 @@ public class Map {
 		//roads[0] = new RoadSegment(intersections[0], intersections[1]);
 	}
 	
-	//I don't think we really want a main function in the Map class. The map doesn't really do anything...
-	/*public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
-	}*/
 
 	public void updateMap() {
-		System.out.println("intersections.length = " + intersections.length);
+		//System.out.println("intersections.length = " + intersections.length);
 		/*for (int i = 0; i < roads.length; i++) {
 			System.out.println("i = " + i + " updating map...");
 			roads[i].updateRoads();
@@ -109,7 +104,6 @@ public class Map {
 			intersections[i].updateIntersection();
 		}
 		
-		System.out.println("updated map");
 	}
 	
 	public Point[] getEntryExit() {

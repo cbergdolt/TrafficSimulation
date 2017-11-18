@@ -1,6 +1,7 @@
 package application;
 
 import java.awt.Point;
+import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Queue;
 
@@ -26,14 +27,17 @@ public class Intersection extends Observable{
 		location = loc; 
 		light = sl;
 		sign = ts;
+		vehicleQueue = new LinkedList<Vehicle>();
 	}
 	
 	public void updateIntersection() {
-		// TODO Auto-generated method stub
 		if (light != null) light.update();
+		if (sign != null && !vehicleQueue.isEmpty()) {
+			Vehicle next = vehicleQueue.remove();	//get the first/next vehicle to reach the intersection
+			next.start();
+		}
 		setChanged();
 		notifyObservers();
-		//System.out.println("updated intersection");
 	}
 	
 	public LightState getState() {
