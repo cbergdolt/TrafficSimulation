@@ -33,7 +33,7 @@ public class Sprint1Test {
 	public void test3() {
 		Point[] p = new Point[1];
 		p[0] = new Point(0,0);
-		StopLight sl = new StopLight(LightState.GNS_REW, p, 2, 2, 2, 2);
+		StopLight sl = new StopLight(LightState.GNS_REW, p, 2, 2, 2, 2, 0);
 		for (int i = 0; i < 3; i++) {
 			sl.update();	
 		}

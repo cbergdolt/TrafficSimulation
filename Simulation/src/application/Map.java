@@ -52,8 +52,11 @@ public class Map {
 				//four-way; stop light
 				else if (routeGrid[j][i] == 4 && routeGrid[j][i+1] == 4 && routeGrid[j+1][i] == 4 && routeGrid[j+1][i+1] == 4) {//instantiate intersection where stop light intersection is
 					Point[] ipoints = {new Point(j, i), new Point(j, i+1), new Point(j+1, i), new Point(j+1, i+1)};
-					StopLight sl = new StopLight(LightState.GNS_REW, ipoints, 10, 10, 10, 10);	//standard init (durations will not change)
-					sl.randInit();	//re-initialize light state and time based on its position
+					StopLight sl;
+					if (fourWayInt == 0 || fourWayInt == 5) //first and last intersections (on this map)--topmost and bottom-most 
+						sl = new StopLight(LightState.YNS_REW, ipoints, 10, 10, 10, 10, 0);
+					else	//the middle stoplights, all in a line on this map
+						sl = new StopLight(LightState.RNS_GEW, ipoints, 10, 10, 10, 10, 10 - fourWayInt*2);
 					intersections[iCount] = new Intersection(ipoints, sl, null);
 					iCount += 1;
 					fourWayInt += 1;
