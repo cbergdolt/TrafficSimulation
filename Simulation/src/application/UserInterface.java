@@ -258,9 +258,9 @@ public class UserInterface extends Application implements Observer{
 				if (vv.vehicle.type == 0) {
 					vImage = new Image("images/sprites/WhiteReindeer/Left1.png", scale, scale, true, true);
 				} else if (vv.vehicle.type == 1) {
-					vImage = new Image("images/sprites/SkiElfDown.png", scale, scale, true, true);
+					vImage = new Image("images/sprites/Skier/SkiingDown.png", scale, scale, true, true);
 				} else {
-					vImage = new Image("images/sprites/Reindeer/MovingRight/Right1.png", scale, scale, true, true);
+					vImage = new Image("images/sprites/WalkingElf/WalkingRight.png", scale, scale, true, true);
 				}
 				vv.imageView = new ImageView(vImage);
 				root.getChildren().add(vv.imageView);
