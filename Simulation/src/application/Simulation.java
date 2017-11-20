@@ -75,7 +75,7 @@ public class Simulation extends Observable{
 			
 			
 			// generate new vehicles (and so also routes)
-			if (vehicles.size()==0) {
+			if (vehicles.size()<8) {
 				newVehicles();
 			}
 			/*if (vehicles.size() > 0) {

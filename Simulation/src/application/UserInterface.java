@@ -254,7 +254,14 @@ public class UserInterface extends Application implements Observer{
 		for (int i = 0; i < sim.vehicles.size(); i++) {
 			VehicleView vv = sim.vehicles.get(i); 
 			if (vv.imageView == null) {
-				Image vImage = new Image("images/sprites/WhiteReindeer/Left1.png", scale, scale, true, true);
+				Image vImage;
+				if (vv.vehicle.type == 0) {
+					vImage = new Image("images/sprites/WhiteReindeer/Left1.png", scale, scale, true, true);
+				} else if (vv.vehicle.type == 1) {
+					vImage = new Image("images/sprites/SkiElfDown.png", scale, scale, true, true);
+				} else {
+					vImage = new Image("images/sprites/Reindeer/MovingRight/Right1.png", scale, scale, true, true);
+				}
 				vv.imageView = new ImageView(vImage);
 				root.getChildren().add(vv.imageView);
 			}

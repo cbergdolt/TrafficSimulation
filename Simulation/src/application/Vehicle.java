@@ -23,11 +23,12 @@ public class Vehicle extends Observable implements Observer{
 	char direction;		//N, S, E, W -- direction of travel -or- R -- roundabout
 	Point location;		//current location of vehicle
 	Point route[];
+	int type;
 	
 	Intersection observedIntersection;	//so vehicle can add itself to a sign-governed intersection's vehicleQueue
 	boolean startRequested;	//used to momentarily prevent stop() being called and changing the curVelocity back to 0
 	
-	Vehicle(int mv, int bd, int sd, int len, char dir, Point loc) {
+	Vehicle(int mv, int bd, int sd, int len, char dir, Point loc, int t) {
 		maxVelocity = mv;
 		breakDistance = bd;
 		stopDistance = sd;
@@ -35,6 +36,7 @@ public class Vehicle extends Observable implements Observer{
 		direction = dir;
 		location = loc;
 		curVelocity = mv;
+		type = t;
 		
 		observedIntersection = null;
 		startRequested = false;
