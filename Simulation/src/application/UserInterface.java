@@ -144,8 +144,8 @@ public class UserInterface extends Application implements Observer{
 		yns_rewImage = new Image("images/sprites/Lights/yns_rew.png", scale*2, scale*2, true, true);
 		rns_gewImage = new Image("images/sprites/Lights/rns_gew.png", scale*2, scale*2, true, true);
 		rns_yewImage = new Image("images/sprites/Lights/rns_yew.png", scale*2, scale*2, true, true);
-		stopImage    = new Image("images/sprites/Lights/stopsign.png", scale*2, scale*2, true, true);
-		yieldImage   = new Image("images/sprites/Lights/yieldsign.png", scale*2, scale*2, true, true);
+		stopImage    = new Image("images/textures/stoplightIcon.png", scale, scale, true, true);
+		yieldImage   = new Image("images/textures/yield.png", scale*2, scale*2, true, true);
 		
 		//StopLight/TrafficSign ImageViews
 		for (int i = 0; i < intersectionViews.length; i++) {
