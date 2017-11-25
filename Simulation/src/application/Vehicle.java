@@ -114,7 +114,6 @@ public class Vehicle extends Observable implements Observer{
 			} else {
 				this.curVelocity = maxVelocity;
 			}
-			System.out.println("updated vehicle from Vehicle observable");
 		} else if (o instanceof Intersection) {
 			//check the status of the stoplight at the intersection at the end of the road segment that the vehicle is driving towards
 			//also check how close that intersection is
@@ -132,8 +131,6 @@ public class Vehicle extends Observable implements Observer{
 				Point[] signLoc = ((Intersection) o).getLocation();
 				signResponse(sign, signLoc);
 			}
-			//System.out.println("updated vehicle from Intersection observable");
-			//System.out.println(this.curVelocity);
 		}
 		/*while (this.curVelocity < 0 && this.curVelocity > this.maxVelocity/this.breakDistance) {
 		this.decelerate();

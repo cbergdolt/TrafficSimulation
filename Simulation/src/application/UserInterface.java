@@ -1,7 +1,6 @@
 package application;
 
 import java.awt.Point;
-import java.util.Iterator;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Vector;
@@ -11,15 +10,26 @@ import javafx.application.Application;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 /***
@@ -61,20 +71,30 @@ public class UserInterface extends Application implements Observer{
 	int scale = 20;//15;
 	Simulation sim;
 	AnchorPane root;
+	Scene scene;
 	
 	ObservableList<Node> obsList;
 	
-	
-	void display() {
-		//If the entire map is going to be images, I don't think we need this function
-		//  we can just change the location of the images when necessary, and javafx magic takes care of displaying them?
-		//On the other hand, if we need actual map data to do this display, that might be a problem;
-		//	the only communication line between the two classes is observer/observable relationship right now.
+	void startSimulation(Stage primaryStage){
+		root = new AnchorPane();
+		obsList = root.getChildren();
+
+        scene = new Scene(root,dimensions*scale,dimensions*scale);
+		//Simulation sim = new Simulation(25, 3, 500);	//runtime, delay, steplength
+		sim = new Simulation(25, 3, 500);	//runtime, delay, steplength
+		sim.addObserver(this);	//make the UI observe the simulation
 		
-	}
-	
-	void startSimulation(){
-		//I also don't think this function is necessary
+		intersectionViews = new ImageView[sim.m.intersections.length];
+		
+		initializeImages();	//has to happen after the Simulation instantiation, because it depends on intersection locations		
+		updateImageViews();
+		
+		primaryStage.setScene(scene);
+		
+		primaryStage.setTitle("Traffic Simulation");
+		primaryStage.show();	//this should be the blank map, ready to go (TODO implement initialize)
+		
+		startAnimation();
 	}
 	
 	public static void main(String[] args) {
@@ -85,32 +105,45 @@ public class UserInterface extends Application implements Observer{
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		root = new AnchorPane();
-		obsList = root.getChildren();
 		
-
 		
-		//somehow before this point, and probably even before we display the initial map, 
-		//	we need to get user input on the map/sim specs. 
-		//	and then perhaps these specs should be passed to the Simulation constructor
-		//Simulation sim = new Simulation(25, 3, 500);	//runtime, delay, steplength
-		sim = new Simulation(25, 3, 500);	//runtime, delay, steplength
-		sim.addObserver(this);	//make the UI observe the simulation
-		
-		intersectionViews = new ImageView[sim.m.intersections.length];
-		
-		initializeImages();	//has to happen after the Simulation instantiation, because it depends on intersection locations		
-		updateImageViews();
-		
-		Scene scene = new Scene(root,dimensions*scale,dimensions*scale);
+        
 		//scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+        GridPane g = new GridPane();
+		g.setAlignment(Pos.CENTER);
+		g.setHgap(10);
+		g.setVgap(10);
+		g.setPadding(new Insets(25, 25, 25, 25));
+		
+		Text scenetitle = new Text("Welcome");
+		scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+		g.add(scenetitle, 0, 0, 2, 1);
+
+		Label userName = new Label("User Name:");
+		g.add(userName, 0, 1);
+
+		TextField userTextField = new TextField();
+		g.add(userTextField, 1, 1);
+
+		Label pw = new Label("Password:");
+		g.add(pw, 0, 2);
+
+		Button btn = new Button("Sign in");
+		HBox hbBtn = new HBox(10);
+		hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
+		hbBtn.getChildren().add(btn);
+		g.add(hbBtn, 1, 4);
+		
+		final Text actiontarget = new Text();
+        g.add(actiontarget, 1, 6);
+        
+        scene = new Scene(g,dimensions*scale,dimensions*scale);
 		primaryStage.setScene(scene);
-		primaryStage.setTitle("Traffic Simulation");
-		primaryStage.show();	//this should be the blank map, ready to go (TODO implement initialize)
-		
-		startAnimation();
-		//sim.run();	//run the simulation!!!
-		
+        primaryStage.setTitle("JavaFX Welcome");        
+        primaryStage.show();
+        
+        //startSimulation(primaryStage);
+	
 		//once the sim finishes, close the stage
 		//primaryStage.close();
 	}
