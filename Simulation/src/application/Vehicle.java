@@ -106,6 +106,14 @@ public class Vehicle extends Observable implements Observer{
 		// TODO Auto-generated method stub
 		if (o instanceof Vehicle) {
 			//check what's up with the observed vehicle, and adjust speed accordingly
+			double d = distance(((Vehicle) o).location, location);
+			if (d <= stopDistance) {
+				stop();
+			}else if (d <= breakDistance) {
+				decelerate();
+			} else {
+				this.curVelocity = maxVelocity;
+			}
 			System.out.println("updated vehicle from Vehicle observable");
 		} else if (o instanceof Intersection) {
 			//check the status of the stoplight at the intersection at the end of the road segment that the vehicle is driving towards
