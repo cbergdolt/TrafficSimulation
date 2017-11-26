@@ -151,8 +151,26 @@ public class UserInterface extends Application implements Observer{
 			 
 		    @Override
 		    public void handle(ActionEvent e) {
-		    		startSimulation(Integer.parseInt(stepText.getText()), Integer.parseInt(delayText.getText()), Integer.parseInt(runtimeText.getText()));
+		    	if (stepText.getText() == null || stepText.getText().trim().isEmpty() || (delayText.getText() == null || delayText.getText().trim().isEmpty() ||(runtimeText.getText() == null || runtimeText.getText().trim().isEmpty()))) {
+		    		
+		    		
+		    	} else {
+		    		try {
+		    			int stepInt = Integer.parseInt(stepText.getText());
+		    			int delayInt = Integer.parseInt(delayText.getText());
+		    			int runtimeInt = Integer.parseInt(runtimeText.getText());
+		    			startSimulation(stepInt, delayInt, runtimeInt);
+		    			
+		    		} catch (NumberFormatException err) {
+		    			
+		    			final Text actiontarget = new Text();
+		    			actiontarget.setText("Please enter in an integer for all values.");
+		    	        g.add(actiontarget, 1, 6);
+		    		}
+		    		
 		    		primaryStage.close();
+		    	
+		    }
 		    }
 		});
 		
