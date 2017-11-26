@@ -152,7 +152,9 @@ public class UserInterface extends Application implements Observer{
 		    @Override
 		    public void handle(ActionEvent e) {
 		    	if (stepText.getText() == null || stepText.getText().trim().isEmpty() || (delayText.getText() == null || delayText.getText().trim().isEmpty() ||(runtimeText.getText() == null || runtimeText.getText().trim().isEmpty()))) {
-		    		
+		    		final Text actiontarget = new Text();
+	    			actiontarget.setText("Please enter in an integer for all values.");
+	    	        g.add(actiontarget, 1, 6);
 		    		
 		    	} else {
 		    		try {
@@ -160,15 +162,15 @@ public class UserInterface extends Application implements Observer{
 		    			int delayInt = Integer.parseInt(delayText.getText());
 		    			int runtimeInt = Integer.parseInt(runtimeText.getText());
 		    			startSimulation(stepInt, delayInt, runtimeInt);
+		    			primaryStage.close();
 		    			
 		    		} catch (NumberFormatException err) {
 		    			
 		    			final Text actiontarget = new Text();
 		    			actiontarget.setText("Please enter in an integer for all values.");
 		    	        g.add(actiontarget, 1, 6);
-		    		}
-		    		
-		    		primaryStage.close();
+		    	
+		    		} 		
 		    	
 		    }
 		    }
