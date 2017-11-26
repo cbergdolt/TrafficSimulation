@@ -10,6 +10,8 @@ import javafx.application.Application;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -75,11 +77,12 @@ public class UserInterface extends Application implements Observer{
 	
 	ObservableList<Node> obsList;
 	
-	void startSimulation(Stage primaryStage){
+	void startSimulation(int stepLen, int delayTime, int runTime){
+		Stage stage = new Stage();
 		root = new AnchorPane();
 		obsList = root.getChildren();
 
-        scene = new Scene(root,dimensions*scale,dimensions*scale);
+        Scene scene2 = new Scene(root,dimensions*scale,dimensions*scale);
 		//Simulation sim = new Simulation(25, 3, 500);	//runtime, delay, steplength
 		sim = new Simulation(25, 3, 500);	//runtime, delay, steplength
 		sim.addObserver(this);	//make the UI observe the simulation
@@ -89,10 +92,10 @@ public class UserInterface extends Application implements Observer{
 		initializeImages();	//has to happen after the Simulation instantiation, because it depends on intersection locations		
 		updateImageViews();
 		
-		primaryStage.setScene(scene);
+		stage.setScene(scene2);
 		
-		primaryStage.setTitle("Traffic Simulation");
-		primaryStage.show();	//this should be the blank map, ready to go (TODO implement initialize)
+		stage.setTitle("Traffic Simulation");
+		stage.show();	//this should be the blank map, ready to go (TODO implement initialize)
 		
 		startAnimation();
 	}
@@ -106,8 +109,6 @@ public class UserInterface extends Application implements Observer{
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		
-		
-        
 		//scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
         GridPane g = new GridPane();
 		g.setAlignment(Pos.CENTER);
@@ -119,16 +120,25 @@ public class UserInterface extends Application implements Observer{
 		scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 		g.add(scenetitle, 0, 0, 2, 1);
 
-		Label userName = new Label("User Name:");
-		g.add(userName, 0, 1);
+		Label runtime = new Label("Runtime:");
+		g.add(runtime, 0, 1);
 
-		TextField userTextField = new TextField();
-		g.add(userTextField, 1, 1);
+		TextField runtimeText = new TextField();
+		g.add(runtimeText, 1, 1);
 
-		Label pw = new Label("Password:");
-		g.add(pw, 0, 2);
+		Label delay = new Label("Delay:");
+		g.add(delay, 0, 2);
 
-		Button btn = new Button("Sign in");
+		TextField delayText = new TextField();
+		g.add(delayText, 1, 2);
+		
+		Label step = new Label("Step Length:");
+		g.add(step, 0, 3);
+
+		TextField stepText = new TextField();
+		g.add(stepText, 1, 3);
+
+		Button btn = new Button("Start Simulation");
 		HBox hbBtn = new HBox(10);
 		hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
 		hbBtn.getChildren().add(btn);
@@ -136,6 +146,16 @@ public class UserInterface extends Application implements Observer{
 		
 		final Text actiontarget = new Text();
         g.add(actiontarget, 1, 6);
+		
+		btn.setOnAction(new EventHandler<ActionEvent>() {
+			 
+		    @Override
+		    public void handle(ActionEvent e) {
+		    		startSimulation(Integer.parseInt(stepText.getText()), Integer.parseInt(delayText.getText()), Integer.parseInt(runtimeText.getText()));
+		    		primaryStage.close();
+		    }
+		});
+		
         
         scene = new Scene(g,dimensions*scale,dimensions*scale);
 		primaryStage.setScene(scene);
@@ -145,7 +165,7 @@ public class UserInterface extends Application implements Observer{
         //startSimulation(primaryStage);
 	
 		//once the sim finishes, close the stage
-		//primaryStage.close();
+		//
 	}
 
 
