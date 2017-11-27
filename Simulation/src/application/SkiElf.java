@@ -6,10 +6,10 @@ public class SkiElf extends Vehicle {
 	SkiElf (char dir, Point loc, int t) {
 		super(dir, loc, t);
 		// TODO Auto-generated constructor stub
-		maxVelocity = 1.5;
+		maxVelocity = 1;
 		breakDistance = 3;
-		stopDistance = 1.5;
-		length = 0.5;
+		stopDistance = 1;
+		length = 1;
 		direction = dir;
 		location = loc;
 		curVelocity = maxVelocity;

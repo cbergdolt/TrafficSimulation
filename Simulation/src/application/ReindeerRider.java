@@ -7,10 +7,10 @@ public class ReindeerRider extends Vehicle {
 	ReindeerRider(char dir, Point loc, int t) {
 		super(dir, loc, t);
 		// TODO Auto-generated constructor stub
-		maxVelocity = 2;
+		maxVelocity = 1;
 		breakDistance = 3;
-		stopDistance = 2;
-		length = 1.5;
+		stopDistance = 1;
+		length = 1;
 		direction = dir;
 		location = loc;
 		curVelocity = maxVelocity;
