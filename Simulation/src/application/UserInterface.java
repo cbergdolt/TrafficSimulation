@@ -22,6 +22,8 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -146,7 +148,7 @@ public class UserInterface extends Application implements Observer{
 		
 		final Text actiontarget = new Text();
         g.add(actiontarget, 1, 6);
-		
+ 
 		btn.setOnAction(new EventHandler<ActionEvent>() {
 			 
 		    @Override
@@ -175,7 +177,35 @@ public class UserInterface extends Application implements Observer{
 		    }
 		    }
 		});
-		
+		btn.setOnKeyPressed(new EventHandler<KeyEvent>() {
+		    @Override
+		    public void handle(KeyEvent keyEvent) {
+		        if (keyEvent.getCode() == KeyCode.ENTER)  {
+		        	if (stepText.getText() == null || stepText.getText().trim().isEmpty() || (delayText.getText() == null || delayText.getText().trim().isEmpty() ||(runtimeText.getText() == null || runtimeText.getText().trim().isEmpty()))) {
+			    		final Text actiontarget = new Text();
+		    			actiontarget.setText("Please enter in an integer for all values.");
+		    	        g.add(actiontarget, 1, 6);
+			    		
+			    	} else {
+			    		try {
+			    			int stepInt = Integer.parseInt(stepText.getText());
+			    			int delayInt = Integer.parseInt(delayText.getText());
+			    			int runtimeInt = Integer.parseInt(runtimeText.getText());
+			    			startSimulation(stepInt, delayInt, runtimeInt);
+			    			primaryStage.close();
+			    			
+			    		} catch (NumberFormatException err) {
+			    			
+			    			final Text actiontarget = new Text();
+			    			actiontarget.setText("Please enter in an integer for all values.");
+			    	        g.add(actiontarget, 1, 6);
+			    	
+			    		} 		
+			    	
+			    }
+		        }
+		    }
+		});
         
         scene = new Scene(g,dimensions*scale,dimensions*scale);
 		primaryStage.setScene(scene);
