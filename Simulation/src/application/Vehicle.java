@@ -15,11 +15,11 @@ import java.util.Observer;
  */
 
 public class Vehicle extends Observable implements Observer{
-	double maxVelocity;	//probably cells/timestep (max possible velocity)
-	double curVelocity;	//
-	double breakDistance;	//# cells between vehicle and other vehicle/intersection before slowing down 
-	double stopDistance;	//# cells between vehicle and other vehicle/intersection at complete stop
-	double length;			//length of vehicle ... not sure what units
+	int maxVelocity;	//probably cells/timestep (max possible velocity)
+	int curVelocity;	//
+	int breakDistance;	//# cells between vehicle and other vehicle/intersection before slowing down 
+	int stopDistance;	//# cells between vehicle and other vehicle/intersection at complete stop
+	int length;			//length of vehicle ... not sure what units
 	char direction;		//N, S, E, W -- direction of travel -or- R -- roundabout
 	Point location;		//current location of vehicle
 	Point route[];
