@@ -75,7 +75,11 @@ public class Vehicle extends Observable implements Observer{
 	}
 	
 	private void decelerate() {
-		this.curVelocity -= this.maxVelocity/this.breakDistance;
+		if (this.curVelocity - this.maxVelocity/this.breakDistance < 0) {
+			stop();
+		} else {
+			this.curVelocity -= this.maxVelocity/this.breakDistance;
+		}
 	}
 	
 	private void changeState() {
