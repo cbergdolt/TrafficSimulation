@@ -204,12 +204,12 @@ public class UserInterface extends Application implements Observer{
 		//import/create images and image views, add to ObsList
 		//System.out.println(x);
 		//road, snow, and portal images
-		RoadImage = new Image("images/textures/RoadTexture_tile.png", scale, scale, true, true);
+		RoadImage = new Image("images/textures/RoadTextureTile_light.png", scale, scale, true, true);
 		GrassImage = new Image("images/textures/Snow.jpg", scale, scale, true, true);
 		PortalImage = new Image("images/textures/wreathPortal.png", scale, scale, true, true);
 		
 		//roundabout image and image view
-		RoundaboutImage = new Image("images/textures/Roundabout.png", scale*6, scale*6, true, true);
+		RoundaboutImage = new Image("images/textures/Roundabout_light.png", scale*6, scale*6, true, true);
 		RoundaboutImageView = new ImageView(RoundaboutImage);
 		
 		//StopLight images
