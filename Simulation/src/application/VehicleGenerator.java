@@ -37,7 +37,14 @@ public class VehicleGenerator {
 			// need a random generated number to get the vehicle type
 			//determine parameters of vehicle somehow
 			
-			return new Vehicle(1, 3, 1, 1, dir, new Point(location), type);
+			//return new Vehicle(1, 3, 1, 1, dir, new Point(location), type);
+			if (type == 0) {
+				return new SledRider(dir, new Point(location), type);
+			} else if (type == 1) {
+				return new SkiElf(dir, new Point(location), type);
+			} else {
+				return new ReindeerRider(dir, new Point(location), type);
+			}
 		}
 	}
 

@@ -4,9 +4,20 @@ import java.awt.Point;
 
 public class SledRider extends Vehicle {
 
-	SledRider(int mv, int bd, int sd, int len, char dir, Point loc, int type) {
-		super(mv, bd, sd, len, dir, loc, type);
+	SledRider(char dir, Point loc, int t) {
+		super(dir, loc, t);
 		// TODO Auto-generated constructor stub
+		maxVelocity = 1;
+		breakDistance = 3;
+		stopDistance = 1;
+		length = 1;
+		direction = dir;
+		location = loc;
+		curVelocity = maxVelocity;
+		type = t;
+		
+		observedIntersection = null;
+		startRequested = false;
 	}
 
 }
