@@ -88,6 +88,7 @@ public class Map {
 					roundabouts.get(routeGrid[j][i])[rab.segmentID] = rab;	
 					
 					intersections[iCount] = new Intersection(ipoints, null, ts, rab);
+					rab.setIntersection(intersections[iCount]);	//give roundabout segment access to its intersection
 					iCount += 1;
 					roundaboutInt += 1;
 				}

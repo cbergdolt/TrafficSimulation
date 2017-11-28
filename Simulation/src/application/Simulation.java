@@ -149,6 +149,7 @@ public class Simulation extends Observable{
 		//generate new vehicles at each entry/exit point	
 		for (int i = 0; i < vg.length; i++) {
 			Vehicle v = vg[i].generateVehicle();
+			//Vehicle v = vg[4].generateVehicle();
 			if (v != null) {
 				Point[] route = generateRoute(v.location);
 				v.route = route;

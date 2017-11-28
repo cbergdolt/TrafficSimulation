@@ -282,6 +282,9 @@ public class Vehicle extends Observable implements Observer{
 					break;
 				}
 			}
+			if (location.equals(observedRoundabout.position[3]))
+				//this is really convoluted, but I don't know of another way to do it... :/
+				observedRoundabout.next.intersection.inIntersection = this;
 		}
 		else {
 			switch (direction) {
