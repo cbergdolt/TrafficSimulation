@@ -262,7 +262,7 @@ public class UserInterface extends Application implements Observer{
 					intersectionViews[i] = new ImageView(yieldImage);
 					break;
 				default:
-					System.out.println("something has gone horribly wrong");
+					System.out.println("initializeImages: something has gone horribly wrong");
 				}
 
 				//continue;	//eventually put stop signs in here... :/
@@ -327,7 +327,7 @@ public class UserInterface extends Application implements Observer{
     		case NONE:	//no light, nothing to update 
     			break;
     		default:
-    			System.out.println("something has gone horribly wrong");
+    			System.out.println("updateImageViews: something has gone horribly wrong");
     		}
     		intersectionViews[i].toFront();
     	}

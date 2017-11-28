@@ -1,6 +1,7 @@
 package application;
 
 import java.awt.Point;
+import java.util.HashMap;
 
 /***
  * The Map class is the main map generator for the simulation.
@@ -20,6 +21,7 @@ public class Map {
 	int fourWayInt;
 	int threeWayInt;
 	int roundaboutInt;
+	HashMap<Integer, RoundaboutSegment[]> roundabouts = new HashMap<Integer, RoundaboutSegment[]>();
 	Landmark[] landmarks;
 	Point[] entry_exit = new Point[8];
 	
@@ -30,11 +32,12 @@ public class Map {
 		}
 		int eeCount = 0;
 		int iCount = 0;
+		//counts for each intersection
 		fourWayInt = 0;
 		threeWayInt = 0;
 		roundaboutInt = 0;
 		
-		//1 = grass, 2 = street, 3 = vehicle generator, 4 = stop light, 5 = stop sign, 6 = roundabout street, 7 = yield sign
+		//1 = grass, 2 = street, 3 = vehicle generator, 4 = stop light, 5 = stop sign, 6 = roundabout street, multiple of 7 = yield sign (roundabout intersection)
 		Grid grid = new Grid();
 		routeGrid = grid.getRouteGrid();
 		Point p = new Point();
@@ -70,10 +73,21 @@ public class Map {
 					threeWayInt += 1;
 				} 
 				//roundabout; yield sign
-				else if (routeGrid[j][i] == 7 && routeGrid[j][i+1] == 7 && routeGrid[j+1][i] == 7 && routeGrid[j+1][i+1] == 7) {//instantiate intersection where yield sign intersection is
+				else if ((routeGrid[j][i]) % 7 == 0 && (routeGrid[j][i+1]) % 7 == 0 
+						&& (routeGrid[j+1][i]) % 7 == 0 && (routeGrid[j+1][i+1]) % 7 == 0) {//instantiate intersection where yield sign intersection is
 					Point[] ipoints = {new Point(j, i), new Point(j, i+1), new Point(j+1, i), new Point(j+1, i+1)};
 					TrafficSign ts = new TrafficSign(SignType.YIELD);
-					intersections[iCount] = new Intersection(ipoints, null, ts);
+					RoundaboutSegment rab = CreateRoundaboutSegment(ipoints[0], routeGrid[j][i]);
+					
+					//make sure there is a key in the roundabouts map that corresponds to the routeGrid number
+					RoundaboutSegment[] rabsegment = roundabouts.get(routeGrid[j][i]);
+					if (rabsegment == null) {
+						roundabouts.put(routeGrid[j][i], new RoundaboutSegment[] {null, null, null, null});
+					}
+					//add roundabout segment to its roundabout "family"
+					roundabouts.get(routeGrid[j][i])[rab.segmentID] = rab;	
+					
+					intersections[iCount] = new Intersection(ipoints, null, ts, rab);
 					iCount += 1;
 					roundaboutInt += 1;
 				}
@@ -81,6 +95,9 @@ public class Map {
 			}
 			//System.out.print("\n");
 		}
+		
+		//link all the proper roundabout segments together
+		linkRoundabout();
 		
 		
 		//I guess this is where the grid(s) are hard-coded
@@ -92,6 +109,73 @@ public class Map {
 		//roads[0] = new RoadSegment(intersections[0], intersections[1]);
 	}
 	
+	private RoundaboutSegment CreateRoundaboutSegment(Point intloc, int key) {
+		int id = -1;
+		if (roundabouts.get(key) == null) id = 0;
+		else {
+			RoundaboutSegment[] rab = roundabouts.get(key);
+			for (int i = 0; i < rab.length; i++) {
+				if (rab[i] == null) {
+					id = i;
+					break;
+				}
+			}
+		}
+		
+		Point[] rabpoints = new Point[4];
+		int i = intloc.y;
+		int j = intloc.x;
+		switch (id) {
+			case 0:
+				rabpoints[0] = new Point(j, i);
+				rabpoints[1] = new Point(j-1, i);
+				rabpoints[2] = new Point(j-2, i+1);
+				rabpoints[3] = new Point(j-2, i+2);
+				break;
+			case 1:
+				rabpoints[0] = new Point(j, i+1);
+				rabpoints[1] = new Point(j, i+2);
+				rabpoints[2] = new Point(j+1, i+3);
+				rabpoints[3] = new Point(j+2, i+3);
+				break;
+			case 2:
+				rabpoints[0] = new Point(j+1, i);
+				rabpoints[1] = new Point(j+1, i-1);
+				rabpoints[2] = new Point(j, i-2);
+				rabpoints[3] = new Point(j-1, i-2);
+				break;
+			case 3:
+				rabpoints[0] = new Point(j+1, i+1);
+				rabpoints[1] = new Point(j+2, i+1);
+				rabpoints[2] = new Point(j+3, i);
+				rabpoints[3] = new Point(j+3, i-1);
+				break;
+			default:
+				System.out.println("CreateRoundaboutSegment: something has gone horribly wrong");
+		}
+
+		RoundaboutSegment rab = new RoundaboutSegment(rabpoints, id);
+		
+		return rab;
+	}
+	
+	private void linkRoundabout() {
+		RoundaboutSegment[] rab;
+		for (Integer key : roundabouts.keySet()) {
+			rab = roundabouts.get(key);	//array of roundabout segments for the single roundabout with key key
+			//populate next segments
+			rab[0].next = rab[1];
+			rab[1].next = rab[3];
+			rab[2].next = rab[0];
+			rab[3].next = rab[2];
+			//populate prev segments
+			rab[0].prev = rab[2];
+			rab[1].prev = rab[0];
+			rab[2].prev = rab[3];
+			rab[3].prev = rab[1];
+		}
+	}
+
 	public void updateMap() {
 		//System.out.println("intersections.length = " + intersections.length);
 		/*for (int i = 0; i < roads.length; i++) {

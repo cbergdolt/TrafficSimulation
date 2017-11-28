@@ -46,6 +46,9 @@ public class Intersection extends Observable{
 		updateInIntersection();	//determine whether there is still a car in the intersection
 		if (light != null) light.update();
 		if (sign != null && !vehicleQueue.isEmpty()) {
+			if (roundabout != null) {
+				roundabout.update();
+			}
 			//Vehicle next = vehicleQueue.remove();	//get the first/next vehicle to reach the intersection
 			Vehicle next = vehicleQueue.peek();
 			if (inIntersection == null) {	//only start the vehicle if there are no other cars in the intersection
@@ -62,8 +65,14 @@ public class Intersection extends Observable{
 		if (inIntersection == null) return;
 		Point loc = inIntersection.location; //location of vehicle in the intersection
 		//determine whether vehicle is out of intersection
-		if (loc.x < location[0].x || loc.x > location[3].x || loc.y < location[2].y || loc.y > location[1].y)
+		if (loc.x < location[0].x || loc.x > location[3].x || loc.y < location[2].y || loc.y > location[1].y) {
+			//make vehicle observe roundabout so it will follow the roundabout
+			/*if (roundabout != null) {
+				roundabout.addObserver(inIntersection);
+			}*/
 			inIntersection = null;
+
+		}
 		//else, just leave inIntersection alone, the vehicle is still in the intersection
 	}
 	

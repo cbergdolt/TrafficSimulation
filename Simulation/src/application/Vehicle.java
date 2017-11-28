@@ -26,6 +26,7 @@ public class Vehicle extends Observable implements Observer{
 	int type;
 	
 	Intersection observedIntersection;	//so vehicle can add itself to a sign-governed intersection's vehicleQueue
+	RoundaboutSegment observedRoundabout;	//so vehicle can traverse the roundabout and ignore other intersections while it's in the roundabout
 	boolean startRequested;	//used to momentarily prevent stop() being called and changing the curVelocity back to 0
 	
 	Vehicle(char dir, Point loc, int t) {
@@ -39,6 +40,7 @@ public class Vehicle extends Observable implements Observer{
 		type = t;
 		
 		observedIntersection = null;
+		observedRoundabout = null;
 		startRequested = false;
 	}
 	
@@ -100,9 +102,20 @@ public class Vehicle extends Observable implements Observer{
 	}
 	
 	public void setObservedIntersection(Intersection intersection) {
-		observedIntersection = intersection;
+		if (observedIntersection == intersection) return; //don't do this stuff if the vehicle already knows it's observing this intersection
+		//otherwise, do stuff with the old intersection, and then replace it with the new intersection
+		if (observedIntersection != null && observedIntersection.roundabout != null) {	//old intersection is part of a roundabout
+			//if the vehicle just stopped observing a roundabout intersection, it needs to start observing 
+			// that intersection's roundabout (but not the new intersections's roundabout!
+			observedIntersection.roundabout.addObserver(this);
+			if (observedRoundabout == null) {
+				observedRoundabout = observedIntersection.roundabout;
+			}
+			//direction = 'R'; //roundabout 
+			//^^^I think I want this here, but I have to fix problems mentioned in updateVehicle first
+		}
+		observedIntersection = intersection;	//update observedIntersection
 		startRequested = false;	//a start has not been requested for this observed intersection yet
-			//^^^this assumes setObservedIntersection is only called once per new observed intersection
 	}
 
 	@Override
@@ -129,18 +142,43 @@ public class Vehicle extends Observable implements Observer{
 				Point[] lightLoc = ((Intersection) o).getLocation();
 				lightResponse(light, lightLoc);
 			}
-			//if the intersection has a sign
-			else if (((Intersection)o).sign != null) {
+			//if the intersection has a sign and the vehicle is not currently observing a roundabout segment
+			else if (((Intersection)o).sign != null && observedRoundabout == null) {
 				TrafficSign sign = ((Intersection) o).sign;
 				Point[] signLoc = ((Intersection) o).getLocation();
 				signResponse(sign, signLoc);
 			}
+		} else if (o instanceof RoundaboutSegment) {
+			//roundaboutResponse((RoundaboutSegment)o);
+			//I'm not really sure that having the vehicle observe the roundabout segment is the best solution
+			//	because it's not being used at all
+			//perhaps the best solution would be to get rid of the actual observer implementation, and just use
+			// 	the faux-observer methodologies I'm using now, so the vehicle knows what roundabout segment it's on
+			//	but the roundabout doesn't send any notifications to the vehicles (since it doesn't need to)
+			// we can clean this up later
 		}
-		/*while (this.curVelocity < 0 && this.curVelocity > this.maxVelocity/this.breakDistance) {
-		this.decelerate();
-	}*/
 	}
 
+	private void roundaboutResponse(RoundaboutSegment rab) {
+		//have the vehicle move to the next point in the roundabout, and transfer to the next segment if necessary
+		if (direction == 'R')  {
+			for (int i = 0; i < rab.position.length; i++) {
+				if (rab.position[i] == location) {
+					if (i == 3) {
+						observedRoundabout = rab.next;
+						rab.deleteObserver(this);
+						location = observedRoundabout.position[0];
+					} else {
+						location = rab.position[i+1];
+					}
+				}
+			}
+		} else {	//vehicle should not be following the roundabout anymore
+			rab.deleteObserver(this); 
+			observedRoundabout = null;
+		}
+	}
+	
 	private void signResponse(TrafficSign sign, Point[] loc) {
 		//changes the vehicle's velocity based on its direction and proximity to the sign (and the sign type)
 		//SignType stype = sign.getType();
@@ -169,9 +207,10 @@ public class Vehicle extends Observable implements Observer{
 			break;
 		case 'R':	//roundabout
 			//not sure if we actually need this case?
+			System.out.println("signResponse: the direction is 'R'");
 			break;
 		default:
-			System.out.println("something has gone horribly wrong");	
+			System.out.println("signResponse: something has gone horribly wrong");	
 		}
 	}
 
@@ -219,37 +258,61 @@ public class Vehicle extends Observable implements Observer{
 			break;
 		case 'R':	//roundabout
 			//not sure if we actually need this case?
+			System.out.println("lightResponse: the direction is 'R'");
 			break;
 		default:
-			System.out.println("something has gone horribly wrong");	
+			System.out.println("lightResponse: something has gone horribly wrong");	
 		}
 	}
 
 	public void updateVehicle() {
 		// TODO Auto-generated method stub
 		//update location based on current location, direction of travel, velocity, etc.
-		//if (location != null) { 
-		switch (direction) {
-		case 'N':
-			location.y -= this.curVelocity;
-			//location.translate(0, -1);
-			break;
-		case 'S':
-			location.y += this.curVelocity;
-			//location.translate(0, 1);
-			break;
-		case 'E':
-			location.x += this.curVelocity;
-			//location.translate(1, 0);
-			break;
-		case 'W':
-			location.x -= this.curVelocity;
-			//location.translate(-1, 0);
-			break;
-		default:
-			System.out.println("something has gone horribly wrong");	
+		//if (location != null) {
+		if (observedRoundabout != null) {
+			for (int i = 0; i < observedRoundabout.position.length; i++) {
+				if (observedRoundabout.position[i].equals(location)) {					
+					if (i == 3) {	//move to next roundabout segment
+						observedRoundabout.deleteObserver(this);
+						observedRoundabout = observedRoundabout.next;
+						location = observedRoundabout.position[0];
+					} else {	//otherwise move to the next position in the current segment
+						location = observedRoundabout.position[i+1];
+					}
+					break;
+				}
+			}
 		}
-
+		else {
+			switch (direction) {
+			case 'N':
+				location.y -= this.curVelocity;
+				//location.translate(0, -1);
+				break;
+			case 'S':
+				location.y += this.curVelocity;
+				//location.translate(0, 1);
+				break;
+			case 'E':
+				location.x += this.curVelocity;
+				//location.translate(1, 0);
+				break;
+			case 'W':
+				location.x -= this.curVelocity;
+				//location.translate(-1, 0);
+				break;
+			case 'R':
+				//not sure what to do here
+				
+				//I think this 'R' direction is still a good idea, but I was running into problems with
+				//	the upcomingIntersection method in Simulation. I will look at fixing this later
+				System.out.println("vehicleUpdate: the direction is 'R'");
+				break;
+			default:
+				System.out.println("vehicleUpdate: something has gone horribly wrong");	
+			}
+		}
+			
 		notifyObservers();
 	}
 	

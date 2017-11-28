@@ -75,7 +75,7 @@ public class Simulation extends Observable{
 			
 			
 			// generate new vehicles (and so also routes)
-			if (vehicles.size()<8) {
+			if (vehicles.size() < vg.length) {
 				newVehicles();
 			}
 			/*if (vehicles.size() > 0) {
@@ -136,6 +136,7 @@ public class Simulation extends Observable{
 				closestIntersection.addObserver(va);
 				
 				//tell the vehicle which intersection it is observing, but only if it is a new intersection
+				//the vehicle needs to know which intersection it is observing so it can add itself to the vehicleQueue when it reaches the intersection
 				if (va.getObservedIntersection() != closestIntersection)
 					va.setObservedIntersection(closestIntersection);
 			}
@@ -147,13 +148,13 @@ public class Simulation extends Observable{
 	private void newVehicles() {
 		//generate new vehicles at each entry/exit point	
 		for (int i = 0; i < vg.length; i++) {
-		Vehicle v = vg[i/*0*/].generateVehicle();
-		if (v != null) {
-			Point[] route = generateRoute(v.location);
-			v.route = route;
-			VehicleView vv = new VehicleView(v);
-			vehicles.add(vv);
-		}
+			Vehicle v = vg[i].generateVehicle();
+			if (v != null) {
+				Point[] route = generateRoute(v.location);
+				v.route = route;
+				VehicleView vv = new VehicleView(v);
+				vehicles.add(vv);
+			}
 		}
 
 	}
@@ -196,9 +197,11 @@ public class Simulation extends Observable{
 		case 'N':
 			if (va.location.x == intersection.location[3].x && va.location.y > intersection.location[3].y) return true;
 			else return false;
-
+		case 'R':
+			System.out.println("upcomingIntersection: direction was 'R'");
+			return false;	//I guess?
 		default:
-			System.out.println("something has gone horribly wrong");
+			System.out.println("upcomingIntersection: something has gone horribly wrong");
 			return false;
 		}
 	}
@@ -249,8 +252,11 @@ public class Simulation extends Observable{
 		case 'W':
 			if (vb.location.x < va.location.x) return true;
 			else return false;
+		case 'R':
+			System.out.println("aheadOf: direction was 'R'");
+			return false; //I guess?
 		default:
-			System.out.println("something has gone horribly wrong");
+			System.out.println("aheadOf: something has gone horribly wrong");
 			return false;
 		}
 	}

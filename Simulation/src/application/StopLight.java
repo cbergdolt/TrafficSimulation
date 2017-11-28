@@ -71,7 +71,7 @@ public class StopLight {
 			break;
 		default:
 			//if the state is something other than these four options, we have a serious issue...
-			System.out.println("something has gone horribly wrong"); 
+			System.out.println("update(StopLight): something has gone horribly wrong"); 
 		}
 		//System.out.println("updated stoplight " + id);
 	}
