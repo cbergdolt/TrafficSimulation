@@ -1,4 +1,4 @@
-package application;
+package application.vehicle;
 
 import java.awt.Point;
 

@@ -1,4 +1,4 @@
-package application;
+package application.test;
 
 import static org.junit.Assert.*;
 
@@ -6,6 +6,9 @@ import java.awt.Point;
 import java.util.Vector;
 
 import org.junit.Test;
+
+import application.vehicle.*;
+import application.intersection.*;
 
 public class Sprint1Test {
 
@@ -26,7 +29,7 @@ public class Sprint1Test {
 		VehicleGenerator vg = new VehicleGenerator(p, 0, 'S');
 		Vehicle v = vg.generateVehicle();
 		v.setMaxVelocity(25);
-		assert(v.maxVelocity == 25);
+		assert(v.getMaxVelocity() == 25);
 	}
 	
 	@Test
@@ -37,8 +40,8 @@ public class Sprint1Test {
 		for (int i = 0; i < 3; i++) {
 			sl.update();	
 		}
-		System.out.println(sl.state);
-		assert(sl.state != LightState.GNS_REW);
+		System.out.println(sl.getState());
+		assert(sl.getState() != LightState.GNS_REW);
 	}
 
 }

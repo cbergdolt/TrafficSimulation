@@ -36,6 +36,10 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import application.intersection.*;
+import application.map.*;
+import application.vehicle.*;
+
 /***
  * The UserInterface class is the main running class that controls the entire simulation. 
  * This is the class that must be run to start the simulation. 
@@ -89,7 +93,7 @@ public class UserInterface extends Application implements Observer{
 		sim = new Simulation(25, 3, 500);	//runtime, delay, steplength
 		sim.addObserver(this);	//make the UI observe the simulation
 		
-		intersectionViews = new ImageView[sim.m.intersections.length];
+		intersectionViews = new ImageView[sim.m.getIntersections().length];
 		
 		initializeImages();	//has to happen after the Simulation instantiation, because it depends on intersection locations		
 		updateImageViews();
@@ -252,9 +256,9 @@ public class UserInterface extends Application implements Observer{
 		
 		//StopLight/TrafficSign ImageViews
 		for (int i = 0; i < intersectionViews.length; i++) {
-			Point loc = sim.m.intersections[i].location[0];
-			if (sim.m.intersections[i].sign != null) {
-				switch (sim.m.intersections[i].sign.type) {
+			Point loc = sim.m.getIntersections()[i].getLocation()[0];
+			if (sim.m.getIntersections()[i].getSign() != null) {
+				switch (sim.m.getIntersections()[i].getSign().getType()) {
 				case STOP:
 					intersectionViews[i] = new ImageView(stopImage);
 					break;
@@ -267,7 +271,7 @@ public class UserInterface extends Application implements Observer{
 
 				//continue;	//eventually put stop signs in here... :/
 			}
-			else if (sim.m.intersections[i].light != null) {
+			else if (sim.m.getIntersections()[i].getLight() != null) {
 				intersectionViews[i] = new ImageView(gns_rewImage); //start as green N/S, red E/W. this will be updated before it's an issue
 			}
 			//add image view to root observable list
@@ -280,22 +284,22 @@ public class UserInterface extends Application implements Observer{
 		int imageViewCount = 0;
 		for (int j = 0; j < dimensions; j++) {
 			for (int i = 0; i < dimensions; i++) {
-				if (sim.m.routeGrid[j][i] == 1) {			
+				if (sim.m.getRouteGrid()[j][i] == 1) {			
 					mapImageViews.add(new ImageView(GrassImage));
-				} else if(sim.m.routeGrid[j][i] == 2 || sim.m.routeGrid[j][i] == 6) {
+				} else if(sim.m.getRouteGrid()[j][i] == 2 || sim.m.getRouteGrid()[j][i] == 6) {
 					mapImageViews.add(new ImageView(RoadImage));	
-					if (sim.m.routeGrid[j][i] == 6 && !foundRAB) {
+					if (sim.m.getRouteGrid()[j][i] == 6 && !foundRAB) {
 						RoundaboutImageView.setX(j*scale);
 						RoundaboutImageView.setY(i*scale);
 						root.getChildren().add(RoundaboutImageView);
 						foundRAB = true;
 					}
-				} else if (sim.m.routeGrid[j][i] == 3) { //ONLY TO SEE WHERE GENERATORS ARE
+				} else if (sim.m.getRouteGrid()[j][i] == 3) { //ONLY TO SEE WHERE GENERATORS ARE
 					mapImageViews.add(new ImageView(PortalImage));
 				
-				} else if (sim.m.routeGrid[j][i] == 4 || sim.m.routeGrid[j][i] == 5 || sim.m.routeGrid[j][i] == 7) { //ONLY TO SEE WHERE INTERSECTIONS ARE
+				} else if (sim.m.getRouteGrid()[j][i] == 4 || sim.m.getRouteGrid()[j][i] == 5 || (sim.m.getRouteGrid()[j][i] % 7) == 0) { //ONLY TO SEE WHERE INTERSECTIONS ARE
 					mapImageViews.add(new ImageView(RoadImage));	
-				} else if (sim.m.routeGrid[j][i] == 8) {
+				} else if (sim.m.getRouteGrid()[j][i] == 8) {
 					continue;
 				}
 				mapImageViews.get(imageViewCount).setX(j*scale);
@@ -313,7 +317,7 @@ public class UserInterface extends Application implements Observer{
 		//Updates the static image views in the scene (stopLights, ...?)
     	for (int i = 0; i < intersectionViews.length; i++) {
     		//since the image views were set up with indices corresponding to the intersection indices, we can assume that is still the case
-    		switch(sim.m.intersections[i].getState()) {
+    		switch(sim.m.getIntersections()[i].getState()) {
     		case GNS_REW:
     			intersectionViews[i].setImage(gns_rewImage);
     			break;
@@ -358,31 +362,31 @@ public class UserInterface extends Application implements Observer{
 		
 		for (int i = 0; i < sim.vehicles.size(); i++) {
 			VehicleView vv = sim.vehicles.get(i); 
-			if (vv.imageView == null) {
+			if (vv.getImageView() == null) {
 				Image vImage;
-				if (vv.vehicle.type == 0) {
+				if (vv.getVehicle().getType() == 0) {
 					vImage = new Image("images/sprites/WhiteReindeer/Left1.png", scale, scale, true, true);
-				} else if (vv.vehicle.type == 1) {
+				} else if (vv.getVehicle().getType() == 1) {
 					vImage = new Image("images/sprites/Skier/SkiingDown.png", scale, scale, true, true);
 				} else {
 					vImage = new Image("images/sprites/WalkingElf/WalkingRight.png", scale, scale, true, true);
 				}
-				vv.imageView = new ImageView(vImage);
-				root.getChildren().add(vv.imageView);
+				vv.setImageView(new ImageView(vImage));
+				root.getChildren().add(vv.getImageView());
 			}
-			Point l = new Point((int) vv.imageView.getX(), (int) vv.imageView.getY());
-			if (vv.moveCount > 1) {
+			Point l = new Point((int) vv.getImageView().getX(), (int) vv.getImageView().getY());
+			if (vv.getMoveCount() > 1) {
 				if ((l.x < 0 || l.x > 49*scale || l.y < 0 || l.y > 49*scale)){
-					root.getChildren().remove(vv.imageView);
+					root.getChildren().remove(vv.getImageView());
 					sim.vehicles.remove(i);
 		
 					//System.out.println("size of vehicles after remove(i) = " + sim.vehicles.size());
 					//vehicles.remove(h);	//vehicle out of map bounds, remove from simulation
 				} 
 			}
-			vv.imageView.setX(vv.vehicle.location.x*scale);
-			vv.imageView.setY(vv.vehicle.location.y*scale);
-			vv.moveCount+=1;
+			vv.getImageView().setX(vv.getVehicle().getLocation().x*scale);
+			vv.getImageView().setY(vv.getVehicle().getLocation().y*scale);
+			vv.setMoveCount(vv.getMoveCount() + 1);
 		}
 		
 	}

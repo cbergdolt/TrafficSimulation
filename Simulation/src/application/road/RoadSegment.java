@@ -1,7 +1,9 @@
-package application;
+package application.road;
 
 import java.util.Observable;
 import java.util.Observer;
+
+import application.intersection.*;
 
 public class RoadSegment extends Observable{
 	int id;

@@ -1,4 +1,4 @@
-package application;
+package application.route;
 
 import java.awt.Point;
 
@@ -13,7 +13,7 @@ public class Landmark {
 	int id;
 	Point location; 
 	
-	Landmark(String tag, int num, Point loc){
+	public Landmark(String tag, int num, Point loc){
 		name = tag;
 		id = num;
 		location = loc;

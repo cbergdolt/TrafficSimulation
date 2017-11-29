@@ -1,4 +1,4 @@
-package application;
+package application.intersection;
 
 import java.awt.Point;
 import java.util.Observable;
@@ -32,7 +32,7 @@ public class RoundaboutSegment extends Observable{
 		//may not be used, I'm not sure yet. This seems to be the best way to determine image rotation values (though are we rotating the image at all?)
 	Intersection intersection;
 	
-	RoundaboutSegment(Point[] pos, int id) {
+	public RoundaboutSegment(Point[] pos, int id) {
 		position = pos;
 		segmentID = id;
 	}
@@ -48,4 +48,16 @@ public class RoundaboutSegment extends Observable{
 	public Intersection getIntersection() {
 		return intersection;
 	}
+	
+	public int getSegmentID() { return segmentID; }
+	//public void setSegmentID(int id) { segmentID = id; }
+	
+	public RoundaboutSegment getNext() { return next; }
+	public void setNext(RoundaboutSegment n) { next = n; }
+	
+	public RoundaboutSegment getPrev() { return prev; }
+	public void setPrev(RoundaboutSegment p) { prev = p; }
+	
+	public Point[] getPosition() { return position; }
+	public void setPosition(Point[] p) { position = p; }
 }

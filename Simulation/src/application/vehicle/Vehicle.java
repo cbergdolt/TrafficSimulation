@@ -1,8 +1,10 @@
-package application;
+package application.vehicle;
 
 import java.awt.Point;
 import java.util.Observable;
 import java.util.Observer;
+
+import application.intersection.*;
 
 /**
  * The Vehicle class is responsible for updating the location of the vehicles. 
@@ -44,9 +46,11 @@ public class Vehicle extends Observable implements Observer{
 		startRequested = false;
 	}
 	
-	void setMaxVelocity(int v) {
+	public void setMaxVelocity(int v) {
 		this.maxVelocity = v;
 	}
+	
+	public int getMaxVelocity() { return maxVelocity; }
 	
 	void setBreakDist(int d) {
 		this.breakDistance = d;
@@ -71,8 +75,8 @@ public class Vehicle extends Observable implements Observer{
 	private void stop() {
 		this.curVelocity = 0;
 		//stopIterations += 1;
-		if (observedIntersection.sign != null) {
-			observedIntersection.vehicleQueue.add(this);
+		if (observedIntersection.getSign() != null) {
+			observedIntersection.addToVehicleQueue(this);
 		}
 	}
 	
@@ -92,10 +96,22 @@ public class Vehicle extends Observable implements Observer{
 		
 	}
 	
-	void start() {
+	public void start() {
 		this.curVelocity = this.maxVelocity;
 		startRequested = true;
 	}
+	
+	public char getDirection() { return direction; }
+	public void setDirection(char d) { direction = d; }
+	
+	public Point getLocation() { return location; }
+	public void setLocation(Point l) { location = l; }
+	
+	public Point[] getRoute() { return route; }
+	public void setRoute(Point[] r) { route = r; }
+	
+	public int getType() { return type; }
+	public void setType(int t) { type = t; }
 	
 	public Intersection getObservedIntersection() {
 		return observedIntersection;
@@ -104,12 +120,12 @@ public class Vehicle extends Observable implements Observer{
 	public void setObservedIntersection(Intersection intersection) {
 		if (observedIntersection == intersection) return; //don't do this stuff if the vehicle already knows it's observing this intersection
 		//otherwise, do stuff with the old intersection, and then replace it with the new intersection
-		if (observedIntersection != null && observedIntersection.roundabout != null) {	//old intersection is part of a roundabout
+		if (observedIntersection != null && observedIntersection.getRoundabout() != null) {	//old intersection is part of a roundabout
 			//if the vehicle just stopped observing a roundabout intersection, it needs to start observing 
 			// that intersection's roundabout (but not the new intersections's roundabout!
-			observedIntersection.roundabout.addObserver(this);
+			observedIntersection.addRoundaboutObserver(this);
 			if (observedRoundabout == null) {
-				observedRoundabout = observedIntersection.roundabout;
+				observedRoundabout = observedIntersection.getRoundabout();
 			}
 			//direction = 'R'; //roundabout 
 			//^^^I think I want this here, but I have to fix problems mentioned in updateVehicle first
@@ -137,14 +153,14 @@ public class Vehicle extends Observable implements Observer{
 			//then adjust speed accordingly
 			
 			//if the intersection has a light
-			if (((Intersection)o).light != null) {
-				StopLight light = ((Intersection) o).light;
+			if (((Intersection)o).getLight() != null) {
+				StopLight light = ((Intersection) o).getLight();
 				Point[] lightLoc = ((Intersection) o).getLocation();
 				lightResponse(light, lightLoc);
 			}
 			//if the intersection has a sign and the vehicle is not currently observing a roundabout segment
-			else if (((Intersection)o).sign != null && observedRoundabout == null) {
-				TrafficSign sign = ((Intersection) o).sign;
+			else if (((Intersection)o).getSign() != null && observedRoundabout == null) {
+				TrafficSign sign = ((Intersection) o).getSign();
 				Point[] signLoc = ((Intersection) o).getLocation();
 				signResponse(sign, signLoc);
 			}
@@ -162,14 +178,14 @@ public class Vehicle extends Observable implements Observer{
 	private void roundaboutResponse(RoundaboutSegment rab) {
 		//have the vehicle move to the next point in the roundabout, and transfer to the next segment if necessary
 		if (direction == 'R')  {
-			for (int i = 0; i < rab.position.length; i++) {
-				if (rab.position[i] == location) {
+			for (int i = 0; i < rab.getPosition().length; i++) {
+				if (rab.getPosition()[i] == location) {
 					if (i == 3) {
-						observedRoundabout = rab.next;
+						observedRoundabout = rab.getNext();
 						rab.deleteObserver(this);
-						location = observedRoundabout.position[0];
+						location = observedRoundabout.getPosition()[0];
 					} else {
-						location = rab.position[i+1];
+						location = rab.getPosition()[i+1];
 					}
 				}
 			}
@@ -270,21 +286,21 @@ public class Vehicle extends Observable implements Observer{
 		//update location based on current location, direction of travel, velocity, etc.
 		//if (location != null) {
 		if (observedRoundabout != null) {
-			for (int i = 0; i < observedRoundabout.position.length; i++) {
-				if (observedRoundabout.position[i].equals(location)) {					
+			for (int i = 0; i < observedRoundabout.getPosition().length; i++) {
+				if (observedRoundabout.getPosition()[i].equals(location)) {					
 					if (i == 3) {	//move to next roundabout segment
 						observedRoundabout.deleteObserver(this);
-						observedRoundabout = observedRoundabout.next;
-						location = observedRoundabout.position[0];
+						observedRoundabout = observedRoundabout.getNext();
+						location = observedRoundabout.getPosition()[0];
 					} else {	//otherwise move to the next position in the current segment
-						location = observedRoundabout.position[i+1];
+						location = observedRoundabout.getPosition()[i+1];
 					}
 					break;
 				}
 			}
-			if (location.equals(observedRoundabout.position[3]))
+			if (location.equals(observedRoundabout.getPosition()[3]))
 				//this is really convoluted, but I don't know of another way to do it... :/
-				observedRoundabout.next.intersection.inIntersection = this;
+				observedRoundabout.getNext().getIntersection().setInIntersection(this);
 		}
 		else {
 			switch (direction) {

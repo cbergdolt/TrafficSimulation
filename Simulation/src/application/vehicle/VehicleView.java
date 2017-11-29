@@ -1,4 +1,4 @@
-package application;
+package application.vehicle;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -20,7 +20,7 @@ public class VehicleView {
 	int moveCount;
 	boolean inSimulation;
 	
-	VehicleView(Vehicle veh) {
+	public VehicleView(Vehicle veh) {
 		//int scale = 15; //hard coded to match the scale in UserInterface
 		vehicle = veh;
 		imageView = null;	
@@ -29,4 +29,16 @@ public class VehicleView {
 		//Image im = new Image("image.png", scale, scale, true, true);
 		//imageView = new ImageView(im);
 	}
+	
+	public Vehicle getVehicle() { return vehicle; }
+	public void setVehicle(Vehicle v) { vehicle = v; }
+	
+	public int getMoveCount() { return moveCount; }
+	public void setMoveCount(int m) { moveCount = m; } 
+	
+	public boolean getInSimulation() { return inSimulation; }
+	public void setInSimulation(boolean val) { inSimulation = val; }
+	
+	public ImageView getImageView() { return imageView; }
+	public void setImageView(ImageView iv) { imageView = iv; } 
 }

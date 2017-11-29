@@ -1,7 +1,11 @@
-package application;
+package application.map;
 
 import java.awt.Point;
 import java.util.HashMap;
+
+import application.intersection.*;
+import application.route.*;
+
 
 /***
  * The Map class is the main map generator for the simulation.
@@ -25,7 +29,7 @@ public class Map {
 	Landmark[] landmarks = new Landmark[10];
 	Point[] entry_exit = new Point[8];
 	
-	Map() {
+	public Map() {
 		Point pt = new Point(0, 0);
 		for (int i = 0; i < entry_exit.length; i++) {
 			entry_exit[i] = pt;
@@ -93,7 +97,7 @@ public class Map {
 						roundabouts.put(routeGrid[j][i], new RoundaboutSegment[] {null, null, null, null});
 					}
 					//add roundabout segment to its roundabout "family"
-					roundabouts.get(routeGrid[j][i])[rab.segmentID] = rab;	
+					roundabouts.get(routeGrid[j][i])[rab.getSegmentID()] = rab;	
 					
 					intersections[iCount] = new Intersection(ipoints, null, ts, rab);
 					rab.setIntersection(intersections[iCount]);	//give roundabout segment access to its intersection
@@ -173,15 +177,15 @@ public class Map {
 		for (Integer key : roundabouts.keySet()) {
 			rab = roundabouts.get(key);	//array of roundabout segments for the single roundabout with key key
 			//populate next segments
-			rab[0].next = rab[1];
-			rab[1].next = rab[3];
-			rab[2].next = rab[0];
-			rab[3].next = rab[2];
+			rab[0].setNext(rab[1]);
+			rab[1].setNext(rab[3]);
+			rab[2].setNext(rab[0]);
+			rab[3].setNext(rab[2]);
 			//populate prev segments
-			rab[0].prev = rab[2];
-			rab[1].prev = rab[0];
-			rab[2].prev = rab[3];
-			rab[3].prev = rab[1];
+			rab[0].setPrev(rab[2]);
+			rab[1].setPrev(rab[0]);
+			rab[2].setPrev(rab[3]);
+			rab[3].setPrev(rab[1]);
 		}
 	}
 
@@ -203,4 +207,16 @@ public class Map {
 	public Point[] getEntryExit() {
 		return entry_exit;
 	}
+	
+	public Intersection[] getIntersections() { return intersections; }
+	
+	public void setIntersections(Intersection[] i) { intersections = i; }
+	
+	public Landmark[] getLandmarks() { return landmarks; }
+	
+	public void setLandmarks(Landmark[] l) { landmarks = l; }
+	
+	public int[][] getRouteGrid() { return routeGrid; }
+	
+	public void setRouteGrid(int [][] g) { routeGrid = g; } 
 }

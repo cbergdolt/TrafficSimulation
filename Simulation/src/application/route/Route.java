@@ -1,4 +1,4 @@
-package application;
+package application.route;
 
 import java.awt.Point;
 import java.util.Queue;

@@ -1,10 +1,10 @@
-package application;
+package application.vehicle;
 
 import java.awt.Point;
 
-public class SledRider extends Vehicle {
+public class ReindeerRider extends Vehicle {
 
-	SledRider(char dir, Point loc, int t) {
+	ReindeerRider(char dir, Point loc, int t) {
 		super(dir, loc, t);
 		// TODO Auto-generated constructor stub
 		maxVelocity = 1;

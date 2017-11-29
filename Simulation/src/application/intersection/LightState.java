@@ -1,4 +1,4 @@
-package application;
+package application.intersection;
 
 public enum LightState {
 	GNS_REW,	//green North/South, red East/West 

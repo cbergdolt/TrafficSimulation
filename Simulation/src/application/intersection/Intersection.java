@@ -1,9 +1,12 @@
-package application;
+package application.intersection;
 
 import java.awt.Point;
 import java.util.LinkedList;
 import java.util.Observable;
+import java.util.Observer;
 import java.util.Queue;
+
+import application.vehicle.*;
 
 /**
  * Intersection class holds the state of the lights and its location.  
@@ -25,7 +28,7 @@ public class Intersection extends Observable{
 	Queue<Vehicle> vehicleQueue;
 	Vehicle inIntersection;		//null if no car in intersection, otherwise contains the vehicle that is in the intersection
 
-	Intersection(Point[] loc, StopLight sl, TrafficSign ts, RoundaboutSegment rab) {
+	public Intersection(Point[] loc, StopLight sl, TrafficSign ts, RoundaboutSegment rab) {
 		location = loc;
 		light = sl;
 		sign = ts;
@@ -34,7 +37,7 @@ public class Intersection extends Observable{
 		vehicleQueue = new LinkedList<Vehicle>();
 	}
 	
-	Intersection(Point[] loc, StopLight sl, TrafficSign ts) {
+	public Intersection(Point[] loc, StopLight sl, TrafficSign ts) {
 		this(loc, sl, ts, null);
 		//location = loc; 
 		//light = sl;
@@ -63,7 +66,7 @@ public class Intersection extends Observable{
 	
 	private void updateInIntersection() {
 		if (inIntersection == null) return;
-		Point loc = inIntersection.location; //location of vehicle in the intersection
+		Point loc = inIntersection.getLocation(); //location of vehicle in the intersection
 		//determine whether vehicle is out of intersection
 		if (loc.x < location[0].x || loc.x > location[3].x || loc.y < location[2].y || loc.y > location[1].y) {
 			//make vehicle observe roundabout so it will follow the roundabout
@@ -82,5 +85,22 @@ public class Intersection extends Observable{
 	}
 	public Point[] getLocation() {
 		return location;
+	}
+	
+	public TrafficSign getSign() { return sign; }
+	
+	public StopLight getLight() { return light; }
+	
+	public RoundaboutSegment getRoundabout() { return roundabout; }
+	
+	public Vehicle getInIntersection() { return inIntersection; }
+	public void setInIntersection(Vehicle v)  { inIntersection = v; }
+	
+	public void addRoundaboutObserver(Object o) {
+		roundabout.addObserver((Observer) o);
+	}
+	
+	public void addToVehicleQueue(Vehicle v) {
+		vehicleQueue.add(v);
 	}
 }

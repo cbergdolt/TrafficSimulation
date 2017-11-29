@@ -1,4 +1,6 @@
-package application;
+package application.road;
+
+import application.intersection.*;
 
 public class StandardRoad extends RoadSegment {
 

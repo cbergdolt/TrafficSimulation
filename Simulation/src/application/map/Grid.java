@@ -1,4 +1,4 @@
-package application;
+package application.map;
 
 /**
  * Hard-coded grid instance, useful for isolating map changes and cleaning up the UserInterface class

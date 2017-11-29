@@ -1,4 +1,4 @@
-package application;
+package application.intersection;
 
 import java.awt.Point;
 import java.util.Random;
@@ -20,7 +20,7 @@ public class StopLight {
 	int greenEW; // time spent in state RNS_GEW
 	int yellowEW; // time spent in state RNS_YEW
 	
-	StopLight(LightState initialState, Point[] loc, int gns, int yns, int gew, int yew, int time) {
+	public StopLight(LightState initialState, Point[] loc, int gns, int yns, int gew, int yew, int time) {
 		state = initialState;
 		id = 0;	//not sure how we can auto-increment this
 		location = loc;
@@ -31,7 +31,7 @@ public class StopLight {
 		timePassed = time;
 	}
 	
-	LightState getState() {
+	public LightState getState() {
 		return state;
 	}
 	

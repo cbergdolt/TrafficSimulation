@@ -1,4 +1,4 @@
-package application;
+package application.vehicle;
 
 import java.awt.Point;
 import java.util.Random;
@@ -17,7 +17,7 @@ public class VehicleGenerator {
 	char dir;
 	int type;
 
-	VehicleGenerator(Point loc, int d, char direction) {
+	public VehicleGenerator(Point loc, int d, char direction) {
 		location = loc;
 		delay = d;
 		currentTime = 0;

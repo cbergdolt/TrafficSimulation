@@ -1,9 +1,9 @@
-package application;
+package application.intersection;
 
 public class TrafficSign {
 	SignType type;
 	
-	TrafficSign(SignType t) {
+	public TrafficSign(SignType t) {
 		type = t;
 	}
 	

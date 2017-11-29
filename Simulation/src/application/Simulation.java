@@ -5,6 +5,12 @@ import java.util.Iterator;
 import java.util.Observable;
 import java.util.Vector;
 
+import application.map.*;
+import application.vehicle.*;
+import application.route.*;
+import application.intersection.*;
+
+
 /**
  * The Simulation class is in charge of making sure the vehicles are observing the correct 
  * vehicles in front of it and is in the same road segment.   
@@ -67,7 +73,7 @@ public class Simulation extends Observable{
 			//for each vehicle, update the vehicle
 			Iterator<VehicleView> it = vehicles.iterator();
 			while(it.hasNext()) {
-				it.next().vehicle.updateVehicle();
+				it.next().getVehicle().updateVehicle();
 			}
 			
 			//update other things, too, like the stoplights
@@ -102,19 +108,19 @@ public class Simulation extends Observable{
 		
 		//remove previous observers of all vehicles and intersections
 		for (int i = 0; i < vehicles.size(); i++) {
-			vehicles.get(i).vehicle.deleteObservers();
+			vehicles.get(i).getVehicle().deleteObservers();
 		}
-		for (int i = 0; i < m.intersections.length; i++) {
-			m.intersections[i].deleteObservers();
+		for (int i = 0; i < m.getIntersections().length; i++) {
+			m.getIntersections()[i].deleteObservers();
 		}
 		
 		//reassign correct observers to vehicles and intersections
 		for(Iterator<VehicleView> ita = vehicles.iterator(); ita.hasNext();){ //for each vehicle
-			Vehicle va = ita.next().vehicle;
+			Vehicle va = ita.next().getVehicle();
 			Vehicle closestVehicle = null;
 			for(Iterator<VehicleView> itb = vehicles.iterator(); itb.hasNext();){ //find its nearest neighboring vehicle
-				Vehicle vb = itb.next().vehicle;
-				if (vb.direction == va.direction && sameRoad(va, vb) && aheadOf(vb, va)) {	//vehicles going same direction and on same road and vb is ahead of va
+				Vehicle vb = itb.next().getVehicle();
+				if (vb.getDirection() == va.getDirection() && sameRoad(va, vb) && aheadOf(vb, va)) {	//vehicles going same direction and on same road and vb is ahead of va
 					if (closestVehicle == null) closestVehicle = vb;
 					else closestVehicle = (Vehicle)shorterDistance(va, vb, closestVehicle);
 				}
@@ -125,8 +131,8 @@ public class Simulation extends Observable{
 			//once in the roundabout, they can move and exit freely, and THEN they need to start observing an intersection again...
 			//I'm not sure how to keep track of that yet. 
 			Intersection closestIntersection = null;
-			for (int i = 0; i < m.intersections.length; i++) { //find its nearest intersection
-				Intersection intersection = m.intersections[i];
+			for (int i = 0; i < m.getIntersections().length; i++) { //find its nearest intersection
+				Intersection intersection = m.getIntersections()[i];
 				if (upcomingIntersection (intersection, va)) {	//if vehicle will cross this intersection if it keeps going straight
 					if (closestIntersection == null) closestIntersection = intersection;
 					else closestIntersection  = (Intersection)shorterDistance(va, intersection, closestIntersection);
@@ -151,8 +157,8 @@ public class Simulation extends Observable{
 			Vehicle v = vg[i].generateVehicle();
 			//Vehicle v = vg[4].generateVehicle();
 			if (v != null) {
-				Point[] route = generateRoute(v.location);
-				v.route = route;
+				Point[] route = generateRoute(v.getLocation());
+				v.setRoute(route);
 				VehicleView vv = new VehicleView(v);
 				vehicles.add(vv);
 			}
@@ -164,11 +170,11 @@ public class Simulation extends Observable{
 		//clean out vehicles that are out of bounds
 		for(Iterator<VehicleView> it = vehicles.iterator(); it.hasNext();){ 
 			VehicleView vv = it.next(); 
-			Point loc = vv.vehicle.location;
-			System.out.println("vv loc " + vv.vehicle.location );
-			if (vv.moveCount > 0) {
+			Point loc = vv.getVehicle().getLocation();
+			System.out.println("vv loc " + vv.getVehicle().getLocation() );
+			if (vv.getMoveCount() > 0) {
 				if (loc.x < 0 || loc.x > 49 || loc.y < 0 || loc.y > 49) { 
-					vv.inSimulation = false;
+					vv.setInSimulation(false);
 				}
 			}
 		}
@@ -178,25 +184,27 @@ public class Simulation extends Observable{
 	private Point[] generateRoute(Point start) {
 		// TODO Auto-generated method stub
 		//I'm not sure how to determine number of stops...?
-		return rg.generateRoute(4, start, m.landmarks, m.routeGrid);
+		return rg.generateRoute(4, start, m.getLandmarks(), m.getRouteGrid());
 		//return null;
 	}
 	
 	//HELPER FUNCTIONS FOR ASSIGNING OBSERVERS TO VEHICLES AND INTERSECTION
 	private boolean upcomingIntersection(Intersection intersection, Vehicle va) {
-		// TODO Auto-generated method stub		
-		switch(va.direction) {
+		// TODO Auto-generated method stub	
+		Point vloc = va.getLocation();
+		Point[] iloc = intersection.getLocation();
+		switch(va.getDirection()) {
 		case 'S':
-			if (va.location.x == intersection.location[0].x && va.location.y < intersection.location[0].y) return true;
+			if (vloc.x == iloc[0].x && vloc.y < iloc[0].y) return true;
 			else return false;
 		case 'E':
-			if (va.location.x < intersection.location[1].x && va.location.y == intersection.location[1].y) return true;
+			if (vloc.x < iloc[1].x && vloc.y == iloc[1].y) return true;
 			else return false;
 		case 'W':
-			if (va.location.x > intersection.location[2].x && va.location.y == intersection.location[2].y) return true;
+			if (vloc.x > iloc[2].x && vloc.y == iloc[2].y) return true;
 			else return false;
 		case 'N':
-			if (va.location.x == intersection.location[3].x && va.location.y > intersection.location[3].y) return true;
+			if (vloc.x == iloc[3].x && vloc.y > iloc[3].y) return true;
 			else return false;
 		case 'R':
 			System.out.println("upcomingIntersection: direction was 'R'");
@@ -212,17 +220,17 @@ public class Simulation extends Observable{
 		Point loca;
 		Point locb;
 		if (a instanceof Vehicle && b instanceof Vehicle) {
-			loca = ((Vehicle)a).location;
-			locb = ((Vehicle)b).location;
+			loca = ((Vehicle)a).getLocation();
+			locb = ((Vehicle)b).getLocation();
 		}
 		else if (a instanceof Intersection && b instanceof Intersection) {
-			loca = ((Intersection)a).location[0];
-			locb = ((Intersection)b).location[0];
+			loca = ((Intersection)a).getLocation()[0];
+			locb = ((Intersection)b).getLocation()[0];
 		}
 		else return null;
 		
-		double dista = distance(target.location, loca);
-		double distb = distance(target.location, locb);
+		double dista = distance(target.getLocation(), loca);
+		double distb = distance(target.getLocation(), locb);
 		
 		if (dista < distb) return a;
 		else return b;
@@ -239,19 +247,19 @@ public class Simulation extends Observable{
 	private boolean aheadOf(Vehicle vb, Vehicle va) {  //determines whether vehicle b (vb) is ahead of vehicle a (va)
 		// TODO Auto-generated method stub
 		if (!sameRoad(va, vb)) return false; //just in case; vehicle b can only be ahead of vehicle a if they are on the same road
-		char dir = vb.direction;
+		char dir = vb.getDirection();
 		switch (dir) {
 		case 'N':
-			if (vb.location.y < va.location.y) return true;
+			if (vb.getLocation().y < va.getLocation().y) return true;
 			else return false;
 		case 'S':
-			if (vb.location.y > va.location.y) return true;
+			if (vb.getLocation().y > va.getLocation().y) return true;
 			else return false;
 		case 'E':
-			if (vb.location.x > va.location.x) return true;
+			if (vb.getLocation().x > va.getLocation().x) return true;
 			else return false;
 		case 'W':
-			if (vb.location.x < va.location.x) return true;
+			if (vb.getLocation().x < va.getLocation().x) return true;
 			else return false;
 		case 'R':
 			System.out.println("aheadOf: direction was 'R'");
@@ -264,10 +272,10 @@ public class Simulation extends Observable{
 
 	private boolean sameRoad(Vehicle va, Vehicle vb) {
 		// TODO Auto-generated method stub
-		if (va.direction != vb.direction) return false; //just in case; vehicle a and vehicle b can only be on the same road if they are headed the same direction
-		char dir = va.direction;
-		if((dir == 'N' || dir == 'S') && va.location.x == vb.location.x) return true;
-		else if((dir == 'E' || dir == 'W') && va.location.y == vb.location.y) return true;
+		if (va.getDirection() != vb.getDirection()) return false; //just in case; vehicle a and vehicle b can only be on the same road if they are headed the same direction
+		char dir = va.getDirection();
+		if((dir == 'N' || dir == 'S') && va.getLocation().x == vb.getLocation().x) return true;
+		else if((dir == 'E' || dir == 'W') && va.getLocation().y == vb.getLocation().y) return true;
 		else return false;
 	}
 	
