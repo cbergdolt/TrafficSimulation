@@ -295,7 +295,9 @@ public class UserInterface extends Application implements Observer{
 				
 				} else if (sim.m.routeGrid[j][i] == 4 || sim.m.routeGrid[j][i] == 5 || sim.m.routeGrid[j][i] == 7) { //ONLY TO SEE WHERE INTERSECTIONS ARE
 					mapImageViews.add(new ImageView(RoadImage));	
-				} 
+				} else if (sim.m.routeGrid[j][i] == 8) {
+					continue;
+				}
 				mapImageViews.get(imageViewCount).setX(j*scale);
 				mapImageViews.get(imageViewCount).setY(i*scale);
 				root.getChildren().add(mapImageViews.get(imageViewCount));

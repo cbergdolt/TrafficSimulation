@@ -12,4 +12,10 @@ public class Landmark {
 	String name;
 	int id;
 	Point location; 
+	
+	Landmark(String tag, int num, Point loc){
+		name = tag;
+		id = num;
+		location = loc;
+	}
 }

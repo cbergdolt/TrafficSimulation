@@ -1,6 +1,8 @@
 package application;
 
 import java.awt.Point;
+import java.util.Queue;
+import java.util.Vector;
 
 /***
  * Class to hold the route the vehicle will take 
@@ -9,6 +11,6 @@ import java.awt.Point;
  */
 
 public class Route {
-	Point[] path;
+	Queue<Point> path;
 	Landmark[] landmarks;
 }

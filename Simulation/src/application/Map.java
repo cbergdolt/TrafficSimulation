@@ -22,7 +22,7 @@ public class Map {
 	int threeWayInt;
 	int roundaboutInt;
 	HashMap<Integer, RoundaboutSegment[]> roundabouts = new HashMap<Integer, RoundaboutSegment[]>();
-	Landmark[] landmarks;
+	Landmark[] landmarks = new Landmark[10];
 	Point[] entry_exit = new Point[8];
 	
 	Map() {
@@ -32,6 +32,7 @@ public class Map {
 		}
 		int eeCount = 0;
 		int iCount = 0;
+		int landCount = 0;
 		//counts for each intersection
 		fourWayInt = 0;
 		threeWayInt = 0;
@@ -51,6 +52,13 @@ public class Map {
 					eeCount += 1;
 					//top right, bottom right, top left, bottom left (on actual map, not on route grid)
 				} 
+				else if (routeGrid[j][i] == 8) {
+					p.x = j;
+					p.y = i;
+					landmarks[landCount] = new Landmark("s", landCount, p);
+					System.out.println("Landmark count is " + landCount);
+					landCount +=1;
+				}
 				//INTERSECTIONS
 				//four-way; stop light
 				else if (routeGrid[j][i] == 4 && routeGrid[j][i+1] == 4 && routeGrid[j+1][i] == 4 && routeGrid[j+1][i+1] == 4) {//instantiate intersection where stop light intersection is
