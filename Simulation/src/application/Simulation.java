@@ -207,7 +207,6 @@ public class Simulation extends Observable{
 			if (vloc.x == iloc[3].x && vloc.y > iloc[3].y) return true;
 			else return false;
 		case 'R':
-			System.out.println("upcomingIntersection: direction was 'R'");
 			return false;	//I guess?
 		default:
 			System.out.println("upcomingIntersection: something has gone horribly wrong");
@@ -262,7 +261,6 @@ public class Simulation extends Observable{
 			if (vb.getLocation().x < va.getLocation().x) return true;
 			else return false;
 		case 'R':
-			System.out.println("aheadOf: direction was 'R'");
 			return false; //I guess?
 		default:
 			System.out.println("aheadOf: something has gone horribly wrong");

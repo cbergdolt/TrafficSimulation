@@ -46,23 +46,14 @@ public class Vehicle extends Observable implements Observer{
 		startRequested = false;
 	}
 	
-	public void setMaxVelocity(int v) {
-		this.maxVelocity = v;
-	}
-	
+	public void setMaxVelocity(int v) { maxVelocity = v; }
 	public int getMaxVelocity() { return maxVelocity; }
 	
-	void setBreakDist(int d) {
-		this.breakDistance = d;
-	}
+	void setBreakDist(int d) { breakDistance = d; }
 	
-	void setStopDist(int d) {
-		this.stopDistance = d;
-	}
+	void setStopDist(int d) { stopDistance = d; }
 	
-	void setLength(int l) {
-		this.length = l;
-	}
+	void setLength(int l) { length = l; }
 	
 	void updatePos(int grid[][]) {
 		
@@ -127,8 +118,7 @@ public class Vehicle extends Observable implements Observer{
 			if (observedRoundabout == null) {
 				observedRoundabout = observedIntersection.getRoundabout();
 			}
-			//direction = 'R'; //roundabout 
-			//^^^I think I want this here, but I have to fix problems mentioned in updateVehicle first
+			direction = 'R'; //roundabout 
 		}
 		observedIntersection = intersection;	//update observedIntersection
 		startRequested = false;	//a start has not been requested for this observed intersection yet
@@ -284,8 +274,25 @@ public class Vehicle extends Observable implements Observer{
 	public void updateVehicle() {
 		// TODO Auto-generated method stub
 		//update location based on current location, direction of travel, velocity, etc.
-		//if (location != null) {
-		if (observedRoundabout != null) {
+		switch (direction) {
+		case 'N':
+			location.y -= this.curVelocity;
+			//location.translate(0, -1);
+			break;
+		case 'S':
+			location.y += this.curVelocity;
+			//location.translate(0, 1);
+			break;
+		case 'E':
+			location.x += this.curVelocity;
+			//location.translate(1, 0);
+			break;
+		case 'W':
+			location.x -= this.curVelocity;
+			//location.translate(-1, 0);
+			break;
+		case 'R':
+			
 			for (int i = 0; i < observedRoundabout.getPosition().length; i++) {
 				if (observedRoundabout.getPosition()[i].equals(location)) {					
 					if (i == 3) {	//move to next roundabout segment
@@ -301,35 +308,9 @@ public class Vehicle extends Observable implements Observer{
 			if (location.equals(observedRoundabout.getPosition()[3]))
 				//this is really convoluted, but I don't know of another way to do it... :/
 				observedRoundabout.getNext().getIntersection().setInIntersection(this);
-		}
-		else {
-			switch (direction) {
-			case 'N':
-				location.y -= this.curVelocity;
-				//location.translate(0, -1);
-				break;
-			case 'S':
-				location.y += this.curVelocity;
-				//location.translate(0, 1);
-				break;
-			case 'E':
-				location.x += this.curVelocity;
-				//location.translate(1, 0);
-				break;
-			case 'W':
-				location.x -= this.curVelocity;
-				//location.translate(-1, 0);
-				break;
-			case 'R':
-				//not sure what to do here
-				
-				//I think this 'R' direction is still a good idea, but I was running into problems with
-				//	the upcomingIntersection method in Simulation. I will look at fixing this later
-				System.out.println("vehicleUpdate: the direction is 'R'");
-				break;
-			default:
-				System.out.println("vehicleUpdate: something has gone horribly wrong");	
-			}
+			break;
+		default:
+			System.out.println("vehicleUpdate: something has gone horribly wrong");	
 		}
 			
 		notifyObservers();
