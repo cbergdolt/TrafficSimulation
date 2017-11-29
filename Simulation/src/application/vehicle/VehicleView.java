@@ -17,6 +17,7 @@ import javafx.scene.image.ImageView;
 public class VehicleView {
 	Vehicle vehicle;
 	ImageView imageView;
+	Image Image;
 	int moveCount;
 	boolean inSimulation;
 	
@@ -26,6 +27,7 @@ public class VehicleView {
 		imageView = null;	
 		inSimulation = true;
 		moveCount = 0;
+		
 		//Image im = new Image("image.png", scale, scale, true, true);
 		//imageView = new ImageView(im);
 	}
@@ -40,5 +42,28 @@ public class VehicleView {
 	public void setInSimulation(boolean val) { inSimulation = val; }
 	
 	public ImageView getImageView() { return imageView; }
-	public void setImageView(ImageView iv) { imageView = iv; } 
+	public void setImageView(ImageView iv) { 
+		imageView = iv; 
+	} 
+	
+	public void setImage() {
+		char dir = vehicle.getDirection();
+		switch(dir) {
+		case 'S':
+			Image = vehicle.downImage;
+			break;
+		case 'N':
+			Image = vehicle.upImage;
+			break;
+		case 'W':
+			Image = vehicle.leftImage;
+			break;
+		case 'E':
+			Image = vehicle.rightImage;
+			break;
+		}
+	}
+	public Image getImage() {
+		return Image;
+	}
 }

@@ -22,6 +22,7 @@ public class VehicleGenerator {
 		delay = d;
 		currentTime = 0;
 		dir = direction;
+		
 		Random r = new Random();
 		type = r.nextInt(3);
 		System.out.println(type);
@@ -39,11 +40,11 @@ public class VehicleGenerator {
 			
 			//return new Vehicle(1, 3, 1, 1, dir, new Point(location), type);
 			if (type == 0) {
-				return new SledRider(dir, new Point(location), type);
+				return new SledRider(dir, new Point(location));
 			} else if (type == 1) {
-				return new SkiElf(dir, new Point(location), type);
+				return new SkiElf(dir, new Point(location));
 			} else {
-				return new ReindeerRider(dir, new Point(location), type);
+				return new ReindeerRider(dir, new Point(location));
 			}
 		}
 	}

@@ -5,6 +5,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import application.intersection.*;
+import javafx.scene.image.Image;
 
 /**
  * The Vehicle class is responsible for updating the location of the vehicles. 
@@ -26,12 +27,18 @@ public class Vehicle extends Observable implements Observer{
 	Point location;		//current location of vehicle
 	Point route[];
 	int type;
+	int scale = 20;
+	
+	Image leftImage;
+	Image rightImage;
+	Image upImage;
+	Image downImage;
 	
 	Intersection observedIntersection;	//so vehicle can add itself to a sign-governed intersection's vehicleQueue
 	RoundaboutSegment observedRoundabout;	//so vehicle can traverse the roundabout and ignore other intersections while it's in the roundabout
 	boolean startRequested;	//used to momentarily prevent stop() being called and changing the curVelocity back to 0
 	
-	Vehicle(char dir, Point loc, int t) {
+	Vehicle(char dir, Point loc) {
 		maxVelocity = 1;
 		breakDistance = 3;
 		stopDistance = 1;
@@ -39,7 +46,6 @@ public class Vehicle extends Observable implements Observer{
 		direction = dir;
 		location = loc;
 		curVelocity = maxVelocity;
-		type = t;
 		
 		observedIntersection = null;
 		observedRoundabout = null;
