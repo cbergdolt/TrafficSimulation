@@ -243,7 +243,7 @@ public class UserInterface extends Application implements Observer{
 		PortalImage = new Image("images/textures/wreathPortal.png", scale, scale, true, true);
 		
 		//roundabout image and image view
-		RoundaboutImage = new Image("images/textures/Roundabout_light.png", scale*6, scale*6, true, true);
+		RoundaboutImage = new Image("images/textures/Roundabout2.png", scale*6, scale*6, true, true);
 		RoundaboutImageView = new ImageView(RoundaboutImage);
 		
 		//StopLight images
