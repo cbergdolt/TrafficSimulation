@@ -38,6 +38,7 @@ public class Simulation extends Observable{
 		//create vehicle generator for each entry/exit point
 		Point[] ee = m.getEntryExit();
 		for (int i = 0; i < ee.length; i++) {
+//		for (int i = 0; i < 1; i++) {
 			System.out.println("location for generator: " + ee[i]);
 			if (ee[i].y == 0) {
 				vg[i] = new VehicleGenerator(new Point(ee[i]), 0, 'S');
@@ -54,7 +55,7 @@ public class Simulation extends Observable{
 		}
 		
 		rg = new RouteGenerator();
-		//newVehicles();
+		newVehicles();
 		//other pesky initialization things?
 	}
 	
@@ -81,6 +82,7 @@ public class Simulation extends Observable{
 			
 			
 			// generate new vehicles (and so also routes)
+			// COMMENTED THIS OUT:
 			if (vehicles.size() < vg.length) {
 				newVehicles();
 			}
@@ -154,6 +156,7 @@ public class Simulation extends Observable{
 	private void newVehicles() {
 		//generate new vehicles at each entry/exit point	
 		for (int i = 0; i < vg.length; i++) {
+//		for (int i = 0; i < 1; i++) {
 			Vehicle v = vg[i].generateVehicle();
 			//Vehicle v = vg[4].generateVehicle();
 			if (v != null) {
@@ -184,7 +187,7 @@ public class Simulation extends Observable{
 	private Point[] generateRoute(Point start) {
 		// TODO Auto-generated method stub
 		//I'm not sure how to determine number of stops...?
-		return rg.generateRoute(4, start, m.getLandmarks(), m.getRouteGrid());
+		return rg.generateRoute(4, start, m.getLandmarks(), m.getRouteGrid(), m.getIntersections());
 		//return null;
 	}
 	

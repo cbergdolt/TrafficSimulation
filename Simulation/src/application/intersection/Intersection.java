@@ -103,4 +103,6 @@ public class Intersection extends Observable{
 	public void addToVehicleQueue(Vehicle v) {
 		vehicleQueue.add(v);
 	}
+	
+	public Point[] getIntPoints() { return location; }
 }

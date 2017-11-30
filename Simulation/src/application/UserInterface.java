@@ -62,6 +62,8 @@ public class UserInterface extends Application implements Observer{
 	Image RoundaboutImage;
 	boolean foundRAB = false;	// found roundabout; ignore other roundabout values
 	ImageView GrassImageView;
+	ImageView LandmarkImageView;
+	Image LandmarkImage;
 	Image GrassImage;
 	Image PortalImage;
 	Vector<ImageView> mapImageViews = new Vector<ImageView>();
@@ -241,6 +243,7 @@ public class UserInterface extends Application implements Observer{
 		RoadImage = new Image("images/textures/RoadTextureTile_light.png", scale, scale, true, true);
 		GrassImage = new Image("images/textures/Snow.jpg", scale, scale, true, true);
 		PortalImage = new Image("images/textures/wreathPortal.png", scale, scale, true, true);
+		LandmarkImage = new Image("images/textures/RoadTexture.png", scale, scale, true, true);
 		
 		//roundabout image and image view
 		RoundaboutImage = new Image("images/textures/Roundabout2.png", scale*6, scale*6, true, true);
@@ -300,7 +303,8 @@ public class UserInterface extends Application implements Observer{
 				} else if (sim.m.getRouteGrid()[j][i] == 4 || sim.m.getRouteGrid()[j][i] == 5 || (sim.m.getRouteGrid()[j][i] % 7) == 0) { //ONLY TO SEE WHERE INTERSECTIONS ARE
 					mapImageViews.add(new ImageView(RoadImage));	
 				} else if (sim.m.getRouteGrid()[j][i] == 8) {
-					continue;
+					mapImageViews.add(new ImageView(LandmarkImage));
+//					continue;
 				}
 				mapImageViews.get(imageViewCount).setX(j*scale);
 				mapImageViews.get(imageViewCount).setY(i*scale);

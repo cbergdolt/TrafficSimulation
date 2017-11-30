@@ -45,7 +45,6 @@ public class Map {
 		//1 = grass, 2 = street, 3 = vehicle generator, 4 = stop light, 5 = stop sign, 6 = roundabout street, multiple of 7 = yield sign (roundabout intersection)
 		Grid grid = new Grid();
 		routeGrid = grid.getRouteGrid();
-		Point p = new Point();
 		for (int i = 0; i < 50; i++) {	//y
 			for (int j = 0; j < 50; j++) {	//x
 				if (routeGrid[j][i] == 3) {	//ENTRY EXIT POINTS (location of vehicle generators
@@ -57,10 +56,7 @@ public class Map {
 					//top right, bottom right, top left, bottom left (on actual map, not on route grid)
 				} 
 				else if (routeGrid[j][i] == 8) {
-					p.x = j;
-					p.y = i;
-					landmarks[landCount] = new Landmark("s", landCount, p);
-					System.out.println("Landmark count is " + landCount);
+					landmarks[landCount] = new Landmark("s", landCount, new Point(j, i));
 					landCount +=1;
 				}
 				//INTERSECTIONS
