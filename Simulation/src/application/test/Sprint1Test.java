@@ -16,7 +16,7 @@ public class Sprint1Test {
 	public void test1() {
 		Vector<Vehicle> vehicles = new Vector<Vehicle>();
 		Point p = new Point(0,0);
-		VehicleGenerator vg = new VehicleGenerator(p, 0, 'S');
+		VehicleGenerator vg = new VehicleGenerator(0, p, 0, 'S');
 		Vehicle v = vg.generateVehicle();
 		vehicles.add(v);
 		System.out.println(vehicles.size());
@@ -26,7 +26,7 @@ public class Sprint1Test {
 	@Test
 	public void test2() {
 		Point p = new Point(0,0);
-		VehicleGenerator vg = new VehicleGenerator(p, 0, 'S');
+		VehicleGenerator vg = new VehicleGenerator(0, p, 0, 'S');
 		Vehicle v = vg.generateVehicle();
 		v.setMaxVelocity(25);
 		assert(v.getMaxVelocity() == 25);
