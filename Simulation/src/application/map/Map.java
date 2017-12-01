@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import application.intersection.*;
 import application.route.*;
+import javafx.scene.control.TabPane.TabClosingPolicy;
 
 
 /***
@@ -68,7 +69,7 @@ public class Map {
 						sl = new StopLight(LightState.YNS_REW, ipoints, 10, 10, 10, 10, 0);
 					else	//the middle stoplights, all in a line on this map
 						sl = new StopLight(LightState.RNS_GEW, ipoints, 10, 10, 10, 10, 10 - fourWayInt*2);
-					intersections[iCount] = new Intersection(ipoints, sl, null);
+					intersections[iCount] = new Intersection(ipoints, IntersectionType.NSEW, sl, null);
 					iCount += 1;
 					fourWayInt += 1;
 				} 
@@ -76,7 +77,8 @@ public class Map {
 				else if (routeGrid[j][i] == 5 && routeGrid[j][i+1] == 5 && routeGrid[j+1][i] == 5 && routeGrid[j+1][i+1] == 5) {//instantiate intersection where stop sign intersection is
 					Point[] ipoints = {new Point(j, i), new Point(j, i+1), new Point(j+1, i), new Point(j+1, i+1)};
 					TrafficSign ts = new TrafficSign(SignType.STOP);
-					intersections[iCount] = new Intersection(ipoints, null, ts);
+					IntersectionType t = determineIntersectionType(ipoints);
+					intersections[iCount] = new Intersection(ipoints, t, null, ts);
 					iCount += 1;
 					threeWayInt += 1;
 				} 
@@ -86,6 +88,7 @@ public class Map {
 					Point[] ipoints = {new Point(j, i), new Point(j, i+1), new Point(j+1, i), new Point(j+1, i+1)};
 					TrafficSign ts = new TrafficSign(SignType.YIELD);
 					RoundaboutSegment rab = CreateRoundaboutSegment(ipoints[0], routeGrid[j][i]);
+					IntersectionType t = determineIntersectionType(ipoints);
 					
 					//make sure there is a key in the roundabouts map that corresponds to the routeGrid number
 					RoundaboutSegment[] rabsegment = roundabouts.get(routeGrid[j][i]);
@@ -95,7 +98,7 @@ public class Map {
 					//add roundabout segment to its roundabout "family"
 					roundabouts.get(routeGrid[j][i])[rab.getSegmentID()] = rab;	
 					
-					intersections[iCount] = new Intersection(ipoints, null, ts, rab);
+					intersections[iCount] = new Intersection(ipoints, t, null, ts, rab);
 					rab.setIntersection(intersections[iCount]);	//give roundabout segment access to its intersection
 					iCount += 1;
 					roundaboutInt += 1;
@@ -117,7 +120,7 @@ public class Map {
 		//intersections[1] = new Intersection(new Point(1, 0), new StopLight(LightState.GNS_REW, new Point(1, 0), 1, 1, 1, 1), null);
 		//roads[0] = new RoadSegment(intersections[0], intersections[1]);
 	}
-	
+
 	private RoundaboutSegment CreateRoundaboutSegment(Point intloc, int key) {
 		int id = -1;
 		if (roundabouts.get(key) == null) id = 0;
@@ -185,6 +188,30 @@ public class Map {
 		}
 	}
 
+	private IntersectionType determineIntersectionType(Point[] ipoints) {
+		//determine the type/direction of the intersection based on the points in the intersection
+		//recall order of points in intersection point array
+		//	|S|W| >> |0|2|
+		//	|E|N| >> |1|3|
+		boolean N, S, E, W;
+		IntersectionType t = IntersectionType.NSEW;	//it has to be initialized to something...
+		
+		//check point outside south location
+		if (routeGrid[ipoints[0].x][ipoints[0].y-1] == 2) S = true;
+		else S = false;
+		//check point outside east location
+		if (routeGrid[ipoints[1].x-1][ipoints[1].y] == 2) E = true;
+		else E = false;
+		//check point outside west location
+		if (routeGrid[ipoints[0].x+1][ipoints[0].y] == 2) W = true;
+		else W = false;
+		//check point outside north location
+		if (routeGrid[ipoints[0].x][ipoints[0].y+1] == 2) N = true;
+		else N = false;
+		
+		return t.getIntersectionType(N,S,E,W);
+	}
+	
 	public void updateMap() {
 		//System.out.println("intersections.length = " + intersections.length);
 		/*for (int i = 0; i < roads.length; i++) {

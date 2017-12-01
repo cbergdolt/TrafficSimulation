@@ -24,12 +24,13 @@ public class Intersection extends Observable{
 	RoundaboutSegment roundabout;
 	int id;
 	char dir;
-	char type;	//F=four way, T=three way, R=roundabout ??? not sure if this is necessary, just check light/sign values
+	IntersectionType type;
 	Queue<Vehicle> vehicleQueue;
 	Vehicle inIntersection;		//null if no car in intersection, otherwise contains the vehicle that is in the intersection
 
-	public Intersection(Point[] loc, StopLight sl, TrafficSign ts, RoundaboutSegment rab) {
+	public Intersection(Point[] loc, IntersectionType t, StopLight sl, TrafficSign ts, RoundaboutSegment rab) {
 		location = loc;
+		type = t;
 		light = sl;
 		sign = ts;
 		roundabout = rab;
@@ -37,8 +38,8 @@ public class Intersection extends Observable{
 		vehicleQueue = new LinkedList<Vehicle>();
 	}
 	
-	public Intersection(Point[] loc, StopLight sl, TrafficSign ts) {
-		this(loc, sl, ts, null);
+	public Intersection(Point[] loc, IntersectionType t, StopLight sl, TrafficSign ts) {
+		this(loc, t, sl, ts, null);
 		//location = loc; 
 		//light = sl;
 		//sign = ts;
