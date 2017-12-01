@@ -16,12 +16,16 @@ public class VehicleGenerator {
 	private int currentTime;
 	char dir;
 	int type;
+	int id;
+	boolean blocked;
 
-	public VehicleGenerator(Point loc, int d, char direction) {
+	public VehicleGenerator(int ID, Point loc, int d, char direction) {
 		location = loc;
 		delay = d;
 		currentTime = 0;
 		dir = direction;
+		id = ID;
+		blocked = false;
 		
 		Random r = new Random();
 		type = r.nextInt(3);
@@ -29,6 +33,7 @@ public class VehicleGenerator {
 	}
 	
 	public Vehicle generateVehicle() {
+		if (blocked) return null;
 		//System.out.println("direction is " + dir);
 		if (currentTime < delay) {
 			currentTime++;	//increment time; progress in generator cycle
@@ -49,4 +54,9 @@ public class VehicleGenerator {
 		}
 	}
 
+	public Point getLocation() { return location; }
+	
+	public int getID() { return id; }
+	
+	public void block() { blocked = true; }
 }

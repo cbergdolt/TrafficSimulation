@@ -2,11 +2,14 @@ package application.map;
 
 import java.awt.Point;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Random;
 
 import application.intersection.*;
 import application.route.*;
+import application.vehicle.Vehicle;
+import application.vehicle.VehicleView;
 import javafx.scene.control.TabPane.TabClosingPolicy;
-
 
 /***
  * The Map class is the main map generator for the simulation.
@@ -69,7 +72,9 @@ public class Map {
 						sl = new StopLight(LightState.YNS_REW, ipoints, 10, 10, 10, 10, 0);
 					else	//the middle stoplights, all in a line on this map
 						sl = new StopLight(LightState.RNS_GEW, ipoints, 10, 10, 10, 10, 10 - fourWayInt*2);
-					intersections[iCount] = new Intersection(ipoints, IntersectionType.NSEW, sl, null);
+					
+					IntersectionType t = determineIntersectionType(ipoints);
+					intersections[iCount] = new Intersection(ipoints, t/*IntersectionType.NSEW*/, sl, null);
 					iCount += 1;
 					fourWayInt += 1;
 				} 
@@ -121,6 +126,45 @@ public class Map {
 		//roads[0] = new RoadSegment(intersections[0], intersections[1]);
 	}
 
+	public int closeRoad() {
+		Random r = new Random();
+		int i = r.nextInt(intersections.length);	//select intersection to close
+		
+		System.out.println("closing intersection " + i);
+		for (int a = 0; a < intersections[i].getLocation().length; a++) System.out.print(intersections[i].getLocation()[a] + ", ");
+		System.out.println("");
+		
+		int d = r.nextInt(4); //choose direction to close
+		//make sure direction is valid
+		while (!(intersections[i].getType().isOpen(d))) {
+			d = r.nextInt(4);	//keep finding a random direction until it's open on intersection i
+		}
+		
+		System.out.println("closing direction " + d);
+		System.out.println("before block, intersection type = " + intersections[i].getType().toString());
+		intersections[i].blockDirection(d);
+		System.out.println("after block, intersection type = " + intersections[i].getType().toString());
+		
+		Intersection iB = findAdjacentIntersection(d, intersections[i]);
+		//if the intersection actually has an adjacent intersection in direction d:
+		if (iB != null) {
+			iB.blockOppositeDirection(d);	//make sure vehicles can't enter the road segment from the other direction
+
+			System.out.println("found an adjacent intersection to close, no need to find generator");
+			System.out.println("intersection coordinates are:");
+			for (int a = 0; a < iB.getLocation().length; a++) System.out.print(iB.getLocation()[a] + ", ");
+			System.out.println("");
+			
+			return -1;	//found intersection, no need for the simulation to block a generator
+		}
+		//otherwise, the intersection must be adjacent to a generator in direction d:
+		else {	//if iB is null 
+			int vg = findAdjacentGenerator(d, intersections[i]);
+			System.out.println("no adjacent intersection found, returning " + vg + " with location " + entry_exit[vg] + " as generator to block");
+			return vg; //vg.block();		//return vg as the index of the vehicle generator to be blocked
+		}
+	}
+	
 	private RoundaboutSegment CreateRoundaboutSegment(Point intloc, int key) {
 		int id = -1;
 		if (roundabouts.get(key) == null) id = 0;
@@ -193,23 +237,116 @@ public class Map {
 		//recall order of points in intersection point array
 		//	|S|W| >> |0|2|
 		//	|E|N| >> |1|3|
-		boolean N, S, E, W;
+		boolean N, S, E, W;	//true means vehicle CAN go through intersection that direction
+							//false means vehicle CANNOT go through intersection that direction
 		IntersectionType t = IntersectionType.NSEW;	//it has to be initialized to something...
 		
 		//check point outside south location
-		if (routeGrid[ipoints[0].x][ipoints[0].y-1] == 2) S = true;
+		if (routeGrid[ipoints[0].x][ipoints[0].y+2] == 2) S = true;
 		else S = false;
 		//check point outside east location
-		if (routeGrid[ipoints[1].x-1][ipoints[1].y] == 2) E = true;
+		if (routeGrid[ipoints[1].x+2][ipoints[1].y] == 2) E = true;
 		else E = false;
 		//check point outside west location
-		if (routeGrid[ipoints[0].x+1][ipoints[0].y] == 2) W = true;
+		if (routeGrid[ipoints[2].x-2][ipoints[2].y] == 2) W = true;
 		else W = false;
 		//check point outside north location
-		if (routeGrid[ipoints[0].x][ipoints[0].y+1] == 2) N = true;
+		if (routeGrid[ipoints[3].x][ipoints[3].y-2] == 2) N = true;
 		else N = false;
 		
-		return t.getIntersectionType(N,S,E,W);
+		t = t.getIntersectionType(N, S, E, W);		
+		return t;
+	}
+	
+	private Intersection findAdjacentIntersection(int d, Intersection iA) {
+		Intersection foundInt = null;
+		for (int i = 0; i < intersections.length; i++) {
+			Intersection iB = intersections[i];
+			if (adjacent(iA, iB, d)) {
+				if (foundInt != null && iB == closestIntersection(iA, iB, foundInt)) foundInt = iB;
+				else foundInt = iB;
+			}
+		}
+		return foundInt;
+	}
+	
+	private int findAdjacentGenerator(int d, Intersection iA) {
+		int vg = -1;
+		for (int i = 0; i < entry_exit.length; i++) {
+			if (adjacent(iA, (Integer)i, d)) {
+				//if it's an adjacent "generator", it should automatically be the "closest", so no need to check
+				vg = i;
+			}
+		}
+		return vg;
+	}
+	
+	private boolean adjacent(Intersection iA, Object o, int d) {
+		Intersection iB = null;
+		Integer vg = -1;
+		//VehicleGenerator vg = null;
+		Point[] iAloc = iA.getLocation();
+		if (o instanceof Intersection) {
+			iB = ((Intersection)o);
+			Point[] iBloc = iB.getLocation();
+			switch(d) {
+			case 0:	//iB should be south of iA
+				if (iAloc[d].x == iBloc[d].x && iAloc[d].y < iBloc[d].y) return true;
+				else return false;
+			case 1: //iB should be east of iA
+				if (iAloc[d].x < iBloc[d].x && iAloc[d].y == iBloc[d].y) return true;
+				else return false;
+			case 2: //iB should be west of iA
+				if (iAloc[d].x > iBloc[d].x && iAloc[d].y == iBloc[d].y) return true;
+				else return false;
+			case 3: //iB should be north of iA
+				if (iAloc[d].x == iBloc[d].x && iAloc[d].y > iBloc[d].y) return true;
+				else return false;
+			default:	//this shouldn't ever happen...
+				System.out.println("Map::adjacent: something has gone horribly wrong");
+				return false;
+			}
+			
+		} else if (o instanceof Integer) {
+			vg = ((Integer)o);
+			Point vgloc = entry_exit[vg];
+			switch(d) {
+			case 0:	//generator should be south of iA
+				if (iAloc[d].x == vgloc.x-1 && iAloc[d].y < vgloc.y) return true;
+				else return false;
+			case 1: //generator should be east of iA
+				if (iAloc[d].x < vgloc.x && iAloc[d].y == vgloc.y+1) return true;
+				else return false;
+			case 2: //generator should be west of iA
+				if (iAloc[d].x > vgloc.x && iAloc[d].y == vgloc.y-1) return true;
+				else return false;
+			case 3: //generator should be north of iA
+				if (iAloc[d].x == vgloc.x+1 && iAloc[d].y > vgloc.y) return true;
+				else return false;
+			default:	//this shouldn't ever happen...
+				System.out.println("Map::adjacent: something has gone horribly wrong");
+				return false;
+			}
+		}
+		return false;	//for some reason, the object wasn't an Intersection or Integer (generator index)
+	}
+	
+	private Intersection closestIntersection(Intersection iA, Intersection iB, Intersection iC) {
+		//doesn't matter which direction I use, the distance comparison will tell me everything I want to know
+		Point locA = iA.getLocation()[0];
+		Point locB = iB.getLocation()[0];
+		Point locC = iC.getLocation()[0];
+		
+		if (distance(locA, locB) > distance(locA, locC)) return iC;
+		else return iB;
+	}
+	
+	private double distance(Point pta, Point ptb) {
+		// TODO Auto-generated method stub
+		double xdiff = pta.x - ptb.x;
+		double ydiff = pta.y - ptb.y;
+		double square_sum = Math.pow(xdiff, 2) + Math.pow(ydiff, 2);
+		return Math.sqrt(square_sum);
 	}
 	
 	public void updateMap() {

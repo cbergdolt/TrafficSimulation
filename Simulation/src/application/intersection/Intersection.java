@@ -88,6 +88,26 @@ public class Intersection extends Observable{
 		return location;
 	}
 	
+	public void blockDirection(int d) { type = type.blockDirection(d); }
+	public void blockOppositeDirection(int d) {
+		switch (d) {
+		case 0: 
+			type = type.blockDirection(3);
+			break;
+		case 1: 
+			type = type.blockDirection(2);
+			break;
+		case 2: 
+			type = type.blockDirection(1);
+			break;
+		case 3: 
+			type = type.blockDirection(0);
+			break;
+		default: //this shouldn't ever happen...
+			System.out.println("Intersection::blockOppositeDirection: something has gone horribly wrong");
+		}
+	}
+	
 	public TrafficSign getSign() { return sign; }
 	
 	public StopLight getLight() { return light; }
@@ -96,6 +116,9 @@ public class Intersection extends Observable{
 	
 	public Vehicle getInIntersection() { return inIntersection; }
 	public void setInIntersection(Vehicle v)  { inIntersection = v; }
+	
+	public IntersectionType getType() { return type; }
+	public void setType(IntersectionType t) { type = t; }
 	
 	public void addRoundaboutObserver(Object o) {
 		roundabout.addObserver((Observer) o);

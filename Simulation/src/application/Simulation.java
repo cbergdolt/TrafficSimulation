@@ -34,6 +34,7 @@ public class Simulation extends Observable{
 		runTime = rt;
 		stepLength = sl; //500 milliseconds (half a second)
 		m = new Map();
+		int blockedVG = m.closeRoad();
 		
 		//create vehicle generator for each entry/exit point
 		Point[] ee = m.getEntryExit();
@@ -41,17 +42,19 @@ public class Simulation extends Observable{
 //		for (int i = 0; i < 1; i++) {
 			System.out.println("location for generator: " + ee[i]);
 			if (ee[i].y == 0) {
-				vg[i] = new VehicleGenerator(new Point(ee[i]), 0, 'S');
+				vg[i] = new VehicleGenerator(i, new Point(ee[i]), 0, 'S');
 			}
 			else if (ee[i].y == 49) {
-				vg[i] = new VehicleGenerator(new Point(ee[i]), 0, 'N');
+				vg[i] = new VehicleGenerator(i, new Point(ee[i]), 0, 'N');
 			}
 			else if (ee[i].x == 0) {
-				vg[i] = new VehicleGenerator(new Point(ee[i]), 0, 'E');
+				vg[i] = new VehicleGenerator(i, new Point(ee[i]), 0, 'E');
 			}
 			else if (ee[i].x == 49) {
-				vg[i] = new VehicleGenerator(new Point(ee[i]), 0, 'W');
+				vg[i] = new VehicleGenerator(i, new Point(ee[i]), 0, 'W');
 			}
+			//block vehicle generator if it's the one indicated by the m.closeRoad() call earlier
+			if (blockedVG != -1 && vg[i].getID() == blockedVG) vg[i].block();
 		}
 		
 		rg = new RouteGenerator();
@@ -83,6 +86,12 @@ public class Simulation extends Observable{
 			
 			// generate new vehicles (and so also routes)
 			// COMMENTED THIS OUT:
+			//NEW DISCOVERY!  This is a bit of a problem if a generator gets blocked (as a result of a road closing)
+			//		because then there are only 7 vehicles generate by 8 vehicle generators the first time around, so 
+			//		when execution gets to this point on the second iteration/loop/whatever, it generates more vehicles.
+			//		This is not exactly an issue, but it looks funky. we will have to find a better way to control the
+			//		release of vehicles into the simulation--though I think this should be taken care of with one of the 
+			//		inputs from the user on the startup screen?
 			if (vehicles.size() < vg.length) {
 				newVehicles();
 			}
