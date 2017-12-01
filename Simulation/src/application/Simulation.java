@@ -3,6 +3,7 @@ package application;
 import java.awt.Point;
 import java.util.Iterator;
 import java.util.Observable;
+import java.util.Random;
 import java.util.Vector;
 
 import application.map.*;
@@ -34,7 +35,11 @@ public class Simulation extends Observable{
 		runTime = rt;
 		stepLength = sl; //500 milliseconds (half a second)
 		m = new Map();
-		int blockedVG = m.closeRoad();
+		Random r = new Random();
+		int roadClosure = r.nextInt(2);
+		int blockedVG;
+		if (roadClosure == 0) blockedVG = -1; //definitely don't block a generator
+		else blockedVG = m.closeRoad();	//close a road segment, which may result in a blocked generator
 		
 		//create vehicle generator for each entry/exit point
 		Point[] ee = m.getEntryExit();
