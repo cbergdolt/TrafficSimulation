@@ -246,7 +246,7 @@ public class UserInterface extends Application implements Observer{
 		//road, snow, and portal images
 		RoadImage = new Image("images/textures/RoadTextureTile_light.png", scale, scale, true, true);
 		GrassImage = new Image("images/textures/Snow.jpg", scale, scale, true, true);
-		PortalImage = new Image("images/textures/wreathPortal.png", scale, scale, true, true);
+		PortalImage = new Image("images/textures/wreathPortal2.png", scale, scale, true, true);
 		LandmarkImage = new Image("images/textures/RoadTexture.png", scale, scale, true, true);
 		
 		//roundabout image and image view
