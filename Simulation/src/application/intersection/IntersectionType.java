@@ -202,6 +202,6 @@ public enum IntersectionType {
 		else if (!N && S && !E && !W) return IntersectionType.S;
 		else if (!N && !S && E && !W) return IntersectionType.E;
 		else if (!N && !S && !E && W) return IntersectionType.W;
-		else return null; //because this should never be the case... a no-direction intersection is not an intersection at all
+		else return NONE; //for some reason, the intersection has no open directions
 	}
 }
