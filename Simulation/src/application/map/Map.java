@@ -263,8 +263,7 @@ public class Map {
 		for (int i = 0; i < intersections.length; i++) {
 			Intersection iB = intersections[i];
 			if (adjacent(iA, iB, d)) {
-				if (foundInt != null && iB == closestIntersection(iA, iB, foundInt)) foundInt = iB;
-				else foundInt = iB;
+				if ((foundInt != null && iB == closestIntersection(iA, iB, foundInt)) || foundInt == null) foundInt = iB;
 			}
 		}
 		return foundInt;

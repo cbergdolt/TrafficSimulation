@@ -36,7 +36,7 @@ public class Simulation extends Observable{
 		stepLength = sl; //500 milliseconds (half a second)
 		m = new Map();
 		Random r = new Random();
-		int roadClosure = r.nextInt(2);
+		int roadClosure = r.nextInt(2);	//so that the closures happen 50% of the time
 		int blockedVG;
 		if (roadClosure == 0) blockedVG = -1; //definitely don't block a generator
 		else blockedVG = m.closeRoad();	//close a road segment, which may result in a blocked generator

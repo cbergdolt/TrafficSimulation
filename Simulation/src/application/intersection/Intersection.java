@@ -92,6 +92,7 @@ public class Intersection extends Observable{
 	
 	public void blockDirection(int d) { 
 		type = type.blockDirection(d);	//actually change the intersection type to block traffic
+		//mark specific direction as blocked
 		if (d == 0) blocked = 'S';
 		else if (d == 1) blocked = 'E';
 		else if (d == 2) blocked = 'W';

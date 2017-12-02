@@ -59,4 +59,7 @@ public class VehicleGenerator {
 	public int getID() { return id; }
 	
 	public void block() { blocked = true; }
+	public boolean isBlocked() { return blocked; }
+	
+	public char getDirection() { return dir; }
 }

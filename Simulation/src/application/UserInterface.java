@@ -294,18 +294,23 @@ public class UserInterface extends Application implements Observer{
 			intersectionViews[i].setY(loc.y*scale);
 			
 			if (sim.m.getIntersections()[i].isBlocked()) {	//if the intersection has been artificially blocked
-				//
 				Intersection in = sim.m.getIntersections()[i];
 				if (!placedFirstRoadBlock) {	//place the RoadClosedImageViewA
 					placeRoadClosure(sim.m.getIntersections()[i], RoadClosedImageViewA);
-					//add imageview to observable list
 					root.getChildren().add(RoadClosedImageViewA);
 					placedFirstRoadBlock = true;
 				} else {	//place the RoadClosedImageViewB
 					placeRoadClosure(sim.m.getIntersections()[i], RoadClosedImageViewB);
-					//add imageview to observable list
 					root.getChildren().add(RoadClosedImageViewB);
 				}
+			}
+		}
+		
+		//check if there is a blocked vehicle generator
+		for (int i = 0; i < sim.vg.length; i++) {
+			if (sim.vg[i].isBlocked()) {
+				placeGeneratorClosure(sim.vg[i]);
+				root.getChildren().add(RoadClosedImageViewB);
 			}
 		}
 		
@@ -345,24 +350,50 @@ public class UserInterface extends Application implements Observer{
 	
 	private void placeRoadClosure(Intersection in, ImageView iv) {
 		switch (in.getBlocked()) {
-		case 'S':
+		case 'S':	//road closure south of intersection
 			iv.setX((in.getLocation()[0].x)*scale);
 			iv.setY((in.getLocation()[0].y+2)*scale);
 			break;
-		case 'E':
+		case 'E':	//road closure east of intersection
 			iv.setX((in.getLocation()[1].x+2)*scale);
 			iv.setY((in.getLocation()[1].y-1)*scale);
 			break;
-		case 'W':
+		case 'W':	//road closure west of intersection
 			iv.setX((in.getLocation()[2].x-3)*scale);
 			iv.setY((in.getLocation()[2].y)*scale);
 			break;
-		case 'N':
+		case 'N':	//road closure north of intersection
 			iv.setX((in.getLocation()[3].x-1)*scale);
 			iv.setY((in.getLocation()[3].y-3)*scale);
 			break;
 		default:	//this shouldn't ever happen
 			System.out.println("InitializeImages: something has gone horribly wrong");
+		}
+	}
+	
+	private void placeGeneratorClosure(VehicleGenerator vg) {
+		//this places the tree over the generators, right on the edge of the map. this can easily change 
+		Point vloc = vg.getLocation();
+		switch(vg.getDirection()) {
+		case 'S':
+			RoadClosedImageViewB.setX((vloc.x)*scale);
+			RoadClosedImageViewB.setY((vloc.y)*scale);
+			break;
+		case 'E':
+			RoadClosedImageViewB.setX((vloc.x)*scale);
+			RoadClosedImageViewB.setY((vloc.y-1)*scale);
+			break;
+		case 'W':
+			RoadClosedImageViewB.setX((vloc.x-1)*scale);
+			RoadClosedImageViewB.setY((vloc.y)*scale);
+			break;
+		case 'N':
+			RoadClosedImageViewB.setX((vloc.x-1)*scale);
+			RoadClosedImageViewB.setY((vloc.y-1)*scale);
+			break;
+		default: //this shouldn't ever happen
+			System.out.println("InitializeImages: something has gone horribly wrong");
+			
 		}
 	}
 	
