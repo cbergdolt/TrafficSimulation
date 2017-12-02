@@ -22,6 +22,7 @@ public class Intersection extends Observable{
 	StopLight light;
 	TrafficSign sign;
 	RoundaboutSegment roundabout;
+	char blocked;	//0 (not blocked) or N/S/E/W, for which direction is blocked
 	int id;
 	char dir;
 	IntersectionType type;
@@ -34,6 +35,7 @@ public class Intersection extends Observable{
 		light = sl;
 		sign = ts;
 		roundabout = rab;
+		blocked = 0;	//intersection not blocked by default
 		inIntersection = null;	//intersection is empty
 		vehicleQueue = new LinkedList<Vehicle>();
 	}
@@ -88,25 +90,38 @@ public class Intersection extends Observable{
 		return location;
 	}
 	
-	public void blockDirection(int d) { type = type.blockDirection(d); }
+	public void blockDirection(int d) { 
+		type = type.blockDirection(d);	//actually change the intersection type to block traffic
+		if (d == 0) blocked = 'S';
+		else if (d == 1) blocked = 'E';
+		else if (d == 2) blocked = 'W';
+		else if (d == 3) blocked = 'N';
+		else System.out.println("Intersection::blockOppositeDirection: something has gone horribly wrong");
+	}
 	public void blockOppositeDirection(int d) {
 		switch (d) {
-		case 0: 
-			type = type.blockDirection(3);
+		case 0: //S
+			type = type.blockDirection(3);	//block N
+			blocked = 'N';
 			break;
-		case 1: 
-			type = type.blockDirection(2);
+		case 1: //E
+			type = type.blockDirection(2);	//block W
+			blocked = 'W';
 			break;
-		case 2: 
-			type = type.blockDirection(1);
+		case 2: //W
+			type = type.blockDirection(1);	//block E
+			blocked = 'E';
 			break;
-		case 3: 
-			type = type.blockDirection(0);
+		case 3: //N
+			type = type.blockDirection(0);	//block S
+			blocked = 'S';
 			break;
 		default: //this shouldn't ever happen...
 			System.out.println("Intersection::blockOppositeDirection: something has gone horribly wrong");
 		}
 	}
+	public char getBlocked() { return blocked; }
+	public boolean isBlocked() { if (blocked == 0) return false; else return true; }
 	
 	public TrafficSign getSign() { return sign; }
 	

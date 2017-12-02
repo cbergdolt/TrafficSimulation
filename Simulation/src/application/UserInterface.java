@@ -68,6 +68,10 @@ public class UserInterface extends Application implements Observer{
 	Image PortalImage;
 	Vector<ImageView> mapImageViews = new Vector<ImageView>();
 	
+	Image RoadClosedImage;
+	ImageView RoadClosedImageViewA;
+	ImageView RoadClosedImageViewB;
+	
 	
 	Image gns_rewImage;
 	Image yns_rewImage;
@@ -249,6 +253,11 @@ public class UserInterface extends Application implements Observer{
 		RoundaboutImage = new Image("images/textures/Roundabout2.png", scale*6, scale*6, true, true);
 		RoundaboutImageView = new ImageView(RoundaboutImage);
 		
+		//road closure image
+		RoadClosedImage = new Image("images/textures/christmasTree1.png", scale*2, scale*2, true, true);
+		RoadClosedImageViewA = new ImageView(RoadClosedImage);
+		RoadClosedImageViewB = new ImageView(RoadClosedImage);
+		
 		//StopLight images
 		gns_rewImage = new Image("images/sprites/Lights/gns_rew.png", scale*2, scale*2, true, true);
 		yns_rewImage = new Image("images/sprites/Lights/yns_rew.png", scale*2, scale*2, true, true);
@@ -257,7 +266,8 @@ public class UserInterface extends Application implements Observer{
 		stopImage    = new Image("images/textures/stoplightIcon.png", scale*2, scale*2, true, true);
 		yieldImage   = new Image("images/textures/yieldimg.png", scale*2, scale*2, true, true);
 		
-		//StopLight/TrafficSign ImageViews
+		//StopLight/TrafficSign ImageViews (also road block images)
+		boolean placedFirstRoadBlock = false;
 		for (int i = 0; i < intersectionViews.length; i++) {
 			Point loc = sim.m.getIntersections()[i].getLocation()[0];
 			if (sim.m.getIntersections()[i].getSign() != null) {
@@ -282,6 +292,21 @@ public class UserInterface extends Application implements Observer{
 			//set correct location for the image view (this location will never change)
 			intersectionViews[i].setX(loc.x*scale);
 			intersectionViews[i].setY(loc.y*scale);
+			
+			if (sim.m.getIntersections()[i].isBlocked()) {	//if the intersection has been artificially blocked
+				//
+				Intersection in = sim.m.getIntersections()[i];
+				if (!placedFirstRoadBlock) {	//place the RoadClosedImageViewA
+					placeRoadClosure(sim.m.getIntersections()[i], RoadClosedImageViewA);
+					//add imageview to observable list
+					root.getChildren().add(RoadClosedImageViewA);
+					placedFirstRoadBlock = true;
+				} else {	//place the RoadClosedImageViewB
+					placeRoadClosure(sim.m.getIntersections()[i], RoadClosedImageViewB);
+					//add imageview to observable list
+					root.getChildren().add(RoadClosedImageViewB);
+				}
+			}
 		}
 		
 		int imageViewCount = 0;
@@ -314,6 +339,31 @@ public class UserInterface extends Application implements Observer{
 			}
 		}
 		RoundaboutImageView.toFront();
+		RoadClosedImageViewA.toFront();
+		RoadClosedImageViewB.toFront();
+	}
+	
+	private void placeRoadClosure(Intersection in, ImageView iv) {
+		switch (in.getBlocked()) {
+		case 'S':
+			iv.setX((in.getLocation()[0].x)*scale);
+			iv.setY((in.getLocation()[0].y+2)*scale);
+			break;
+		case 'E':
+			iv.setX((in.getLocation()[1].x+2)*scale);
+			iv.setY((in.getLocation()[1].y-1)*scale);
+			break;
+		case 'W':
+			iv.setX((in.getLocation()[2].x-3)*scale);
+			iv.setY((in.getLocation()[2].y)*scale);
+			break;
+		case 'N':
+			iv.setX((in.getLocation()[3].x-1)*scale);
+			iv.setY((in.getLocation()[3].y-3)*scale);
+			break;
+		default:	//this shouldn't ever happen
+			System.out.println("InitializeImages: something has gone horribly wrong");
+		}
 	}
 	
     private void updateImageViews() {
