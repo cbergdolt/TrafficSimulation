@@ -38,9 +38,8 @@ public class Simulation extends Observable{
 		Random r = new Random();
 		int roadClosure = r.nextInt(2);	//so that the closures happen 50% of the time
 		int blockedVG;
-		//if (roadClosure == 0) blockedVG = -1; //definitely don't block a generator
-		//else 
-		blockedVG = m.closeRoad();	//close a road segment, which may result in a blocked generator
+		if (roadClosure == 0) blockedVG = -1; //definitely don't block a generator
+		else blockedVG = m.closeRoad();	//close a road segment, which may result in a blocked generator
 		
 		//create vehicle generator for each entry/exit point
 		Point[] ee = m.getEntryExit();
@@ -134,6 +133,8 @@ public class Simulation extends Observable{
 		//reassign correct observers to vehicles and intersections
 		for(Iterator<VehicleView> ita = vehicles.iterator(); ita.hasNext();){ //for each vehicle
 			Vehicle va = ita.next().getVehicle();
+			
+			//find nearest upcoming vehicle and observe it
 			Vehicle closestVehicle = null;
 			for(Iterator<VehicleView> itb = vehicles.iterator(); itb.hasNext();){ //find its nearest neighboring vehicle
 				Vehicle vb = itb.next().getVehicle();
@@ -144,9 +145,7 @@ public class Simulation extends Observable{
 			}
 			if (closestVehicle != null) closestVehicle.addObserver(va);
 			
-			//TODO I don't want vehicles to observe roundabout intersections while in the roundabout. 
-			//once in the roundabout, they can move and exit freely, and THEN they need to start observing an intersection again...
-			//I'm not sure how to keep track of that yet. 
+			//find nearest upcoming intersection and observe it
 			Intersection closestIntersection = null;
 			for (int i = 0; i < m.getIntersections().length; i++) { //find its nearest intersection
 				Intersection intersection = m.getIntersections()[i];
@@ -159,7 +158,8 @@ public class Simulation extends Observable{
 				closestIntersection.addObserver(va);
 				
 				//tell the vehicle which intersection it is observing, but only if it is a new intersection
-				//the vehicle needs to know which intersection it is observing so it can add itself to the vehicleQueue when it reaches the intersection
+				//the vehicle needs to know which intersection it is observing so it can add itself to the 
+				//	vehicleQueue when it reaches the intersection
 				if (va.getObservedIntersection() != closestIntersection)
 					va.setObservedIntersection(closestIntersection);
 			}
@@ -171,13 +171,9 @@ public class Simulation extends Observable{
 	private void newVehicles() {
 		//generate new vehicles at each entry/exit point	
 		for (int i = 0; i < vg.length; i++) {
-//		Vehicle v = null;
-//		for (int i = 0; i < 4; i++) {
+//		for (int i = 0; i < 1; i++) {
 			Vehicle v = vg[i].generateVehicle();
-			//if (i == 0) v = vg[1].generateVehicle();
-			//else if (i == 1) v = vg[3].generateVehicle();
-			//else if (i == 2) v = vg[4].generateVehicle();
-			//else if (i == 3) v = vg[6].generateVehicle();
+			//Vehicle v = vg[1].generateVehicle();
 			if (v != null) {
 				Route route = generateRoute(v.getLocation());
 				v.setRoute(route);

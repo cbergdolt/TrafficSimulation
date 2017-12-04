@@ -26,7 +26,6 @@ public class Vehicle extends Observable implements Observer{
 	int length;			//length of vehicle ... not sure what units
 	char direction;		//N, S, E, W -- direction of travel -or- R -- roundabout
 	Point location;		//current location of vehicle
-	//Point route[];
 	Route route;
 	int type;
 	int scale = 20;
@@ -219,7 +218,6 @@ public class Vehicle extends Observable implements Observer{
 			else if (dist <= this.stopDistance && dist > 0 && !startRequested) this.stop();
 			break;
 		case 'R':	//roundabout
-			//not sure if we actually need this case?
 			System.out.println("signResponse: the direction is 'R'");
 			break;
 		default:
@@ -270,7 +268,6 @@ public class Vehicle extends Observable implements Observer{
 			} else this.curVelocity = this.maxVelocity;
 			break;
 		case 'R':	//roundabout
-			//not sure if we actually need this case?
 			System.out.println("lightResponse: the direction is 'R'");
 			break;
 		default:
@@ -290,27 +287,30 @@ public class Vehicle extends Observable implements Observer{
 				}
 			}
 		}
-		
+
 		//update location based on current location, direction of travel, velocity, etc.
 		switch (direction) {
 		case 'N':
+			observedRoundabout = null; //clearly doesn't need to observe a roundabout anymore
 			location.y -= this.curVelocity;
 			//location.translate(0, -1);
 			break;
 		case 'S':
+			observedRoundabout = null; //clearly doesn't need to observe a roundabout anymore
 			location.y += this.curVelocity;
 			//location.translate(0, 1);
 			break;
 		case 'E':
+			observedRoundabout = null; //clearly doesn't need to observe a roundabout anymore
 			location.x += this.curVelocity;
 			//location.translate(1, 0);
 			break;
 		case 'W':
+			observedRoundabout = null; //clearly doesn't need to observe a roundabout anymore
 			location.x -= this.curVelocity;
 			//location.translate(-1, 0);
 			break;
 		case 'R':
-			
 			for (int i = 0; i < observedRoundabout.getPosition().length; i++) {
 				if (observedRoundabout.getPosition()[i].equals(location)) {					
 					if (i == 3) {	//move to next roundabout segment
@@ -318,19 +318,22 @@ public class Vehicle extends Observable implements Observer{
 						observedRoundabout = observedRoundabout.getNext();
 						location = observedRoundabout.getPosition()[0];
 					} else {	//otherwise move to the next position in the current segment
-						location = observedRoundabout.getPosition()[i+1];
+						location = new Point(observedRoundabout.getPosition()[i+1]);
 					}
 					break;
 				}
 			}
-			if (location.equals(observedRoundabout.getPosition()[3]))
+			if (location.equals(observedRoundabout.getPosition()[3])) {
 				//this is really convoluted, but I don't know of another way to do it... :/
+				//tell the intersection that it has a vehicle in it so that the vehicles observing that intersection
+				//	don't collide with the vehicle currently in it
 				observedRoundabout.getNext().getIntersection().setInIntersection(this);
+			}
 			break;
 		default:
 			System.out.println("vehicleUpdate: something has gone horribly wrong");	
 		}
-			
+		
 		notifyObservers();
 	}
 	

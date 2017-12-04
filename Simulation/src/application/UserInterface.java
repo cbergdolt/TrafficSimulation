@@ -329,9 +329,7 @@ public class UserInterface extends Application implements Observer{
 					LandmarkImageViews.add(new ImageView(LandmarkImage));
 					LandmarkImageViews.get(landmarkCount).setX(j*scale);
 					LandmarkImageViews.get(landmarkCount).setY(i*scale);
-//					mapImageViews.get(landmarkCount).setY(i*scale);
 					root.getChildren().add(LandmarkImageViews.get(landmarkCount));
-//					LandmarkImageViews.get(landmarkCount).toFront();
 					landmarkCount += 1;
 				} else if(sim.m.getRouteGrid()[j][i] == 2 || sim.m.getRouteGrid()[j][i] == 6) {
 					mapImageViews.add(new ImageView(RoadImage));	
@@ -348,7 +346,6 @@ public class UserInterface extends Application implements Observer{
 					mapImageViews.add(new ImageView(RoadImage));	
 				} else if (sim.m.getRouteGrid()[j][i] == 8) {
 					mapImageViews.add(new ImageView(LandmarkStopImage));
-//					continue;
 				}
 				mapImageViews.get(imageViewCount).setX(j*scale);
 				mapImageViews.get(imageViewCount).setY(i*scale);
