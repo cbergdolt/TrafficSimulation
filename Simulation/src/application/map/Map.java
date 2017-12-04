@@ -128,7 +128,7 @@ public class Map {
 
 	public int closeRoad() {
 		Random r = new Random();
-		int i = r.nextInt(intersections.length);	//select intersection to close
+		int i = 7;//r.nextInt(intersections.length);	//select intersection to close
 		
 		System.out.println("closing intersection " + i);
 		for (int a = 0; a < intersections[i].getLocation().length; a++) System.out.print(intersections[i].getLocation()[a] + ", ");
@@ -139,7 +139,7 @@ public class Map {
 		while (!(intersections[i].getType().isOpen(d))) {
 			d = r.nextInt(4);	//keep finding a random direction until it's open on intersection i
 		}
-		
+		d = 3;
 		System.out.println("closing direction " + d);
 		System.out.println("before block, intersection type = " + intersections[i].getType().toString());
 		intersections[i].blockDirection(d);

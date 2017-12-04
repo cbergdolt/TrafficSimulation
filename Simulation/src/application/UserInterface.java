@@ -63,7 +63,7 @@ public class UserInterface extends Application implements Observer{
 	boolean foundRAB = false;	// found roundabout; ignore other roundabout values
 	ImageView GrassImageView;
 	ImageView LandmarkImageView;
-	Image LandmarkImage;
+	Image LandmarkStopImage;
 	Image GrassImage;
 	Image PortalImage;
 	Vector<ImageView> mapImageViews = new Vector<ImageView>();
@@ -71,6 +71,9 @@ public class UserInterface extends Application implements Observer{
 	Image RoadClosedImage;
 	ImageView RoadClosedImageViewA;
 	ImageView RoadClosedImageViewB;
+	
+	Image LandmarkImage;
+	Vector<ImageView> LandmarkImageViews = new Vector<ImageView>();
 	
 	
 	Image gns_rewImage;
@@ -247,7 +250,8 @@ public class UserInterface extends Application implements Observer{
 		RoadImage = new Image("images/textures/RoadTextureTile_light.png", scale, scale, true, true);
 		GrassImage = new Image("images/textures/Snow.jpg", scale, scale, true, true);
 		PortalImage = new Image("images/textures/wreathPortal2.png", scale, scale, true, true);
-		LandmarkImage = new Image("images/textures/RoadTexture.png", scale, scale, true, true);
+		LandmarkStopImage = new Image("images/textures/RoadTexture.png", scale, scale, true, true);
+		LandmarkImage = new Image("images/textures/house.png", scale*2, scale*2, true, true);
 		
 		//roundabout image and image view
 		RoundaboutImage = new Image("images/textures/Roundabout2.png", scale*6, scale*6, true, true);
@@ -314,11 +318,21 @@ public class UserInterface extends Application implements Observer{
 			}
 		}
 		
+		int landmarkCount = 0;
 		int imageViewCount = 0;
 		for (int j = 0; j < dimensions; j++) {
 			for (int i = 0; i < dimensions; i++) {
 				if (sim.m.getRouteGrid()[j][i] == 1) {			
 					mapImageViews.add(new ImageView(GrassImage));
+				} else if (sim.m.getRouteGrid()[j][i] == 9) {
+					mapImageViews.add(new ImageView(GrassImage));
+					LandmarkImageViews.add(new ImageView(LandmarkImage));
+					LandmarkImageViews.get(landmarkCount).setX(j*scale);
+					LandmarkImageViews.get(landmarkCount).setY(i*scale);
+//					mapImageViews.get(landmarkCount).setY(i*scale);
+					root.getChildren().add(LandmarkImageViews.get(landmarkCount));
+//					LandmarkImageViews.get(landmarkCount).toFront();
+					landmarkCount += 1;
 				} else if(sim.m.getRouteGrid()[j][i] == 2 || sim.m.getRouteGrid()[j][i] == 6) {
 					mapImageViews.add(new ImageView(RoadImage));	
 					if (sim.m.getRouteGrid()[j][i] == 6 && !foundRAB) {
@@ -333,7 +347,7 @@ public class UserInterface extends Application implements Observer{
 				} else if (sim.m.getRouteGrid()[j][i] == 4 || sim.m.getRouteGrid()[j][i] == 5 || (sim.m.getRouteGrid()[j][i] % 7) == 0) { //ONLY TO SEE WHERE INTERSECTIONS ARE
 					mapImageViews.add(new ImageView(RoadImage));	
 				} else if (sim.m.getRouteGrid()[j][i] == 8) {
-					mapImageViews.add(new ImageView(LandmarkImage));
+					mapImageViews.add(new ImageView(LandmarkStopImage));
 //					continue;
 				}
 				mapImageViews.get(imageViewCount).setX(j*scale);
@@ -343,6 +357,11 @@ public class UserInterface extends Application implements Observer{
 			
 			}
 		}
+		
+		for (int i = 0; i < landmarkCount; i++) {
+			LandmarkImageViews.get(i).toFront();
+		}
+		
 		RoundaboutImageView.toFront();
 		RoadClosedImageViewA.toFront();
 		RoadClosedImageViewB.toFront();

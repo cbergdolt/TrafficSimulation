@@ -38,8 +38,9 @@ public class Simulation extends Observable{
 		Random r = new Random();
 		int roadClosure = r.nextInt(2);	//so that the closures happen 50% of the time
 		int blockedVG;
-		if (roadClosure == 0) blockedVG = -1; //definitely don't block a generator
-		else blockedVG = m.closeRoad();	//close a road segment, which may result in a blocked generator
+		//if (roadClosure == 0) blockedVG = -1; //definitely don't block a generator
+		//else 
+		blockedVG = m.closeRoad();	//close a road segment, which may result in a blocked generator
 		
 		//create vehicle generator for each entry/exit point
 		Point[] ee = m.getEntryExit();
@@ -170,9 +171,13 @@ public class Simulation extends Observable{
 	private void newVehicles() {
 		//generate new vehicles at each entry/exit point	
 		for (int i = 0; i < vg.length; i++) {
-//		for (int i = 0; i < 1; i++) {
+//		Vehicle v = null;
+//		for (int i = 0; i < 4; i++) {
 			Vehicle v = vg[i].generateVehicle();
-			//Vehicle v = vg[4].generateVehicle();
+			//if (i == 0) v = vg[1].generateVehicle();
+			//else if (i == 1) v = vg[3].generateVehicle();
+			//else if (i == 2) v = vg[4].generateVehicle();
+			//else if (i == 3) v = vg[6].generateVehicle();
 			if (v != null) {
 				Route route = generateRoute(v.getLocation());
 				v.setRoute(route);
