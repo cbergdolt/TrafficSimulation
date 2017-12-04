@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.util.LinkedList;
 
 import application.intersection.Intersection;
+import javafx.util.Pair;
 
 /***
  * Route generator to form the route for the specified vehicle
@@ -12,13 +13,53 @@ import application.intersection.Intersection;
  */
 
 public class RouteGenerator{
-	Route route;
+	//Route route;
 	
-	public Point[] generateRoute(int numStops, Point start, Landmark[] stops, int[][] grid, Intersection[] intersections) {
+	public Route generateRoute(int numStops, Point start, Landmark[] stops, int[][] grid, Intersection[] intersections) {
 		/**
 		 * Generates the route for the vehicle
 		 */
-		System.out.println("start: " + start.x + " " + start.y);
+		
+		Route route = new Route();
+		
+		//don't bother with a route, can go straight through
+		if (start.equals(new Point(4,0)) || start.equals(new Point(42,0)) || start.equals(new Point(5, 49)) || start.equals(new Point(43, 49)))
+			return null;
+		else if (start.equals(new Point(22,0))) {
+			route.path.add(new RoutePair(new Point(22, 10), 'S'));
+			route.path.add(new RoutePair(new Point(22, 20), 'R'));
+			route.path.add(new RoutePair(new Point(22, 25), 'S'));	//roundabout exit! (point is different)
+			route.path.add(new RoutePair(new Point(22, 38), 'S'));
+			return route;
+		}
+		else if (start.equals(new Point(49, 22))) {
+			route.path.add(new RoutePair(new Point(43, 22), 'W'));
+			route.path.add(new RoutePair(new Point(33, 22), 'W'));
+			route.path.add(new RoutePair(new Point(25, 22), 'R'));
+			route.path.add(new RoutePair(new Point(20, 22), 'W'));	//roundabout exit! (point is different)
+			route.path.add(new RoutePair(new Point(13, 22), 'W'));
+			route.path.add(new RoutePair(new Point(5, 22), 'W'));
+			return route;
+		}
+		else if (start.equals(new Point(0, 23))) {
+			route.path.add(new RoutePair(new Point(4, 23), 'E'));
+			route.path.add(new RoutePair(new Point(10, 23), 'E'));
+			route.path.add(new RoutePair(new Point(20, 23), 'R'));
+			route.path.add(new RoutePair(new Point(25, 23), 'E'));	//roundabout exit! (point is different)
+			route.path.add(new RoutePair(new Point(32, 23), 'E'));
+			route.path.add(new RoutePair(new Point(42, 23), 'E'));
+			return route;
+		}
+		else if (start.equals(new Point(23, 49))) {
+			route.path.add(new RoutePair(new Point(23, 39), 'N'));
+			route.path.add(new RoutePair(new Point(23, 25), 'R'));
+			route.path.add(new RoutePair(new Point(23, 20), 'N'));	//roundabout exit! (point is different)
+			route.path.add(new RoutePair(new Point(23, 11), 'N'));
+			return route;
+		}
+		else return null;
+		
+		/*System.out.println("start: " + start.x + " " + start.y);
 		
 		// Set Disappear point for landmarks
 		int i;
@@ -72,6 +113,7 @@ public class RouteGenerator{
 			curr = new Point(stops[ii].location.x, stops[ii].location.y);
 			System.out.println("point now: " + curr.x + " " + curr.y);
 		}
+		*/
 		//System.out.println("LANDMARK AT: " + stops[id].location.x + " " + stops[id].location.y);
 		// for every path to generate, reinstate the intersections
 		/*int sectX, sectY;
@@ -90,7 +132,7 @@ public class RouteGenerator{
 //			System.out.println("point: " + curr.x + " " + curr.y);
 			
 		}*/
-		if (curr.x < stops[id].location.x) {
+		/*if (curr.x < stops[id].location.x) {
 			System.out.println("first");
 			// landmark/stop is to the right of the start so Direction = E
 			// iterate through intersections to the left of the start 
@@ -107,6 +149,6 @@ public class RouteGenerator{
 			System.out.println("last");
 		}
 		
-		return null;
+		return null;*/
 	}
 }
