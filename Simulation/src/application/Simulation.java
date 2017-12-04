@@ -63,7 +63,7 @@ public class Simulation extends Observable{
 		}
 		
 		rg = new RouteGenerator();
-		newVehicles();
+//		newVehicles();
 		//other pesky initialization things?
 	}
 	
@@ -175,7 +175,7 @@ public class Simulation extends Observable{
 			Vehicle v = vg[i].generateVehicle();
 			//Vehicle v = vg[1].generateVehicle();
 			if (v != null) {
-				Route route = generateRoute(v.getLocation());
+				Route route = generateRoute(v.getLocation(), v.getDirection());
 				v.setRoute(route);
 				VehicleView vv = new VehicleView(v);
 				vehicles.add(vv);
@@ -199,10 +199,10 @@ public class Simulation extends Observable{
 		
 	}
 
-	private Route generateRoute(Point start) {
+	private Route generateRoute(Point start, char dir) {
 		// TODO Auto-generated method stub
 		//I'm not sure how to determine number of stops...?
-		return rg.generateRoute(4, start, m.getLandmarks(), m.getRouteGrid(), m.getIntersections());
+		return rg.generateRoute(4, start, m.getLandmarks(), m.getRouteGrid(), m.getIntersections(), dir);
 		//return null;
 	}
 	

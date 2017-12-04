@@ -15,7 +15,7 @@ import javafx.util.Pair;
 public class RouteGenerator{
 	//Route route;
 	
-	public Route generateRoute(int numStops, Point start, Landmark[] stops, int[][] grid, Intersection[] intersections) {
+	public Route generateRoute(int numStops, Point start, Landmark[] stops, int[][] grid, Intersection[] intersections, char dir) {
 		/**
 		 * Generates the route for the vehicle
 		 */

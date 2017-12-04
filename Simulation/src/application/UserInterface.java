@@ -3,12 +3,11 @@ package application;
 import java.awt.Point;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Random;
 import java.util.Vector;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.beans.property.LongProperty;
-import javafx.beans.property.SimpleLongProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -18,26 +17,20 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import application.intersection.*;
-import application.map.*;
 import application.vehicle.*;
 
 /***
@@ -74,6 +67,9 @@ public class UserInterface extends Application implements Observer{
 	
 	Image LandmarkImage;
 	Vector<ImageView> LandmarkImageViews = new Vector<ImageView>();
+	Vector<Image> HouseImages = new Vector<Image>();
+	Vector<ImageView> HouseImageViews = new Vector<ImageView>();
+
 	
 	
 	Image gns_rewImage;
@@ -245,13 +241,20 @@ public class UserInterface extends Application implements Observer{
     
 	private void initializeImages() {
 		//import/create images and image views, add to ObsList
-		//System.out.println(x);
 		//road, snow, and portal images
 		RoadImage = new Image("images/textures/RoadTextureTile_light.png", scale, scale, true, true);
 		GrassImage = new Image("images/textures/Snow.jpg", scale, scale, true, true);
 		PortalImage = new Image("images/textures/wreathPortal2.png", scale, scale, true, true);
 		LandmarkStopImage = new Image("images/textures/RoadTexture.png", scale, scale, true, true);
 		LandmarkImage = new Image("images/textures/house.png", scale*2, scale*2, true, true);
+		
+		// images for other houses on the block
+		HouseImages.add(new Image("images/textures/house2.png", scale*1.5, scale*1.5, true, true));
+		HouseImages.add(new Image("images/sprites/Houses/House1.png", scale*1.5, scale*1.5, true, true));
+		HouseImages.add(new Image("images/sprites/Houses/House2.png", scale*1.25, scale*1.25, true, true));
+		HouseImages.add(new Image("images/sprites/Houses/House3.png", scale*1.5, scale*1.5, true, true));
+		HouseImages.add(new Image("images/sprites/Houses/House4.png", scale*1.25, scale*1.25, true, true));
+		
 		
 		//roundabout image and image view
 		RoundaboutImage = new Image("images/textures/Roundabout2.png", scale*6, scale*6, true, true);
@@ -298,7 +301,7 @@ public class UserInterface extends Application implements Observer{
 			intersectionViews[i].setY(loc.y*scale);
 			
 			if (sim.m.getIntersections()[i].isBlocked()) {	//if the intersection has been artificially blocked
-				Intersection in = sim.m.getIntersections()[i];
+//				Intersection in = sim.m.getIntersections()[i];
 				if (!placedFirstRoadBlock) {	//place the RoadClosedImageViewA
 					placeRoadClosure(sim.m.getIntersections()[i], RoadClosedImageViewA);
 					root.getChildren().add(RoadClosedImageViewA);
@@ -320,17 +323,28 @@ public class UserInterface extends Application implements Observer{
 		
 		int landmarkCount = 0;
 		int imageViewCount = 0;
+//		int houseViewCount = 0;
+//		int r; 
+//		Random rand = new Random();
+		
 		for (int j = 0; j < dimensions; j++) {
 			for (int i = 0; i < dimensions; i++) {
 				if (sim.m.getRouteGrid()[j][i] == 1) {			
 					mapImageViews.add(new ImageView(GrassImage));
-				} else if (sim.m.getRouteGrid()[j][i] == 9) {
+				} else if (sim.m.getRouteGrid()[j][i] == 8) {
 					mapImageViews.add(new ImageView(GrassImage));
 					LandmarkImageViews.add(new ImageView(LandmarkImage));
 					LandmarkImageViews.get(landmarkCount).setX(j*scale);
 					LandmarkImageViews.get(landmarkCount).setY(i*scale);
+					if (i == 9) {
+						LandmarkImageViews.get(landmarkCount).setY((i-0.5)*scale );
+					} else if (i == 19 || i == 31) {
+						LandmarkImageViews.get(landmarkCount).setX((j-1)*scale );
+					}
+					
 					root.getChildren().add(LandmarkImageViews.get(landmarkCount));
 					landmarkCount += 1;
+				
 				} else if(sim.m.getRouteGrid()[j][i] == 2 || sim.m.getRouteGrid()[j][i] == 6) {
 					mapImageViews.add(new ImageView(RoadImage));	
 					if (sim.m.getRouteGrid()[j][i] == 6 && !foundRAB) {
@@ -344,8 +358,25 @@ public class UserInterface extends Application implements Observer{
 				
 				} else if (sim.m.getRouteGrid()[j][i] == 4 || sim.m.getRouteGrid()[j][i] == 5 || (sim.m.getRouteGrid()[j][i] % 7) == 0) { //ONLY TO SEE WHERE INTERSECTIONS ARE
 					mapImageViews.add(new ImageView(RoadImage));	
-				} else if (sim.m.getRouteGrid()[j][i] == 8) {
-					mapImageViews.add(new ImageView(LandmarkStopImage));
+				} else if (sim.m.getRouteGrid()[j][i] == 9) {
+					mapImageViews.add(new ImageView(GrassImage));
+//					r = rand.nextInt(5);					
+//					HouseImageViews.add(new ImageView(HouseImages.get(r)));
+//					if (sim.m.getRouteGrid()[j+1][i] == 2 || sim.m.getRouteGrid()[j+1][i] == 4 || sim.m.getRouteGrid()[j+1][i] == 5) {
+//						HouseImageViews.get(houseViewCount).setX((j-0.5)*scale);
+//					} else {
+//						HouseImageViews.get(houseViewCount).setX(j*scale);
+//					}
+//					
+//					if (sim.m.getRouteGrid()[j][i+1] == 2 || sim.m.getRouteGrid()[j][i+1] == 4 || sim.m.getRouteGrid()[j][i+1] == 5) {
+//						HouseImageViews.get(houseViewCount).setY((i-0.5)*scale);
+//					} else {
+//						HouseImageViews.get(houseViewCount).setY(i*scale);
+//					}
+//										
+//					root.getChildren().add(HouseImageViews.get(houseViewCount));
+//					
+//					houseViewCount += 1;
 				}
 				mapImageViews.get(imageViewCount).setX(j*scale);
 				mapImageViews.get(imageViewCount).setY(i*scale);
@@ -358,6 +389,10 @@ public class UserInterface extends Application implements Observer{
 		for (int i = 0; i < landmarkCount; i++) {
 			LandmarkImageViews.get(i).toFront();
 		}
+		
+//		for (int i = 0; i < houseViewCount; i++) {
+//			HouseImageViews.get(i).toFront();
+//		}
 		
 		RoundaboutImageView.toFront();
 		RoadClosedImageViewA.toFront();
