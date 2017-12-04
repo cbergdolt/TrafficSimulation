@@ -174,7 +174,7 @@ public class Simulation extends Observable{
 			Vehicle v = vg[i].generateVehicle();
 			//Vehicle v = vg[4].generateVehicle();
 			if (v != null) {
-				Point[] route = generateRoute(v.getLocation());
+				Route route = generateRoute(v.getLocation());
 				v.setRoute(route);
 				VehicleView vv = new VehicleView(v);
 				vehicles.add(vv);
@@ -198,7 +198,7 @@ public class Simulation extends Observable{
 		
 	}
 
-	private Point[] generateRoute(Point start) {
+	private Route generateRoute(Point start) {
 		// TODO Auto-generated method stub
 		//I'm not sure how to determine number of stops...?
 		return rg.generateRoute(4, start, m.getLandmarks(), m.getRouteGrid(), m.getIntersections());

@@ -1,6 +1,7 @@
 package application.route;
 
 import java.awt.Point;
+import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Vector;
 
@@ -11,7 +12,17 @@ import java.util.Vector;
  */
 
 public class Route {
-	Queue<Point> path;
+	//Queue<Point> path;
+	Queue<RoutePair> path;
 	Landmark[] landmarks;
 	// variable for top of the queue point
+	
+	public Route() {
+		path = new LinkedList<RoutePair>();
+		
+	}
+	
+	public Queue<RoutePair> getPath() { return path; }
+	
+	public void remove() { path.remove(); }
 }

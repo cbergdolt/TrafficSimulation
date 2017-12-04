@@ -5,6 +5,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import application.intersection.*;
+import application.route.*;
 import javafx.scene.image.Image;
 
 /**
@@ -25,7 +26,8 @@ public class Vehicle extends Observable implements Observer{
 	int length;			//length of vehicle ... not sure what units
 	char direction;		//N, S, E, W -- direction of travel -or- R -- roundabout
 	Point location;		//current location of vehicle
-	Point route[];
+	//Point route[];
+	Route route;
 	int type;
 	int scale = 20;
 	
@@ -104,8 +106,8 @@ public class Vehicle extends Observable implements Observer{
 	public Point getLocation() { return location; }
 	public void setLocation(Point l) { location = l; }
 	
-	public Point[] getRoute() { return route; }
-	public void setRoute(Point[] r) { route = r; }
+	public Route getRoute() { return route; }
+	public void setRoute(Route r) { route = r; }
 	
 	public int getType() { return type; }
 	public void setType(int t) { type = t; }
@@ -123,8 +125,7 @@ public class Vehicle extends Observable implements Observer{
 			observedIntersection.addRoundaboutObserver(this);
 			if (observedRoundabout == null) {
 				observedRoundabout = observedIntersection.getRoundabout();
-			}
-			direction = 'R'; //roundabout 
+			} 
 		}
 		observedIntersection = intersection;	//update observedIntersection
 		startRequested = false;	//a start has not been requested for this observed intersection yet
@@ -278,7 +279,18 @@ public class Vehicle extends Observable implements Observer{
 	}
 
 	public void updateVehicle() {
-		// TODO Auto-generated method stub
+		//check if vehicle is in the next intersection in the route, adjust direction accordingly
+		if (route != null) {
+			RoutePair nextInt = route.getPath().peek();
+			if (nextInt != null) {	//if there is another intersection/direction pair in the path
+				Point intLoc = nextInt.getPoint();
+				if (location.equals(intLoc)) {
+					direction = nextInt.getDirection();
+					route.remove();
+				}
+			}
+		}
+		
 		//update location based on current location, direction of travel, velocity, etc.
 		switch (direction) {
 		case 'N':
