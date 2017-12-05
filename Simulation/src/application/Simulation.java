@@ -98,7 +98,7 @@ public class Simulation extends Observable{
 			//		release of vehicles into the simulation--though I think this should be taken care of with one of the 
 			//		inputs from the user on the startup screen?
 			if (vehicles.size() < vg.length) {
-				newVehicles();
+				newVehicle();
 			}
 			/*if (vehicles.size() > 0) {
 				checkBounds();
@@ -171,9 +171,7 @@ public class Simulation extends Observable{
 	private void newVehicles() {
 		//generate new vehicles at each entry/exit point	
 		for (int i = 0; i < vg.length; i++) {
-//		for (int i = 0; i < 1; i++) {
 			Vehicle v = vg[i].generateVehicle();
-			//Vehicle v = vg[1].generateVehicle();
 			if (v != null) {
 				Route route = generateRoute(v.getLocation(), v.getDirection());
 				v.setRoute(route);
@@ -182,6 +180,20 @@ public class Simulation extends Observable{
 			}
 		}
 
+	}
+	
+	private void newVehicle() {
+		//generate new vehicle from a randomly selected vehicle generator
+		Random r = new Random();
+		int w = r.nextInt(vg.length);
+		Vehicle v = vg[w].generateVehicle();
+		if (v != null) {
+			Route route = generateRoute(v.getLocation(), v.getDirection());
+			v.setRoute(route);
+			VehicleView vv = new VehicleView(v);
+			vehicles.add(vv);
+		}
+		System.out.println("NEW VEHICLE: "+w);
 	}
 	
 	private void checkBounds() {
