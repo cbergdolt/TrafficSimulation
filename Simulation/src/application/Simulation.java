@@ -214,7 +214,7 @@ public class Simulation extends Observable{
 	private Route generateRoute(Point start, char dir) {
 		// TODO Auto-generated method stub
 		//I'm not sure how to determine number of stops...?
-		return rg.generateRoute(4, start, m.getLandmarks(), m.getRouteGrid(), m.getIntersections(), dir);
+		return rg.generateRoute(4, start, m.getLandmarks(), m.getRouteGrid(), m.getIntersections(), dir, m.getAdjList());
 		//return null;
 	}
 	
