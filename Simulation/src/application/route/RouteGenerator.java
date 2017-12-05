@@ -1,6 +1,8 @@
 package application.route;
 
 import java.awt.Point;
+import java.util.Random;
+import java.util.Vector;
 
 import application.intersection.Intersection;
 
@@ -13,10 +15,26 @@ import application.intersection.Intersection;
 public class RouteGenerator{
 	//Route route;
 	
-	public Route generateRoute(int numStops, Point start, Landmark[] stops, int[][] grid, Intersection[] intersections, char dir) {
+	public Route generateRoute(int numStops, Point start, Landmark[] stops, int[][] grid, Intersection[] intersections, char dir, Object[] vertices) {
 		/**
 		 * Generates the route for the vehicle
 		 */
+		
+//		Vector<Point> routeStops = new Vector<Point>();
+//		Random rand = new Random();
+//		int r;
+//		for (int i = 0; i < numStops; i++) {
+//			while (true) {
+//				r = rand.nextInt(36);
+//				if (vertices[r] instanceof Landmark) {
+//					// add to vector
+//					routeStops.add(((Landmark)vertices[r]).location);
+//					System.out.println("stop:" + ((Landmark)vertices[r]).location);
+//					break;
+//				}
+//			}
+//			
+//		}
 		
 		Route route = new Route();
 		
@@ -55,9 +73,15 @@ public class RouteGenerator{
 			route.path.add(new RoutePair(new Point(23, 11), 'N'));
 			return route;
 		}
-		else return null;
+		
+		
+		
+		
+		
+		return null;
 		
 		// for alg: if curr is landmark, add 'L' as direction
+		
 
 		/*
 		// randomly chose x = numStops landmark ids
@@ -100,29 +124,6 @@ public class RouteGenerator{
 
 	}
 	
-	public Point getRealStart(int x, int y) {
-		Point initial = new Point(x, y);
-		if (initial.equals(new Point(4, 0))) {
-			return new Point (4, 10);
-		} else if (initial.equals(new Point(22, 0))) {
-			return new Point (12, 10);
-		} else if (initial.equals(new Point(42, 0))) {
-			return new Point (42, 10);
-		} else if (initial.equals(new Point(0, 23))) {
-			return new Point (4, 22);
-		} else if (initial.equals(new Point(49, 22))) {
-			return new Point (42, 22);
-		} else if (initial.equals(new Point(5, 49))) {
-			return new Point (4, 38);
-		} else if (initial.equals(new Point(23, 49))) {
-			return new Point (22, 38);
-		} else if (initial.equals(new Point(43, 49))) {
-			return new Point (42, 38);
-		} else {
-			System.out.println("Unable to recognize start point");
-			return null;
-		}
-	}
 	
 	public char getDirection(Point old, Point curr) {
 		// if point is one of 4 roundabout points, direction should be r until it exits roundabout
@@ -196,6 +197,4 @@ public class RouteGenerator{
 		
 		return null;
 	}
-	
-	
 }

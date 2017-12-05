@@ -24,6 +24,7 @@ import javafx.scene.control.TabPane.TabClosingPolicy;
 public class Map {
 	int[][] routeGrid;
 	int[][] trackingGrid;
+	int[][] adjList;
 	//RoadSegment[] roads = new RoadSegment[12];	//I have no idea how many road segments we will have, but the number should be constant once we get the map figured out
 	Intersection[] intersections = new Intersection[18];
 	int fourWayInt;
@@ -32,6 +33,7 @@ public class Map {
 	HashMap<Integer, RoundaboutSegment[]> roundabouts = new HashMap<Integer, RoundaboutSegment[]>();
 	Landmark[] landmarks = new Landmark[10];
 	Point[] entry_exit = new Point[8];
+	Object[] vertices = new Object[36];
 	
 	public Map() {
 		Point pt = new Point(0, 0);
@@ -41,14 +43,18 @@ public class Map {
 		int eeCount = 0;
 		int iCount = 0;
 		int landCount = 0;
+		int vCount = 0;
 		//counts for each intersection
 		fourWayInt = 0;
 		threeWayInt = 0;
 		roundaboutInt = 0;
+
 		
 		//1 = grass, 2 = street, 3 = vehicle generator, 4 = stop light, 5 = stop sign, 6 = roundabout street, multiple of 7 = yield sign (roundabout intersection)
 		Grid grid = new Grid();
 		routeGrid = grid.getRouteGrid();
+		adjList = grid.getAdjList();
+
 		for (int i = 0; i < 50; i++) {	//y
 			for (int j = 0; j < 50; j++) {	//x
 				if (routeGrid[j][i] == 3) {	//ENTRY EXIT POINTS (location of vehicle generators
@@ -56,6 +62,8 @@ public class Map {
 					System.out.println("NEW EE: "+entry_exit[eeCount]);
 					//entry_exit[eeCount].x = j;
 					//entry_exit[eeCount].y = i;
+					vertices[vCount] = entry_exit[eeCount];
+					vCount += 1;
 					eeCount += 1;
 					//top right, bottom right, top left, bottom left (on actual map, not on route grid)
 				} 
@@ -77,6 +85,8 @@ public class Map {
 					}
 					
 					landmarks[landCount] = new Landmark("s", landCount, new Point(j, i), a, b);
+					vertices[vCount] = landmarks[landCount];
+					vCount += 1;
 					landCount +=1;
 				}
 				//INTERSECTIONS
@@ -91,6 +101,8 @@ public class Map {
 					
 					IntersectionType t = determineIntersectionType(ipoints);
 					intersections[iCount] = new Intersection(ipoints, t/*IntersectionType.NSEW*/, sl, null);
+					vertices[vCount] = intersections[iCount];
+					vCount += 1;
 					iCount += 1;
 					fourWayInt += 1;
 				} 
@@ -100,6 +112,8 @@ public class Map {
 					TrafficSign ts = new TrafficSign(SignType.STOP);
 					IntersectionType t = determineIntersectionType(ipoints);
 					intersections[iCount] = new Intersection(ipoints, t, null, ts);
+					vertices[vCount] = intersections[iCount];
+					vCount += 1;
 					iCount += 1;
 					threeWayInt += 1;
 				} 
@@ -121,6 +135,8 @@ public class Map {
 					
 					intersections[iCount] = new Intersection(ipoints, t, null, ts, rab);
 					rab.setIntersection(intersections[iCount]);	//give roundabout segment access to its intersection
+					vertices[vCount] = intersections[iCount];
+					vCount += 1;
 					iCount += 1;
 					roundaboutInt += 1;
 				}
@@ -140,10 +156,6 @@ public class Map {
 		//intersections[0] = new Intersection(new Point(0, 0), null, new TrafficSign(SignType.STOP));
 		//intersections[1] = new Intersection(new Point(1, 0), new StopLight(LightState.GNS_REW, new Point(1, 0), 1, 1, 1, 1), null);
 		//roads[0] = new RoadSegment(intersections[0], intersections[1]);
-	
-		// add entry points, intersections and landmarks to Vertex array
-		
-		// hard code the adj list
 	
 	}
 
@@ -397,6 +409,8 @@ public class Map {
 	public void setLandmarks(Landmark[] l) { landmarks = l; }
 	
 	public int[][] getRouteGrid() { return routeGrid; }
+	
+	public int[][] getAdjList() { return adjList;}
 	
 	public void setRouteGrid(int [][] g) { routeGrid = g; } 
 }
