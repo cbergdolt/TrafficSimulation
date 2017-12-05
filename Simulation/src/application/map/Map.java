@@ -60,7 +60,23 @@ public class Map {
 					//top right, bottom right, top left, bottom left (on actual map, not on route grid)
 				} 
 				else if (routeGrid[j][i] == 8) {
-					landmarks[landCount] = new Landmark("s", landCount, new Point(j, i));
+					Point a = null;
+					Point b = null;
+					if (routeGrid[j-1][i] == 2) { // check if road is E
+						a = new Point(j-1, i);
+						b = new Point(j-2, i);
+					} else if (routeGrid[j+1][i] == 2) { // check if road is W
+						a = new Point(j+1, i);
+						b = new Point(j+2, i);
+					} else if (routeGrid[j][i-1] == 2) { // check if road is N
+						a = new Point(j, i-1);
+						b = new Point(j, i-2);
+					} else if (routeGrid[j][i+1] == 2) { // check if road is N
+						a = new Point(j, i+1);
+						b = new Point(j, i+2);
+					}
+					
+					landmarks[landCount] = new Landmark("s", landCount, new Point(j, i), a, b);
 					landCount +=1;
 				}
 				//INTERSECTIONS
@@ -124,6 +140,11 @@ public class Map {
 		//intersections[0] = new Intersection(new Point(0, 0), null, new TrafficSign(SignType.STOP));
 		//intersections[1] = new Intersection(new Point(1, 0), new StopLight(LightState.GNS_REW, new Point(1, 0), 1, 1, 1, 1), null);
 		//roads[0] = new RoadSegment(intersections[0], intersections[1]);
+	
+		// add entry points, intersections and landmarks to Vertex array
+		
+		// hard code the adj list
+	
 	}
 
 	public int closeRoad() {
