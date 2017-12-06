@@ -15,26 +15,32 @@ import application.intersection.Intersection;
 public class RouteGenerator{
 	//Route route;
 	
-	public Route generateRoute(int numStops, Point start, Landmark[] stops, int[][] grid, Intersection[] intersections, char dir, Object[] vertices) {
+	public Route generateRoute(int numStops, Point start, Landmark[] stops, int[][] grid, Intersection[] intersections, char dir, Object[] vertices, int[][] adjList) {
 		/**
 		 * Generates the route for the vehicle
 		 */
 		
-//		Vector<Point> routeStops = new Vector<Point>();
-//		Random rand = new Random();
-//		int r;
-//		for (int i = 0; i < numStops; i++) {
-//			while (true) {
-//				r = rand.nextInt(36);
-//				if (vertices[r] instanceof Landmark) {
-//					// add to vector
-//					routeStops.add(((Landmark)vertices[r]).location);
-//					System.out.println("stop:" + ((Landmark)vertices[r]).location);
-//					break;
-//				}
-//			}
-//			
-//		}
+		System.out.println("HEREEEE");
+		
+		Vector<Point> routeStops = new Vector<Point>();
+		Vector<Integer> ids = new Vector<Integer>();
+		Random rand = new Random();
+		int r;
+		while(routeStops.size() < numStops) {
+				System.out.println(routeStops.size());
+				r = rand.nextInt(36);
+				while (ids.contains(r)) {
+					r = rand.nextInt(36);
+				}
+				System.out.println(vertices[r].getClass().getSimpleName());
+				if (vertices[r] instanceof Landmark) {
+					routeStops.add(((Landmark)vertices[r]).location);
+					System.out.println("stop:" + ((Landmark)vertices[r]).location);
+				}
+				ids.add(r);
+		}
+		
+		System.out.println("done");
 		
 		Route route = new Route();
 		

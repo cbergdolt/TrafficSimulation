@@ -148,6 +148,10 @@ public class Map {
 		//link all the proper roundabout segments together
 		linkRoundabout();
 		
+		for (Object i: vertices) {
+			System.out.println(i.getClass().getName());
+		}
+		
 		
 		//I guess this is where the grid(s) are hard-coded
 		//And are the landmarks generated here, or passed in?
@@ -411,6 +415,8 @@ public class Map {
 	public int[][] getRouteGrid() { return routeGrid; }
 	
 	public int[][] getAdjList() { return adjList;}
+	
+	public Object[] getVertices() { return vertices;}
 	
 	public void setRouteGrid(int [][] g) { routeGrid = g; } 
 }
