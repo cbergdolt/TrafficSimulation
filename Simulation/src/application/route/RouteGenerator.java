@@ -154,7 +154,7 @@ public class RouteGenerator{
 			marked.put(v.getKey(), v.getValue()); 
 			
 			for (int u = 0; u < V; u++) {
-				if (adjList[v.getKey()][u] == 1) {
+				if (adjList[v.getKey()][u] == 1 || (u == fin && adjList[v.getKey()][u] == 2) || (u == src && adjList[v.getKey()][u] == 2)) {
 					//System.out.println(u);
 					frontier.add(new Pair <Integer, Integer> (u, v.getKey()));
 				}
