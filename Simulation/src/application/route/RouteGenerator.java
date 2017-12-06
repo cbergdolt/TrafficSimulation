@@ -108,8 +108,8 @@ public class RouteGenerator{
 		int fin = 0;
 		
 		System.out.println("In Dijkstra:");
-		System.out.println("starting: " + start.x + " " + start.y);
-		System.out.println("ending: " + end.x + " " + end.y);
+		//System.out.println("starting: " + start.x + " " + start.y);
+		//System.out.println("ending: " + end.x + " " + end.y);
 		
 		for (int j = 0; j < V; j++) {			
 			if (vertices[j] instanceof Landmark) {
@@ -153,7 +153,6 @@ public class RouteGenerator{
 			}
 			
 			marked.put(v.getKey(), v.getValue()); 
-			
 			for (int u = 0; u < V; u++) {
 				if (adjList[v.getKey()][u] == 1 || (u == fin && adjList[v.getKey()][u] == 2) || (u == src && adjList[v.getKey()][u] == 2)) {
 					//System.out.println(u);
@@ -166,31 +165,63 @@ public class RouteGenerator{
 			System.out.println(entry.getKey() + ", " + entry.getValue());
 		}
 		System.out.println("Done\n");
-		Stack<Integer> r = new Stack<Integer>();
-		r = constructRoute(marked, src, fin);
+		Stack<Pair<Integer, Character>> r = new Stack<Pair<Integer, Character>>();
+		r = constructRoute(vertices, marked, src, fin);
 		
+		Pair<Integer, Character> p;
 		while(!r.isEmpty()) {
-			System.out.println(r.pop());
+			p = r.pop();
+			//System.out.println(p.toString());
 		}
 		
 		return marked;
 		
 	}
 	
-	public Stack<Integer> constructRoute(Map<Integer, Integer> marked, int src, int fin) {
+	public Stack<Pair<Integer, Character>> constructRoute(Object[] vertices, Map<Integer, Integer> marked, int src, int fin) {
 		//Route r = new Route();
-		Stack<Integer> s = new Stack<Integer>();
+		Stack<Pair<Integer, Character>> s = new Stack<Pair<Integer, Character>>();
+		char direction = 'o';
 		int val = fin;
-		s.push(fin);
+		Point p1 = new Point();
+		Point p2 = new Point();
 		
+		Pair<Integer, Character> p = new Pair<Integer, Character>(fin, ' ');
+		System.out.println("Fin "+ p.toString());
+		s.push(p);
+		val = marked.get(val);
 		while (val != src) {
+			p1 = getPoint(val, vertices);
+			direction = getDirection(p1, getPoint(s.peek().getKey(), vertices));
+			
+			Pair<Integer, Character> pair = new Pair<Integer, Character>(val, direction);
+			s.push(pair);
+			System.out.println(pair.toString());
 			val = marked.get(val);
-			s.push(val);
+			if (val == src) {
+				p2 = getPoint(s.peek().getKey(), vertices);
+				p1 = (Point) vertices[val];
+				direction = getDirection(p1, p2);
+				Pair<Integer, Character> finalPair = new Pair<Integer, Character>(val, direction);
+				s.push(finalPair);
+				System.out.println("SRC "+ finalPair.toString());
+			}
+			
 		}
 		
 		return s;
 	}
 
+	public Point getPoint(int index, Object[] vertices) {	
+		if (vertices[index] instanceof Landmark) {
+			return ((Landmark) vertices[index]).location;
+		} else if (vertices[index] instanceof Point) {
+			return (Point) vertices[index];
+		} else {
+			return ((Intersection) vertices[index]).getIntPoints()[0];	
+		} 
+		
+	}
 
 	public char getDirection(Point old, Point curr) {
 		// if point is one of 4 roundabout points, direction should be r until it exits roundabout
@@ -209,9 +240,21 @@ public class RouteGenerator{
 			} else if (old.x > curr.x) {
 				return 'W';
 			}
-		} else {
-			System.out.println("Unable to determine direction");
-			return ' ';
+		} else if (old.y != curr.y && old.x != old.y) {
+			if (Math.abs(curr.x-old.x) > Math.abs(curr.y-old.y)) {
+				if (old.x < curr.x) {
+					return 'E';
+				} else if (old.x > curr.x) {
+					return 'W';
+				}
+			} else {
+				if (old.y < curr.y) {
+					return 'S';
+				} else if (old.y > curr.y) {
+					return 'N';
+				}
+			}
+			
 		}
 		return ' ';
 	}
