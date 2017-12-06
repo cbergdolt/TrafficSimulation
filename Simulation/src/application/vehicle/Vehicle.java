@@ -35,6 +35,7 @@ public class Vehicle extends Observable implements Observer{
 	Image upImage;
 	Image downImage;
 	
+	Vehicle observedVehicle;
 	Intersection observedIntersection;	//so vehicle can add itself to a sign-governed intersection's vehicleQueue
 	RoundaboutSegment observedRoundabout;	//so vehicle can traverse the roundabout and ignore other intersections while it's in the roundabout
 	boolean startRequested;	//used to momentarily prevent stop() being called and changing the curVelocity back to 0
@@ -48,6 +49,7 @@ public class Vehicle extends Observable implements Observer{
 		location = loc;
 		curVelocity = maxVelocity;
 		
+		observedVehicle = null;
 		observedIntersection = null;
 		observedRoundabout = null;
 		startRequested = false;
@@ -111,10 +113,7 @@ public class Vehicle extends Observable implements Observer{
 	public int getType() { return type; }
 	public void setType(int t) { type = t; }
 	
-	public Intersection getObservedIntersection() {
-		return observedIntersection;
-	}
-	
+	public Intersection getObservedIntersection() { return observedIntersection; }
 	public void setObservedIntersection(Intersection intersection) {
 		if (observedIntersection == intersection) return; //don't do this stuff if the vehicle already knows it's observing this intersection
 		//otherwise, do stuff with the old intersection, and then replace it with the new intersection
@@ -129,36 +128,45 @@ public class Vehicle extends Observable implements Observer{
 		observedIntersection = intersection;	//update observedIntersection
 		startRequested = false;	//a start has not been requested for this observed intersection yet
 	}
+	
+	public Vehicle getObservedVehicle() { return observedVehicle; }
+	public void setObservedVehicle(Vehicle vehicle) { 
+		observedVehicle = vehicle;
+	}
 
 	@Override
 	public void update(Observable o, Object arg) {
 		// TODO Auto-generated method stub
 		if (o instanceof Vehicle) {
-			//check what's up with the observed vehicle, and adjust speed accordingly
-			double d = distance(((Vehicle) o).location, location);
-			if (d <= stopDistance) {
-				stop();
-			}else if (d <= breakDistance) {
-				decelerate();
-			} else {
-				this.curVelocity = maxVelocity;
+			if (closer(observedVehicle, observedIntersection) instanceof Vehicle) {
+				//check what's up with the observed vehicle, and adjust speed accordingly
+				double d = distance(((Vehicle) o).location, location);
+				if (d <= stopDistance) {
+					stop();
+				}else if (d <= breakDistance) {
+					decelerate();
+				} else {
+					this.curVelocity = maxVelocity;
+				}
 			}
 		} else if (o instanceof Intersection) {
-			//check the status of the stoplight at the intersection at the end of the road segment that the vehicle is driving towards
-			//also check how close that intersection is
-			//then adjust speed accordingly
-			
-			//if the intersection has a light
-			if (((Intersection)o).getLight() != null) {
-				StopLight light = ((Intersection) o).getLight();
-				Point[] lightLoc = ((Intersection) o).getLocation();
-				lightResponse(light, lightLoc);
-			}
-			//if the intersection has a sign and the vehicle is not currently observing a roundabout segment
-			else if (((Intersection)o).getSign() != null && observedRoundabout == null) {
-				TrafficSign sign = ((Intersection) o).getSign();
-				Point[] signLoc = ((Intersection) o).getLocation();
-				signResponse(sign, signLoc);
+			if (closer(observedVehicle, observedIntersection) instanceof Intersection) {
+				//check the status of the stoplight at the intersection at the end of the road segment that the vehicle is driving towards
+				//also check how close that intersection is
+				//then adjust speed accordingly
+				
+				//if the intersection has a light
+				if (((Intersection)o).getLight() != null) {
+					StopLight light = ((Intersection) o).getLight();
+					Point[] lightLoc = ((Intersection) o).getLocation();
+					lightResponse(light, lightLoc);
+				}
+				//if the intersection has a sign and the vehicle is not currently observing a roundabout segment
+				else if (((Intersection)o).getSign() != null && observedRoundabout == null) {
+					TrafficSign sign = ((Intersection) o).getSign();
+					Point[] signLoc = ((Intersection) o).getLocation();
+					signResponse(sign, signLoc);
+				}
 			}
 		} else if (o instanceof RoundaboutSegment) {
 			//roundaboutResponse((RoundaboutSegment)o);
@@ -334,7 +342,28 @@ public class Vehicle extends Observable implements Observer{
 			System.out.println("vehicleUpdate: something has gone horribly wrong");	
 		}
 		
+		setChanged();
 		notifyObservers();
+	}
+	
+	private Object closer(Vehicle v, Intersection i) {
+		if (v == null) return i;
+		if (i == null) return v;
+		Point intloc = null;
+		if (this.direction == 'N') intloc = i.getLocation()[3];
+		else if (this.direction == 'S') intloc = i.getLocation()[0];
+		else if (this.direction == 'E') intloc = i.getLocation()[1];
+		else if (this.direction == 'W') intloc = i.getLocation()[2];
+		//else if (this.direction == 'R') 
+		else {
+			System.out.println("Vehicle::closer: something has gone horribly wrong");
+			return null;
+		}
+		
+		double idist = distance(this.location, intloc);	//distance from this vehicle to intersection i
+		double vdist = distance(this.location, v.getLocation());	//distance from this vehicle to vehicle v
+		if (idist >= vdist) return v;
+		else return i;
 	}
 	
 	private double distance(Point pta, Point ptb) {
