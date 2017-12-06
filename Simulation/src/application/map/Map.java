@@ -148,9 +148,9 @@ public class Map {
 		//link all the proper roundabout segments together
 		linkRoundabout();
 		
-		for (Object i: vertices) {
-			System.out.println(i.getClass().getName());
-		}
+//		for (Object i: vertices) {
+//			System.out.println(i.getClass().getName());
+//		}
 		
 		
 		//I guess this is where the grid(s) are hard-coded
