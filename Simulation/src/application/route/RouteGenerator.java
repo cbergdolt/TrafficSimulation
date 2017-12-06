@@ -1,6 +1,7 @@
 package application.route;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.PriorityQueue;
@@ -8,6 +9,7 @@ import java.util.Random;
 import java.util.Vector;
 
 import application.intersection.Intersection;
+import javafx.util.Pair;
 
 /***
  * Route generator to form the route for the specified vehicle
@@ -97,7 +99,7 @@ public class RouteGenerator{
 		int V = vertices.length;
 		
 		Map<Integer, Integer> marked = new HashMap<Integer, Integer>();
-		PriorityQueue<Integer> frontier = new PriorityQueue<Integer>();
+		ArrayList<Pair<Integer, Integer>> frontier = new ArrayList<Pair<Integer, Integer>>();
 		
 		
 		// find start node
@@ -136,30 +138,27 @@ public class RouteGenerator{
 		System.out.println("start id: " + src);
 		System.out.println("end id: " + fin);
 		
-		frontier.add(src);
-		
-		int v = 0;
-		int prev = src;
+		Pair <Integer, Integer> v = new Pair <Integer, Integer> (src, src);
+		frontier.add(v);
 		
 		while(!frontier.isEmpty()) {
-			v = frontier.remove();
+			v = frontier.remove(0);
 			
-			if (marked.containsValue(v)) continue;
+			if (marked.containsValue(v.getKey())) continue;
 			
-			if (v == fin) {
-				marked.put(v, prev);
+			if (v.getKey() == fin) {
+				marked.put(v.getKey(), v.getValue());
 				break;
 			}
 			
-			marked.put(v,prev); 
+			marked.put(v.getKey(), v.getValue()); 
 			
 			for (int u = 0; u < V; u++) {
-				if (adjList[v][u] == 1) {
-					System.out.println(u);
-					frontier.add(u);
+				if (adjList[v.getKey()][u] == 1) {
+					//System.out.println(u);
+					frontier.add(new Pair <Integer, Integer> (u, v.getKey()));
 				}
 			}
-			prev = v;
 		}
 
 		for (Map.Entry entry : marked.entrySet()) {
