@@ -53,6 +53,8 @@ public class RouteGenerator{
 		
 		dijkstra(route, vertices, adjList, start, routeStops.get(0));
 		
+		return route;
+		
 		//don't bother with a route, can go straight through
 		/*
 		if (start.equals(new Point(4,0)) || start.equals(new Point(42,0)) || start.equals(new Point(5, 49)) || start.equals(new Point(43, 49)))
@@ -91,8 +93,6 @@ public class RouteGenerator{
 		}
 		*/
 		
-		return null;
-
 
 	}
 	
