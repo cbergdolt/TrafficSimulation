@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.2.2" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
+  <package id="1" language="java" name="application" project="Simulation" file="/Simulation/src/application" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="508" y="144"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="2" language="java" name="application.intersection" project="Simulation" 
+    file="/Simulation/src/application/intersection" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="803" y="297"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="3" language="java" name="application.map" project="Simulation" file="/Simulation/src/application/map" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="974" y="155"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="4" language="java" name="application.road" project="Simulation" file="/Simulation/src/application/road" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1030" y="296"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="5" language="java" name="application.route" project="Simulation" file="/Simulation/src/application/route" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="201" y="310"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="6" language="java" name="application.vehicle" project="Simulation" 
+    file="/Simulation/src/application/vehicle" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="214" y="151"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    sort-features="false" accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true" static="true"/>    
+    <operations public="true" package="true" protected="true" private="true" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>
