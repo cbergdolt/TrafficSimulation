@@ -500,7 +500,7 @@ public class UserInterface extends Application implements Observer{
 			VehicleView vv = sim.vehicles.get(i); 
 			if (vv.getImageView() == null) {
 				Image vImage;
-				vv.setImage();
+				vv.setMyImage();
 				vImage = vv.getImage();
 				vv.setImageView(new ImageView(vImage));
 				root.getChildren().add(vv.getImageView());

@@ -84,7 +84,7 @@ public class Simulation extends Observable{
 			while(it.hasNext()) {
 				VehicleView v = it.next();
 				v.getVehicle().updateVehicle();
-				v.setImage();
+				v.setMyImage();
 				
 			}
 			
