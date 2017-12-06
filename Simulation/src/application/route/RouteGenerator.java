@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Random;
+import java.util.Stack;
 import java.util.Vector;
 
 import application.intersection.Intersection;
@@ -94,7 +95,7 @@ public class RouteGenerator{
 	}
 	
 	
-	private void dijkstra(Route route, Object[] vertices, int[][] adjList, Point start, Point end) {
+	private Map<Integer, Integer> dijkstra(Route route, Object[] vertices, int[][] adjList, Point start, Point end) {
 		// TODO Auto-generated method stub
 		int V = vertices.length;
 		
@@ -165,7 +166,29 @@ public class RouteGenerator{
 			System.out.println(entry.getKey() + ", " + entry.getValue());
 		}
 		System.out.println("Done\n");
+		Stack<Integer> r = new Stack<Integer>();
+		r = constructRoute(marked, src, fin);
 		
+		while(!r.isEmpty()) {
+			System.out.println(r.pop());
+		}
+		
+		return marked;
+		
+	}
+	
+	public Stack<Integer> constructRoute(Map<Integer, Integer> marked, int src, int fin) {
+		//Route r = new Route();
+		Stack<Integer> s = new Stack<Integer>();
+		int val = fin;
+		s.push(fin);
+		
+		while (val != src) {
+			val = marked.get(val);
+			s.push(val);
+		}
+		
+		return s;
 	}
 
 
