@@ -54,6 +54,7 @@ public class RouteGenerator{
 		dijkstra(route, vertices, adjList, start, routeStops.get(0));
 		
 		//don't bother with a route, can go straight through
+		/*
 		if (start.equals(new Point(4,0)) || start.equals(new Point(42,0)) || start.equals(new Point(5, 49)) || start.equals(new Point(43, 49)))
 			return null;
 		else if (start.equals(new Point(22,0))) {
@@ -88,6 +89,7 @@ public class RouteGenerator{
 			route.path.add(new RoutePair(new Point(23, 11), 'N'));
 			return route;
 		}
+		*/
 		
 		return null;
 
@@ -164,14 +166,21 @@ public class RouteGenerator{
 		for (Map.Entry entry : marked.entrySet()) {
 			System.out.println(entry.getKey() + ", " + entry.getValue());
 		}
-		System.out.println("Done\n");
+		System.out.println("Done");
 		Stack<Pair<Integer, Character>> r = new Stack<Pair<Integer, Character>>();
 		r = constructRoute(vertices, marked, src, fin);
 		
 		Pair<Integer, Character> p;
+		p = r.pop();
+		char oldDir = p.getValue();
+		Point at = new Point(0,0);
 		while(!r.isEmpty()) {
 			p = r.pop();
-			//System.out.println(p.toString());
+			at = getPoint(p.getKey(), vertices);
+			at = getNewPoint(p.getKey(), vertices, p.getValue(), oldDir);
+			System.out.println(at.x +" , " + at.y + " +++++ " + p.getValue());
+			route.path.add(new RoutePair(at, p.getValue()));
+			oldDir = p.getValue();
 		}
 		
 		return marked;
@@ -187,7 +196,7 @@ public class RouteGenerator{
 		Point p2 = new Point();
 		
 		Pair<Integer, Character> p = new Pair<Integer, Character>(fin, ' ');
-		System.out.println("Fin "+ p.toString());
+//		System.out.println("Fin "+ p.toString());
 		s.push(p);
 		val = marked.get(val);
 		while (val != src) {
@@ -196,7 +205,7 @@ public class RouteGenerator{
 			
 			Pair<Integer, Character> pair = new Pair<Integer, Character>(val, direction);
 			s.push(pair);
-			System.out.println(pair.toString());
+//			System.out.println(pair.toString());
 			val = marked.get(val);
 			if (val == src) {
 				p2 = getPoint(s.peek().getKey(), vertices);
@@ -204,7 +213,7 @@ public class RouteGenerator{
 				direction = getDirection(p1, p2);
 				Pair<Integer, Character> finalPair = new Pair<Integer, Character>(val, direction);
 				s.push(finalPair);
-				System.out.println("SRC "+ finalPair.toString());
+//				System.out.println("SRC "+ finalPair.toString());
 			}
 			
 		}
@@ -223,6 +232,70 @@ public class RouteGenerator{
 		
 	}
 
+	public Point getNewPoint(int index, Object[] vertices, char dir, char oldDir) {	
+		if (vertices[index] instanceof Landmark) {
+			return ((Landmark) vertices[index]).location;
+		} else if (vertices[index] instanceof Point) {
+			return (Point) vertices[index];
+		} else {
+			if (oldDir == 'N') {
+				switch(dir) {
+					case 'N':
+						return ((Intersection) vertices[index]).getIntPoints()[3];
+					case 'E':
+						return ((Intersection) vertices[index]).getIntPoints()[3];
+						
+					case 'W':
+						return ((Intersection) vertices[index]).getIntPoints()[2];
+						
+					case 'R':
+						return ((Intersection) vertices[index]).getRoundabout().getPrev().getPosition()[3];
+				}	
+			} else if (oldDir =='S') {
+				switch(dir) {
+				case 'S':
+					return ((Intersection) vertices[index]).getIntPoints()[0];
+					
+				case 'E':
+					return ((Intersection) vertices[index]).getIntPoints()[1];
+					
+				case 'W':
+					return ((Intersection) vertices[index]).getIntPoints()[0];
+				case 'R':
+					return ((Intersection) vertices[index]).getRoundabout().getPrev().getPosition()[3];
+			}
+				return ((Intersection) vertices[index]).getIntPoints()[1];
+			} else if (oldDir == 'E') {
+				switch(dir) {
+				case 'N':
+					return ((Intersection) vertices[index]).getIntPoints()[3];
+				case 'S':
+					return ((Intersection) vertices[index]).getIntPoints()[1];
+					
+				case 'E':
+					return ((Intersection) vertices[index]).getIntPoints()[1];
+				case 'R':
+					return ((Intersection) vertices[index]).getRoundabout().getPrev().getPosition()[3];
+			}
+			} else if (oldDir == 'W') {
+				switch(dir) {
+				case 'N':
+					return ((Intersection) vertices[index]).getIntPoints()[2];
+				case 'S':
+					return ((Intersection) vertices[index]).getIntPoints()[0];					
+				case 'W':
+					return ((Intersection) vertices[index]).getIntPoints()[2];
+				case 'R':
+					return ((Intersection) vertices[index]).getRoundabout().getPrev().getPosition()[3];	
+			}
+			} else {
+					return ((Intersection) vertices[index]).getRoundabout().getPosition()[0];
+			}
+		}
+		return null; 
+		
+	}
+	
 	public char getDirection(Point old, Point curr) {
 		// if point is one of 4 roundabout points, direction should be r until it exits roundabout
 		// if both points roundabout, return R
@@ -267,44 +340,4 @@ public class RouteGenerator{
 		}
 	}
 	
-	public Point realPointForPath(Intersection[] intersections, Point xing, char dir, char oldDir) {
-		// determine which point to send back if dir = R
-		if (dir == 'R') {
-			for (Intersection i: intersections) {
-				if (i.getIntPoints()[0].equals(xing)) {
-					switch(oldDir) {
-					case 'N':
-						return i.getIntPoints()[3];
-					case 'S':
-						return i.getIntPoints()[0];
-					case 'E':
-						return i.getIntPoints()[1];
-					case 'W':
-						return i.getIntPoints()[2];
-					default: 
-						System.out.println("Point not found");
-					}
-				}
-			}
-		} else {
-			for (Intersection i: intersections) {
-				if (i.getIntPoints()[0].equals(xing)) {
-					switch(dir) {
-					case 'N':
-						return i.getIntPoints()[3];
-					case 'S':
-						return i.getIntPoints()[0];
-					case 'E':
-						return i.getIntPoints()[1];
-					case 'W':
-						return i.getIntPoints()[2];
-					default: 
-						System.out.println("Point not found");
-					}
-				}
-			}
-		}
-		
-		return null;
-	}
 }

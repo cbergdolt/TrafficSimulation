@@ -100,7 +100,7 @@ public class Simulation extends Observable{
 			//		This is not exactly an issue, but it looks funky. we will have to find a better way to control the
 			//		release of vehicles into the simulation--though I think this should be taken care of with one of the 
 			//		inputs from the user on the startup screen?
-			if (vehicles.size() < vg.length) {
+			if (vehicles.size() < 1) {//vg.length) {
 				newVehicle();
 			}
 			/*if (vehicles.size() > 0) {
