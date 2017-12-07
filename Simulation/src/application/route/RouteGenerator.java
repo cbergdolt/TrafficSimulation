@@ -347,8 +347,11 @@ public class RouteGenerator{
 				if (adjList[v.getKey()][u] == 1 || 
 						(u == fin && adjList[v.getKey()][u] == 2) || 
 						(u == src && adjList[v.getKey()][u] == 2)) {
-					//System.out.println(u);
-					frontier.add(new Entry(u, v.getKey()));
+					if (uturnTest(v.getKey(), v.getValue(), u, vertices) == true) {
+						//System.out.println(u);
+						frontier.add(new Entry(u, v.getKey()));
+					}
+					
 				}
 			}
 		}
@@ -362,6 +365,23 @@ public class RouteGenerator{
 		r = constructRoute(vertices, marked, src, fin);
 		return r;
 		}
+	
+	public boolean uturnTest(int currNode, int currPrev, int nextNode, Object[] vertices) { //return false if path cannot be traveled 
+		Point currNodePos = getPoint(currNode, vertices);
+		Point currPrevPos = getPoint(currPrev, vertices);
+		Point nextNodePos = getPoint(nextNode, vertices);
+		
+		char currDirection = getDirection(currPrevPos, currNodePos);
+		char prevDirection = getDirection(currNodePos, nextNodePos);
+		
+		if ((currDirection == 'E' && prevDirection =='W') || (currDirection == 'W' && prevDirection =='E')) {
+			return false;
+		} else if ((currDirection == 'N' && prevDirection =='S') || (currDirection == 'S' && prevDirection =='W')) {
+			return false;
+		}
+		
+		return true;
+	}
 	
 	public int findIndex(Object[] vertices, int[][] adjList, Point p) {
 		int V = vertices.length;
