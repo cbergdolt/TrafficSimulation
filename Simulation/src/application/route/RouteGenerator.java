@@ -182,7 +182,7 @@ public class RouteGenerator{
 			route.path.add(new RoutePair(at, p.getValue()));
 			oldDir = p.getValue();
 		}
-		
+		route.addLandmark((Landmark)vertices[fin]);
 		return marked;
 		
 	}
