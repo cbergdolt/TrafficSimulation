@@ -175,15 +175,7 @@ public class Vehicle extends Observable implements Observer{
 					signResponse(sign, signLoc);
 				}
 			}
-		} else if (o instanceof RoundaboutSegment) {
-			//roundaboutResponse((RoundaboutSegment)o);
-			//I'm not really sure that having the vehicle observe the roundabout segment is the best solution
-			//	because it's not being used at all
-			//perhaps the best solution would be to get rid of the actual observer implementation, and just use
-			// 	the faux-observer methodologies I'm using now, so the vehicle knows what roundabout segment it's on
-			//	but the roundabout doesn't send any notifications to the vehicles (since it doesn't need to)
-			// we can clean this up later
-		}
+		} 
 	}
 
 	private void roundaboutResponse(RoundaboutSegment rab) {
@@ -294,8 +286,9 @@ public class Vehicle extends Observable implements Observer{
 		//FOR SOME REASON, curQueue IS ALWAYS NULL AT THIS POINT WE DO NOT KNOW WHY, BUT WE ARE TIRED AND WILL LOOK AT THIS TOMORROW
 		//check if vehicle is in the next intersection in the route, adjust direction accordingly
 		if (curQueue == null) System.out.println("hey, curQueue was null. this is not good");
-		if (curQueue != null && curQueue.isEmpty()) {
+		if (curQueue != null && curQueue.isEmpty() && curQueue.peek() != null) {
 			curQueue = route.getNextPath();
+			System.out.println("LANDMARK COUNTER " + route.getLandmarkCounter());
 		}
 		if (curQueue != null) {
 			RoutePair nextInt = curQueue.peek();
