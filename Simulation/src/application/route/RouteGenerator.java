@@ -106,11 +106,10 @@ public class RouteGenerator{
 	private Route dijkstra(Route route, Object[] vertices, int[][] adjList, Point start, Point end) {
 		// TODO Auto-generated method stub
 		int V = vertices.length;
-		
-		Map<Integer, Integer> marked = new HashMap<Integer, Integer>();
-		ArrayList<Pair<Integer, Integer>> frontier = new ArrayList<Pair<Integer, Integer>>();
-		
-		
+		//instantiated the data structures necessary to run dijkstra's 
+		Map<Integer, Integer> marked = new HashMap<Integer, Integer>(); // visited nodes the key = current node; value = previous node
+		ArrayList<Pair<Integer, Integer>> frontier = new ArrayList<Pair<Integer, Integer>>(); // the next nodes to be visited
+																							//Pair <next node, prev node>
 		// find start node
 		int src = 0;
 		int fin = 0;
@@ -119,6 +118,7 @@ public class RouteGenerator{
 		//System.out.println("starting: " + start.x + " " + start.y);
 		//System.out.println("ending: " + end.x + " " + end.y);
 		
+		//determine the location in adj matrix of the start and destination objects
 		for (int j = 0; j < V; j++) {			
 			if (vertices[j] instanceof Landmark) {
 				if (((Landmark) vertices[j]).location.equals(start)) {
@@ -147,7 +147,7 @@ public class RouteGenerator{
 		System.out.println("start id: " + src);
 		System.out.println("end id: " + fin);
 		
-		Pair <Integer, Integer> v = new Pair <Integer, Integer> (src, src);
+		Pair <Integer, Integer> v = new Pair <Integer, Integer> (src, src); //edge
 		frontier.add(v);
 		
 		while(!frontier.isEmpty()) {
@@ -161,21 +161,23 @@ public class RouteGenerator{
 			}
 			
 			marked.put(v.getKey(), v.getValue()); 
-			for (int u = 0; u < V; u++) {
+			for (int u = 0; u < V; u++) { //traverses adj matrix and determines which nodes things are adj to
 				if (adjList[v.getKey()][u] == 1 || (u == fin && adjList[v.getKey()][u] == 2) || (u == src && adjList[v.getKey()][u] == 2)) {
 					//System.out.println(u);
 					frontier.add(new Pair <Integer, Integer> (u, v.getKey()));
 				}
 			}
 		}
-
+		//this is a test print statement; it prints out everything in marked 
 		for (Map.Entry entry : marked.entrySet()) {
 			System.out.println(entry.getKey() + ", " + entry.getValue());
 		}
 		System.out.println("Done");
+		//constructs the route based off of dijkstra's
 		Stack<Pair<Integer, Character>> r = new Stack<Pair<Integer, Character>>();
 		r = constructRoute(vertices, marked, src, fin);
 		
+		//prints out the route, erase this when done
 		Pair<Integer, Character> p;
 		p = r.pop();
 		char oldDir = p.getValue();
@@ -218,7 +220,7 @@ public class RouteGenerator{
 			s.push(pair);
 //			System.out.println(pair.toString());
 			val = marked.get(val);
-			if (val == src) {
+			if (val == src) { //allows the starting location to be pushed down on the stack b/c while condition will terminate before it otherwise
 				p2 = getPoint(s.peek().getKey(), vertices);
 				if (vertices[val] instanceof Landmark) {
 					p1 = ((Landmark) vertices[val]).getLocation();
