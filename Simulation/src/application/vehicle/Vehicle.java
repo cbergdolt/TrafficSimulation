@@ -284,6 +284,9 @@ public class Vehicle extends Observable implements Observer{
 	}
 
 	public void updateVehicle() {
+		//queue<queue<RoutePair>>
+		//after each sub-queue, the vehicle will be at a landmark
+		//HOW LONG SHOULD IT STAY THERE?
 		//check if vehicle is in the next intersection in the route, adjust direction accordingly
 		if (route != null) {
 			RoutePair nextInt = route.getPath().peek();

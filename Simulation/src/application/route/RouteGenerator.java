@@ -53,9 +53,12 @@ public class RouteGenerator{
 		
 		Route route = new Route();
 		
+		Stack<Pair<Integer, Character>> routeStack;
+		// all intersections with exception of the first and last pairs
+		
 		for (int i = 1; i< routeStops.size(); i++) {
-			route = 	dijkstra(route, vertices, adjList, routeStops.get(i-1), routeStops.get(i));
-
+			routeStack = dijkstra(route, vertices, adjList, routeStops.get(i-1), routeStops.get(i));
+			//convert stack to useful path/route points
 		}
 		
 		
@@ -103,7 +106,7 @@ public class RouteGenerator{
 	}
 	
 	
-	private Route dijkstra(Route route, Object[] vertices, int[][] adjList, Point start, Point end) {
+	private Stack<Pair<Integer, Character>> dijkstra(Route route, Object[] vertices, int[][] adjList, Point start, Point end) {
 		// TODO Auto-generated method stub
 		int V = vertices.length;
 		//instantiated the data structures necessary to run dijkstra's 
@@ -176,7 +179,8 @@ public class RouteGenerator{
 		//constructs the route based off of dijkstra's
 		Stack<Pair<Integer, Character>> r = new Stack<Pair<Integer, Character>>();
 		r = constructRoute(vertices, marked, src, fin);
-		
+		return r;
+		/*
 		//prints out the route, erase this when done
 		Pair<Integer, Character> p;
 		p = r.pop();
@@ -196,8 +200,8 @@ public class RouteGenerator{
 		if (vertices[fin] instanceof Landmark) {
 			route.addLandmark((Landmark)vertices[fin]);
 		}
-		return route;
-		
+		//return route;
+		*/
 	}
 	
 	public Stack<Pair<Integer, Character>> constructRoute(Object[] vertices, Map<Integer, Integer> marked, int src, int fin) {
