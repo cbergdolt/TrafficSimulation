@@ -224,9 +224,47 @@ public class RouteGenerator{
 					}
 				}
 			case 'L': //	FIRST THING OFF OF THE """"""STACK"""""""
-				switch(dir) {
-				case 'N':
+				if (vertex instanceof Landmark) {
+					Landmark land = (Landmark) vertex;
+					switch(land.getType()) {
+					case NORTH:
+						if (dir == 'N') {
+							return land.getLocationArray()[1];
+						} else {
+							return land.getLocationArray()[2];
+						}
+					case SOUTH:
+						if (dir == 'S') {
+							return land.getLocationArray()[1];
+						} else {
+							return land.getLocationArray()[2];
+						}
+					case EAST:
+						if (dir == 'E') {
+							return land.getLocationArray()[1];
+						} else {
+							return land.getLocationArray()[2];
+						}
+					case WEST:
+						if (dir == 'W') {
+							return land.getLocationArray()[1];
+						} else {
+							return land.getLocationArray()[2];
+						}
+					}
 					
+				} else if (vertex instanceof Point) {
+					//Point p;
+					switch(dir) {
+					case 'N':
+						return new Point(((Point) vertex).x, ((Point) vertex).y-1);
+					case 'S':
+						return new Point(((Point) vertex).x, ((Point) vertex).y+1);
+					case 'E':
+						return new Point(((Point) vertex).x+1, ((Point) vertex).y);
+					case 'W':
+						return new Point(((Point) vertex).x-1, ((Point) vertex).y);
+					}
 				}
 				
 			}
