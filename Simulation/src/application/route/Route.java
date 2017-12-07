@@ -14,7 +14,7 @@ import java.util.Vector;
 public class Route {
 	//Queue<Point> path;
 	Queue<RoutePair> path;
-	Vector<Landmark> landmarks;
+	Vector<Landmark> landmarks = new Vector<Landmark>();
 	// variable for top of the queue point
 	
 	public Route() {
