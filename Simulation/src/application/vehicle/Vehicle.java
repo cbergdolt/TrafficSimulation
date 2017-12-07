@@ -296,6 +296,7 @@ public class Vehicle extends Observable implements Observer{
 				Point intLoc = nextInt.getPoint();
 				if (location.equals(intLoc)) {
 					direction = nextInt.getDirection();
+					System.out.println(intLoc + " -------- " +direction);
 					curQueue.remove();
 				}
 			}

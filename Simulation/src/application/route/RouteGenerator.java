@@ -477,18 +477,18 @@ public class RouteGenerator{
 			if (Math.abs(curr.x-old.x) > Math.abs(curr.y-old.y)) {
 				if (old.x < curr.x) {
 					return 'E';
-				} else if (old.x > curr.x) {
+				} else {
 					return 'W';
 				}
 			} else {
 				if (old.y < curr.y) {
 					return 'S';
-				} else if (old.y > curr.y) {
+				} else {
 					return 'N';
 				}
-			}
-			
+			}	
 		}
+		System.out.println("IN THE DEAFULT CASE GET DIRECTION");
 		return ' ';
 	}
 	
