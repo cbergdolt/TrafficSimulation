@@ -504,6 +504,12 @@ public class UserInterface extends Application implements Observer{
 				vImage = vv.getImage();
 				vv.setImageView(new ImageView(vImage));
 				root.getChildren().add(vv.getImageView());
+			} else {
+				Image vImage;
+				vv.setMyImage();
+				vImage = vv.getImage();
+				vv.getImageView().setImage(vImage);
+				//root.getChildren().add(vv.getImageView());
 			}
 			Point l = new Point((int) vv.getImageView().getX(), (int) vv.getImageView().getY());
 			if (vv.getMoveCount() > 1) {
