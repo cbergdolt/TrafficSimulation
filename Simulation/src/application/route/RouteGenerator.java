@@ -316,7 +316,7 @@ public class RouteGenerator{
 		//instantiated the data structures necessary to run dijkstra's 
 		int V = vertices.length;
 		Map<Integer, Integer> marked = new HashMap<Integer, Integer>(); // visited nodes the key = current node; value = previous node
-		ArrayList<Pair<Integer, Integer>> frontier = new ArrayList<Pair<Integer, Integer>>(); // the next nodes to be visited
+		PriorityQueue<Entry> frontier = new PriorityQueue<Entry>(); // the next nodes to be visited
 																							//Pair <next node, prev node>
 		// find start node
 		int src = 0;
@@ -329,11 +329,11 @@ public class RouteGenerator{
 		System.out.println("start id: " + src);
 		System.out.println("end id: " + fin);
 		
-		Pair <Integer, Integer> v = new Pair <Integer, Integer> (src, src); //edge
+		Entry  v = new Entry(src, src); //edge
 		frontier.add(v);
 		
 		while(!frontier.isEmpty()) {
-			v = frontier.remove(0);
+			v = frontier.poll();
 			
 			if (marked.containsValue(v.getKey())) continue;
 			
@@ -348,7 +348,7 @@ public class RouteGenerator{
 						(u == fin && adjList[v.getKey()][u] == 2) || 
 						(u == src && adjList[v.getKey()][u] == 2)) {
 					//System.out.println(u);
-					frontier.add(new Pair <Integer, Integer> (u, v.getKey()));
+					frontier.add(new Entry(u, v.getKey()));
 				}
 			}
 		}
