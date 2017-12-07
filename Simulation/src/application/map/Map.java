@@ -70,21 +70,26 @@ public class Map {
 				else if (routeGrid[j][i] == 8) {
 					Point a = null;
 					Point b = null;
+					LandmarkType type = null;
 					if (routeGrid[j-1][i] == 2) { // check if road is E
-						a = new Point(j-1, i);
+						a = new Point(j-1, i);	//closer to landmark
 						b = new Point(j-2, i);
+						type = LandmarkType.EAST;
 					} else if (routeGrid[j+1][i] == 2) { // check if road is W
-						a = new Point(j+1, i);
+						a = new Point(j+1, i); 	//closer to landmark
 						b = new Point(j+2, i);
+						type = LandmarkType.WEST;
 					} else if (routeGrid[j][i-1] == 2) { // check if road is N
-						a = new Point(j, i-1);
+						a = new Point(j, i-1);	//closer to landmark
 						b = new Point(j, i-2);
-					} else if (routeGrid[j][i+1] == 2) { // check if road is N
-						a = new Point(j, i+1);
+						type = LandmarkType.NORTH;
+					} else if (routeGrid[j][i+1] == 2) { // check if road is S
+						a = new Point(j, i+1);	//closer to landmark
 						b = new Point(j, i+2);
+						type = LandmarkType.SOUTH;
 					}
 					
-					landmarks[landCount] = new Landmark("s", landCount, new Point(j, i), a, b);
+					landmarks[landCount] = new Landmark(landCount, new Point[]{new Point(j, i), new Point(a), new Point(b)}, type);
 					vertices[vCount] = landmarks[landCount];
 					vCount += 1;
 					landCount +=1;
