@@ -71,22 +71,26 @@ public class Map {
 					Point a = null;
 					Point b = null;
 					LandmarkType type = null;
-					if (routeGrid[j-1][i] == 2) { // check if road is E
+					if (routeGrid[j-1][i] == 2) { // check if road is N
 						a = new Point(j-1, i);	//closer to landmark
 						b = new Point(j-2, i);
-						type = LandmarkType.EAST;
-					} else if (routeGrid[j+1][i] == 2) { // check if road is W
+						type = LandmarkType.NORTH;
+						System.out.println("landmark number " + landCount + " type = " + type.toString());
+					} else if (routeGrid[j+1][i] == 2) { // check if road is S
 						a = new Point(j+1, i); 	//closer to landmark
 						b = new Point(j+2, i);
-						type = LandmarkType.WEST;
-					} else if (routeGrid[j][i-1] == 2) { // check if road is N
+						type = LandmarkType.SOUTH;
+						System.out.println("landmark number " + landCount + " type = " + type.toString());
+					} else if (routeGrid[j][i-1] == 2) { // check if road is E
 						a = new Point(j, i-1);	//closer to landmark
 						b = new Point(j, i-2);
-						type = LandmarkType.NORTH;
-					} else if (routeGrid[j][i+1] == 2) { // check if road is S
+						type = LandmarkType.EAST;
+						System.out.println("landmark number " + landCount + " type = " + type.toString());
+					} else if (routeGrid[j][i+1] == 2) { // check if road is W
 						a = new Point(j, i+1);	//closer to landmark
 						b = new Point(j, i+2);
-						type = LandmarkType.SOUTH;
+						type = LandmarkType.WEST;
+						System.out.println("landmark number " + landCount + " type = " + type.toString());
 					}
 					
 					landmarks[landCount] = new Landmark(landCount, new Point[]{new Point(j, i), new Point(a), new Point(b)}, type);
