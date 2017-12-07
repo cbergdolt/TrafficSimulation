@@ -3,8 +3,10 @@ package application.route;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Random;
 import java.util.Stack;
 import java.util.Vector;
@@ -30,9 +32,10 @@ public class RouteGenerator{
 		
 		Vector<Point> routeStops = new Vector<Point>();
 		Vector<Integer> ids = new Vector<Integer>();
-		routeStops.add(start);
+		//routeStops.add(start);
 		Random rand = new Random();
 		int r;
+		Vector<Landmark> lands = new Vector<Landmark>();
 		while(routeStops.size() < numStops+1) {
 //				System.out.println(routeStops.size());
 				r = rand.nextInt(36);
@@ -41,7 +44,9 @@ public class RouteGenerator{
 				}
 //				System.out.println(vertices[r].getClass().getSimpleName());
 				if (vertices[r] instanceof Landmark) {
-					routeStops.add(((Landmark)vertices[r]).location);
+					Landmark l = (Landmark) vertices[r];
+					routeStops.add(l.getLocation());
+					lands.add(l);
 //					System.out.println("stop:" + ((Landmark)vertices[r]).location);
 				}
 				ids.add(r);
@@ -50,61 +55,183 @@ public class RouteGenerator{
 		
 //		System.out.println("done");
 		
-		
 		Route route = new Route();
+		route.setLandmarks(lands);
 		
 		Stack<Pair<Integer, Character>> routeStack;
+		Queue<RoutePair> routeSegment;
 		// all intersections with exception of the first and last pairs
 		
 		for (int i = 1; i< routeStops.size(); i++) {
 			routeStack = dijkstra(route, vertices, adjList, routeStops.get(i-1), routeStops.get(i));
+			routeSegment = makeSegment(routeStack, vertices);
+			route.addSegment(routeSegment);
 			//convert stack to useful path/route points
 		}
 		
+		return route; //Queue<Queue<RoutePair>>
 		
-		return route;
-		
-		//don't bother with a route, can go straight through
-		/*
-		if (start.equals(new Point(4,0)) || start.equals(new Point(42,0)) || start.equals(new Point(5, 49)) || start.equals(new Point(43, 49)))
-			return null;
-		else if (start.equals(new Point(22,0))) {
-			route.path.add(new RoutePair(new Point(22, 10), 'S'));
-			route.path.add(new RoutePair(new Point(22, 20), 'R'));
-			route.path.add(new RoutePair(new Point(22, 25), 'S'));	//roundabout exit! (point is different)
-			route.path.add(new RoutePair(new Point(22, 38), 'S'));
-			return route;
-		}
-		else if (start.equals(new Point(49, 22))) {
-			route.path.add(new RoutePair(new Point(43, 22), 'W'));
-			route.path.add(new RoutePair(new Point(33, 22), 'W'));
-			route.path.add(new RoutePair(new Point(25, 22), 'R'));
-			route.path.add(new RoutePair(new Point(20, 22), 'W'));	//roundabout exit! (point is different)
-			route.path.add(new RoutePair(new Point(13, 22), 'W'));
-			route.path.add(new RoutePair(new Point(5, 22), 'W'));
-			return route;
-		}
-		else if (start.equals(new Point(0, 23))) {
-			route.path.add(new RoutePair(new Point(4, 23), 'E'));
-			route.path.add(new RoutePair(new Point(10, 23), 'E'));
-			route.path.add(new RoutePair(new Point(20, 23), 'R'));
-			route.path.add(new RoutePair(new Point(25, 23), 'E'));	//roundabout exit! (point is different)
-			route.path.add(new RoutePair(new Point(32, 23), 'E'));
-			route.path.add(new RoutePair(new Point(42, 23), 'E'));
-			return route;
-		}
-		else if (start.equals(new Point(23, 49))) {
-			route.path.add(new RoutePair(new Point(23, 39), 'N'));
-			route.path.add(new RoutePair(new Point(23, 25), 'R'));
-			route.path.add(new RoutePair(new Point(23, 20), 'N'));	//roundabout exit! (point is different)
-			route.path.add(new RoutePair(new Point(23, 11), 'N'));
-			return route;
-		}
-		*/
-		
-
 	}
 	
+	private Queue<RoutePair> makeSegment(Stack<Pair<Integer, Character>> initStack, Object[] vertices) {
+		Queue<RoutePair> myQueue = new LinkedList<RoutePair>();
+		char prevDir = 'L';
+		while (!initStack.empty()) {
+			Pair<Integer, Character> stackPair = initStack.pop();
+			int index = stackPair.getKey();
+			Point p = getPointfromIndex(vertices[index], stackPair.getValue(), prevDir);
+		}
+		
+		return myQueue;
+	}
+	
+	private Point getPointfromIndex(Object vertex, char dir, char prevDir) {
+		switch(prevDir) {
+		case 'N':
+			if (vertex instanceof Intersection) {
+				Intersection inter = (Intersection) vertex;
+				switch(dir) {
+				case 'N':
+					return inter.getLocation()[3];
+				case 'S':
+					System.out.println("No U-Turns Allowed!");
+					return null;
+				case 'E':
+					return inter.getLocation()[3];
+				case 'W':
+					return inter.getLocation()[2];
+				case 'R':
+					return inter.getRoundabout().getPosition()[0];
+				case 'L':
+					System.out.println("I don't even know what you did wrong");
+					return null;
+				default:
+					return null;
+				} 
+			}else if (vertex instanceof Landmark) {
+				Landmark land = (Landmark) vertex;
+				if (land.getType() == LandmarkType.NORTH) {
+					return land.getLocationArray()[1];
+				} else {
+					return land.getLocationArray()[2];
+				}
+			} else {
+				return (Point) vertex;
+			}
+		case 'S':
+			if (vertex instanceof Intersection) {
+				Intersection inter = (Intersection) vertex;
+				switch(dir) {
+				case 'S':
+					return inter.getLocation()[0];
+				case 'N':
+					System.out.println("No U-Turns Allowed!");
+					return null;
+				case 'W':
+					return inter.getLocation()[0];
+				case 'E':
+					return inter.getLocation()[1];
+				case 'R':
+					return inter.getRoundabout().getPosition()[0];
+				case 'L':
+					System.out.println("I don't even know what you did wrong");
+					return null;
+				default:
+					return null;
+				} 
+			}else if (vertex instanceof Landmark) {
+				Landmark land = (Landmark) vertex;
+				if (land.getType() == LandmarkType.SOUTH) {
+					return land.getLocationArray()[1];
+				} else {
+					return land.getLocationArray()[2];
+				}
+			} else {
+				return (Point) vertex;
+			}
+			case 'E':
+				if (vertex instanceof Intersection) {
+					Intersection inter = (Intersection) vertex;
+					switch(dir) {
+					case 'E':
+						return inter.getLocation()[1];
+					case 'W':
+						System.out.println("No U-Turns Allowed!");
+						return null;
+					case 'S':
+						return inter.getLocation()[1];
+					case 'N':
+						return inter.getLocation()[3];
+					case 'R':
+						return inter.getRoundabout().getPosition()[0];
+					case 'L':
+						System.out.println("I don't even know what you did wrong");
+						return null;
+					default:
+						return null;
+					} 
+				}else if (vertex instanceof Landmark) {
+					Landmark land = (Landmark) vertex;
+					if (land.getType() == LandmarkType.EAST) {
+						return land.getLocationArray()[1];
+					} else {
+						return land.getLocationArray()[2];
+					}
+				} else {
+					return (Point) vertex;
+				}
+			case 'W':
+				if (vertex instanceof Intersection) {
+					Intersection inter = (Intersection) vertex;
+					switch(dir) {
+					case 'W':
+						return inter.getLocation()[2];
+					case 'E':
+						System.out.println("No U-Turns Allowed!");
+						return null;
+					case 'N':
+						return inter.getLocation()[2];
+					case 'S':
+						return inter.getLocation()[0];
+					case 'R':
+						return inter.getRoundabout().getPosition()[0];
+					case 'L':
+						System.out.println("I don't even know what you did wrong");
+						return null;
+					default:
+						return null;
+					} 
+				} else if (vertex instanceof Landmark) {
+					Landmark land = (Landmark) vertex;
+					if (land.getType() == LandmarkType.WEST) {
+						return land.getLocationArray()[1];
+					} else {
+						return land.getLocationArray()[2];
+					}
+				} else {
+					return (Point) vertex;
+				}
+			case 'R':
+				if (vertex instanceof Intersection) {
+					Intersection inter = (Intersection) vertex;
+					if (dir == 'N'||dir == 'S'||dir == 'E'||dir == 'W') {
+						return inter.getRoundabout().getPrev().getPosition()[3];
+					} else if (dir == 'R') {
+						return inter.getRoundabout().getPosition()[0];
+					} else {
+						System.out.println("Roundabout Shennanigans");
+						return null;
+					}
+				}
+			case 'L': //	FIRST THING OFF OF THE """"""STACK"""""""
+				switch(dir) {
+				case 'N':
+					
+				}
+				
+			}
+		}
+		
 	
 	private Stack<Pair<Integer, Character>> dijkstra(Route route, Object[] vertices, int[][] adjList, Point start, Point end) {
 		// TODO Auto-generated method stub

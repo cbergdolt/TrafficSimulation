@@ -45,4 +45,6 @@ public class Landmark {
 	}
 	public Point[] getLocationArray() { return location; }
 	
+	public LandmarkType getType() { return type; }
+	
 }

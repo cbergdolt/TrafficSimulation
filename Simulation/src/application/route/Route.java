@@ -13,20 +13,31 @@ import java.util.Vector;
 
 public class Route {
 	//Queue<Point> path;
-	Queue<RoutePair> path;
+	Queue<Queue<RoutePair> > path;
 	Vector<Landmark> landmarks = new Vector<Landmark>();
 	// variable for top of the queue point
 	
 	public Route() {
-		path = new LinkedList<RoutePair>();
+		path = new LinkedList<>();//<LinkedList<RoutePair>>();
 		
 	}
 	
-	public Queue<RoutePair> getPath() { return path; }
+	public Queue<Queue<RoutePair> > getPath() { return path; }
+	
+	public Queue<RoutePair> getNextPath() { return path.remove(); }
 	
 	public void remove() { path.remove(); }
+	
+	public void addSegment(Queue<RoutePair> seg) {
+		path.add(seg);
+	}
 	
 	public void addLandmark(Landmark i) {
 		landmarks.add(i);
 	}
+	
+	public void setLandmarks(Vector<Landmark> lands) {
+		landmarks = lands;
+	}
+	
 }
