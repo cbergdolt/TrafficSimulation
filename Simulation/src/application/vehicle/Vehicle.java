@@ -1,8 +1,10 @@
 package application.vehicle;
 
 import java.awt.Point;
+import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Queue;
 
 import application.intersection.*;
 import application.route.*;
@@ -28,12 +30,15 @@ public class Vehicle extends Observable implements Observer{
 	Point location;		//current location of vehicle
 	Route route;
 	int type;
+	int landmarkTime;
 	int scale = 20;
 	
 	Image leftImage;
 	Image rightImage;
 	Image upImage;
 	Image downImage;
+	
+	Queue<RoutePair> curQueue;
 	
 	Vehicle observedVehicle;
 	Intersection observedIntersection;	//so vehicle can add itself to a sign-governed intersection's vehicleQueue
@@ -48,6 +53,7 @@ public class Vehicle extends Observable implements Observer{
 		direction = dir;
 		location = loc;
 		curVelocity = maxVelocity;
+		landmarkTime = 0;
 		
 		observedVehicle = null;
 		observedIntersection = null;
@@ -65,10 +71,6 @@ public class Vehicle extends Observable implements Observer{
 	void setLength(int l) { length = l; }
 	
 	void updatePos(int grid[][]) {
-		
-	}
-	
-	void setRoute() {
 		
 	}
 	
@@ -108,7 +110,12 @@ public class Vehicle extends Observable implements Observer{
 	public void setLocation(Point l) { location = l; }
 	
 	public Route getRoute() { return route; }
-	public void setRoute(Route r) { route = r; }
+	public void setRoute(Route r) { 
+		route = r; 
+		curQueue = route.getNextPath();
+		if (curQueue == null) System.out.println("setRoute: curQueue is still null");
+		else System.out.println("well, curQueue wasn't null");
+	}
 	
 	public int getType() { return type; }
 	public void setType(int t) { type = t; }
@@ -284,17 +291,19 @@ public class Vehicle extends Observable implements Observer{
 	}
 
 	public void updateVehicle() {
-		//queue<queue<RoutePair>>
-		//after each sub-queue, the vehicle will be at a landmark
-		//HOW LONG SHOULD IT STAY THERE?
+		//FOR SOME REASON, curQueue IS ALWAYS NULL AT THIS POINT WE DO NOT KNOW WHY, BUT WE ARE TIRED AND WILL LOOK AT THIS TOMORROW
 		//check if vehicle is in the next intersection in the route, adjust direction accordingly
-		if (route != null) {
-			RoutePair nextInt = route.getPath().peek();
+		if (curQueue == null) System.out.println("hey, curQueue was null. this is not good");
+		if (curQueue != null && curQueue.isEmpty()) {
+			curQueue = route.getNextPath();
+		}
+		if (curQueue != null) {
+			RoutePair nextInt = curQueue.peek();
 			if (nextInt != null) {	//if there is another intersection/direction pair in the path
 				Point intLoc = nextInt.getPoint();
 				if (location.equals(intLoc)) {
 					direction = nextInt.getDirection();
-					route.remove();
+					curQueue.remove();
 				}
 			}
 		}
@@ -340,6 +349,20 @@ public class Vehicle extends Observable implements Observer{
 				//	don't collide with the vehicle currently in it
 				observedRoundabout.getNext().getIntersection().setInIntersection(this);
 			}
+			break;
+		case 'L':
+			if (landmarkTime == 0) {
+				this.curVelocity = 0;	//don't move automatically until I tell you to again
+				location = route.getLandmark(route.getLandmarkCounter()).getLocation(); //move the vehicle to the exact landmark location
+			} else if (landmarkTime <= 3) {
+				this.curVelocity = 0;	//make sure you are stopped!
+			} else if (landmarkTime > 3) {
+				//start the thing up again!
+				// look at next route move and put it in the right location for the next update
+				RoutePair next = curQueue.peek();
+				location = next.getPoint();
+			}
+			landmarkTime += 1; //increment the time that vehicle has been stopped at landmark
 			break;
 		default:
 			System.out.println("vehicleUpdate: something has gone horribly wrong");	

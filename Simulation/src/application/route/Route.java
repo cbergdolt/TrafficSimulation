@@ -15,6 +15,7 @@ public class Route {
 	//Queue<Point> path;
 	Queue<Queue<RoutePair> > path;
 	Vector<Landmark> landmarks = new Vector<Landmark>();
+	int landmarkCounter; //keeps track of which landmark in the vector the vehicle is currently heading towards
 	// variable for top of the queue point
 	
 	public Route() {
@@ -24,7 +25,10 @@ public class Route {
 	
 	public Queue<Queue<RoutePair> > getPath() { return path; }
 	
-	public Queue<RoutePair> getNextPath() { return path.remove(); }
+	public Queue<RoutePair> getNextPath() {
+		landmarkCounter += 1;
+		return path.poll(); 
+	}
 	
 	public void remove() { path.remove(); }
 	
@@ -39,5 +43,8 @@ public class Route {
 	public void setLandmarks(Vector<Landmark> lands) {
 		landmarks = lands;
 	}
+	
+	public int getLandmarkCounter() { return landmarkCounter; }
+	public Landmark getLandmark(int i) { return landmarks.get(i); }
 	
 }

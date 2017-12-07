@@ -266,7 +266,8 @@ public class RouteGenerator{
 						return new Point(((Point) vertex).x-1, ((Point) vertex).y);
 					}
 				}
-				
+				default:
+					return null;
 			}
 		}
 		
@@ -409,7 +410,7 @@ public class RouteGenerator{
 
 	public Point getPoint(int index, Object[] vertices) {	
 		if (vertices[index] instanceof Landmark) {
-			return ((Landmark) vertices[index]).location;
+			return ((Landmark) vertices[index]).getLocation();
 		} else if (vertices[index] instanceof Point) {
 			return (Point) vertices[index];
 		} else {
@@ -418,9 +419,9 @@ public class RouteGenerator{
 		
 	}
 
-	public Point getNewPoint(int index, Object[] vertices, char dir, char oldDir) {	
+	/*public Point getNewPoint(int index, Object[] vertices, char dir, char oldDir) {	
 		if (vertices[index] instanceof Landmark) {
-			return ((Landmark) vertices[index]).location;
+			return ((Landmark) vertices[index]).getLocation();
 		} else if (vertices[index] instanceof Point) {
 			return (Point) vertices[index];
 		} else {
@@ -489,7 +490,7 @@ public class RouteGenerator{
 		}
 		return null; 
 		
-	}
+	}*/
 	
 	public char getDirection(Point old, Point curr) {
 		// if point is one of 4 roundabout points, direction should be r until it exits roundabout
