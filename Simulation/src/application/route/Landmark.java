@@ -38,5 +38,8 @@ public class Landmark {
 		disappearB = new Point(x, y);
 	}
 	
+	public Point getLocation() {
+		return location;
+	}
 	
 }
