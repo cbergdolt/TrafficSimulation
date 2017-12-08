@@ -299,7 +299,7 @@ public class Vehicle extends Observable implements Observer{
 		}
 		if (curQueue != null) {
 			RoutePair nextInt = curQueue.peek();
-			System.out.println("point = " + nextInt.getPoint() + " direction = " + nextInt.getDirection());
+			//System.out.println("point = " + nextInt.getPoint() + " direction = " + nextInt.getDirection());
 			if (nextInt != null) {	//if there is another intersection/direction pair in the path
 				Point intLoc = nextInt.getPoint();
 				System.out.println("in updateVehicle take 2");
@@ -355,13 +355,14 @@ public class Vehicle extends Observable implements Observer{
 			break;
 		case 'L':
 			if (landmarkTime == 0) {
-				this.curVelocity = 0;	//don't move automatically until I tell you to again
+				this.stop();	//don't move automatically until I tell you to again
 				location = route.getLandmark(route.getLandmarkCounter()).getLocation(); //move the vehicle to the exact landmark location
 			} else if (landmarkTime <= 3) {
-				this.curVelocity = 0;	//make sure you are stopped!
+				this.stop();	//make sure you are stopped!
 			} else if (landmarkTime > 3) {
 				//start the thing up again!
 				// look at next route move and put it in the right location for the next update
+				curQueue = route.getNextPath();
 				RoutePair next = curQueue.peek();
 				location = next.getPoint();
 			}

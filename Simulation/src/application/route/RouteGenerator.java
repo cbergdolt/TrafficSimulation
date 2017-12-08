@@ -74,13 +74,14 @@ public class RouteGenerator{
 	
 	private Queue<RoutePair> makeSegment(Stack<Pair<Integer, Character>> initStack, Object[] vertices) {
 		Queue<RoutePair> myQueue = new LinkedList<RoutePair>();
-		char prevDir;// = 'L';
+		char prevDir = initStack.peek().getValue();// = 'L';
 		while (!initStack.empty()) {
 			Pair<Integer, Character> stackPair = initStack.pop();
 			System.out.println(stackPair.getKey() + " +++++ " + stackPair.getValue());
 			int index = stackPair.getKey();
-			prevDir = stackPair.getValue();
+
 			Point p = getPointfromIndex(vertices[index], stackPair.getValue(), prevDir);
+			prevDir = stackPair.getValue();
 			RoutePair r = new RoutePair(p, prevDir);
 			myQueue.add(r);
 		}
@@ -448,6 +449,7 @@ public class RouteGenerator{
 				} else if (vertex instanceof Landmark) {
 					Landmark land = (Landmark) vertex;
 					if (land.getType() == LandmarkType.WEST) {
+						System.out.println("landmark type was WEST ++++ " + land.getLocationArray()[1]);
 						return new Point(land.getLocationArray()[1]);
 					} else if (land.getType() == LandmarkType.EAST){
 						return new Point(land.getLocationArray()[2]);
