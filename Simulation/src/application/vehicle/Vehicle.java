@@ -365,6 +365,7 @@ public class Vehicle extends Observable implements Observer{
 				curQueue = route.getNextPath();
 				RoutePair next = curQueue.peek();
 				location = next.getPoint();
+				landmarkTime = 0;
 			}
 			landmarkTime += 1; //increment the time that vehicle has been stopped at landmark
 			break;

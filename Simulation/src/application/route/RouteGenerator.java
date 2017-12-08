@@ -34,6 +34,7 @@ public class RouteGenerator{
 		Random rand = new Random();
 		int r;
 		Vector<Landmark> lands = new Vector<Landmark>();
+		routeStops.add(((Landmark)vertices[24]).getLocation());	//REMOVE
 		while(routeStops.size() < numStops+1) {
 				r = rand.nextInt(36);
 				while (ids.contains(r)) {
@@ -47,6 +48,7 @@ public class RouteGenerator{
 				} 
 				ids.add(r);
 		}
+		
 		routeStops.add(start);
 
 		Route route = new Route();
@@ -75,6 +77,7 @@ public class RouteGenerator{
 	private Queue<RoutePair> makeSegment(Stack<Pair<Integer, Character>> initStack, Object[] vertices) {
 		Queue<RoutePair> myQueue = new LinkedList<RoutePair>();
 		char prevDir = initStack.peek().getValue();// = 'L';
+		System.out.println("initial prevDir = " + prevDir);
 		while (!initStack.empty()) {
 			Pair<Integer, Character> stackPair = initStack.pop();
 			System.out.println(stackPair.getKey() + " +++++ " + stackPair.getValue());
@@ -247,9 +250,10 @@ public class RouteGenerator{
 		// if both points roundabout, return R
 		if (isRoundabout(old) && isRoundabout(curr)) {
 			return 'R';
-		} else if (old.y == curr.y && old.x == curr.x) {
+		} 
+		if (old.y == curr.y && old.x == curr.x) {
 			return 'L';
-		} else if (old.y != curr.y && old.x != old.y) {
+		} else if (old.y != curr.y && old.x != curr.x) {
 			if (Math.abs(curr.x-old.x) > Math.abs(curr.y-old.y)) {
 				if (old.x < curr.x) {
 					return 'E';
@@ -263,13 +267,13 @@ public class RouteGenerator{
 					return 'N';
 				}
 			}	
-		} else if (old.x == curr.x) {
+		} else if (old.x == curr.x && old.y != curr.y) {
 			if (old.y < curr.y) {
 				return 'S';
 			} else if (old.y > curr.y) {
 				return 'N';
 			}
-		} else if (old.y == curr.y) {
+		} else if (old.y == curr.y && old.x != curr.x) {
 			if (old.x < curr.x) {
 				return 'E';
 			} else if (old.x > curr.x) {
