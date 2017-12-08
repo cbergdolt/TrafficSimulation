@@ -1,6 +1,5 @@
 package application.route;
 
-import java.awt.Point;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Vector;
@@ -12,15 +11,13 @@ import java.util.Vector;
  */
 
 public class Route {
-	//Queue<Point> path;
 	Queue<Queue<RoutePair> > path;
 	Vector<Landmark> landmarks = new Vector<Landmark>();
 	int landmarkCounter = 0; //keeps track of which landmark in the vector the vehicle is currently heading towards
 	// variable for top of the queue point
 	
 	public Route() {
-		path = new LinkedList<>();//<LinkedList<RoutePair>>();
-		
+		path = new LinkedList<>();
 	}
 	
 	public Queue<Queue<RoutePair> > getPath() { return path; }
@@ -31,11 +28,6 @@ public class Route {
 	}
 	
 	public void remove() { path.remove(); }
-	
-	public void addSegment() {//Queue<RoutePair> seg) {
-		//path.add(seg);
-		System.out.println("QUEUE SIZE " + path.size());
-	}
 	
 	public void addLandmark(Landmark i) {
 		landmarks.add(i);

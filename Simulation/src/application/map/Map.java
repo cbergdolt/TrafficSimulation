@@ -2,14 +2,10 @@ package application.map;
 
 import java.awt.Point;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Random;
 
 import application.intersection.*;
 import application.route.*;
-import application.vehicle.Vehicle;
-import application.vehicle.VehicleView;
-import javafx.scene.control.TabPane.TabClosingPolicy;
 
 /***
  * The Map class is the main map generator for the simulation.
@@ -25,7 +21,6 @@ public class Map {
 	int[][] routeGrid;
 	int[][] trackingGrid;
 	int[][] adjList;
-	//RoadSegment[] roads = new RoadSegment[12];	//I have no idea how many road segments we will have, but the number should be constant once we get the map figured out
 	Intersection[] intersections = new Intersection[18];
 	int fourWayInt;
 	int threeWayInt;
@@ -59,9 +54,6 @@ public class Map {
 			for (int j = 0; j < 50; j++) {	//x
 				if (routeGrid[j][i] == 3) {	//ENTRY EXIT POINTS (location of vehicle generators
 					entry_exit[eeCount] = new Point(j, i);
-					System.out.println("NEW EE: "+entry_exit[eeCount]);
-					//entry_exit[eeCount].x = j;
-					//entry_exit[eeCount].y = i;
 					vertices[vCount] = entry_exit[eeCount];
 					vCount += 1;
 					eeCount += 1;
@@ -75,22 +67,18 @@ public class Map {
 						a = new Point(j-1, i);	//closer to landmark
 						b = new Point(j-2, i);
 						type = LandmarkType.NORTH;
-						System.out.println("landmark number " + landCount + " type = " + type.toString());
 					} else if (routeGrid[j+1][i] == 2) { // check if road is S
 						a = new Point(j+1, i); 	//closer to landmark
 						b = new Point(j+2, i);
 						type = LandmarkType.SOUTH;
-						System.out.println("landmark number " + landCount + " type = " + type.toString());
 					} else if (routeGrid[j][i-1] == 2) { // check if road is E
 						a = new Point(j, i-1);	//closer to landmark
 						b = new Point(j, i-2);
 						type = LandmarkType.EAST;
-						System.out.println("landmark number " + landCount + " type = " + type.toString());
 					} else if (routeGrid[j][i+1] == 2) { // check if road is W
 						a = new Point(j, i+1);	//closer to landmark
 						b = new Point(j, i+2);
 						type = LandmarkType.WEST;
-						System.out.println("landmark number " + landCount + " type = " + type.toString());
 					}
 					
 					landmarks[landCount] = new Landmark(landCount, new Point[]{new Point(j, i), new Point(a), new Point(b)}, type);
@@ -149,36 +137,16 @@ public class Map {
 					iCount += 1;
 					roundaboutInt += 1;
 				}
-				//System.out.print(routeGrid[j][i] + " ");
 			}
-			//System.out.print("\n");
 		}
 		
 		//link all the proper roundabout segments together
 		linkRoundabout();
-		
-//		for (Object i: vertices) {
-//			System.out.println(i.getClass().getName());
-//		}
-		
-		
-		//I guess this is where the grid(s) are hard-coded
-		//And are the landmarks generated here, or passed in?
-		// once we have the list of landmarks, we can iterate through that and place them on the grid(s)
-		//create the road segments based on the map
-		//intersections[0] = new Intersection(new Point(0, 0), null, new TrafficSign(SignType.STOP));
-		//intersections[1] = new Intersection(new Point(1, 0), new StopLight(LightState.GNS_REW, new Point(1, 0), 1, 1, 1, 1), null);
-		//roads[0] = new RoadSegment(intersections[0], intersections[1]);
-	
 	}
 
 	public int closeRoad() {
 		Random r = new Random();
 		int i = r.nextInt(intersections.length);	//select intersection to close
-		
-		System.out.println("closing intersection " + i);
-		for (int a = 0; a < intersections[i].getLocation().length; a++) System.out.print(intersections[i].getLocation()[a] + ", ");
-		System.out.println("");
 		
 		int d = r.nextInt(4); //choose direction to close
 		//make sure direction is valid
@@ -186,27 +154,17 @@ public class Map {
 			d = r.nextInt(4);	//keep finding a random direction until it's open on intersection i
 		}
 
-		System.out.println("closing direction " + d);
-		System.out.println("before block, intersection type = " + intersections[i].getType().toString());
 		intersections[i].blockDirection(d);
-		System.out.println("after block, intersection type = " + intersections[i].getType().toString());
 		
 		Intersection iB = findAdjacentIntersection(d, intersections[i]);
 		//if the intersection actually has an adjacent intersection in direction d:
 		if (iB != null) {
-			iB.blockOppositeDirection(d);	//make sure vehicles can't enter the road segment from the other direction
-
-			System.out.println("found an adjacent intersection to close, no need to find generator");
-			System.out.println("intersection coordinates are:");
-			for (int a = 0; a < iB.getLocation().length; a++) System.out.print(iB.getLocation()[a] + ", ");
-			System.out.println("");
-			
+			iB.blockOppositeDirection(d);	//make sure vehicles can't enter the road segment from the other direction			
 			return -1;	//found intersection, no need for the simulation to block a generator
 		}
 		//otherwise, the intersection must be adjacent to a generator in direction d:
 		else {	//if iB is null 
 			int vg = findAdjacentGenerator(d, intersections[i]);
-			System.out.println("no adjacent intersection found, returning " + vg + " with location " + entry_exit[vg] + " as generator to block");
 			return vg; //vg.block();		//return vg as the index of the vehicle generator to be blocked
 		}
 	}
@@ -395,13 +353,6 @@ public class Map {
 	}
 	
 	public void updateMap() {
-		//System.out.println("intersections.length = " + intersections.length);
-		/*for (int i = 0; i < roads.length; i++) {
-			System.out.println("i = " + i + " updating map...");
-			roads[i].updateRoads();
-		}*/ //this for loop will be a problem unless all elements of the roads array are filled with legitmate road segments
-		//roads[0].updateRoads();
-		
 		//update all intersections (not roads, because those don't exist anymore)
 		for (int i = 0; i < intersections.length; i++) {
 			intersections[i].updateIntersection();

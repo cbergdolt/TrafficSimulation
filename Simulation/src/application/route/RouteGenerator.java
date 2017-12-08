@@ -1,7 +1,6 @@
 package application.route;
 
 import java.awt.Point;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -21,7 +20,6 @@ import javafx.util.Pair;
  */
 
 public class RouteGenerator{
-	//Route route;
 	
 	public Route generateRoute(int numStops, Point start, Landmark[] stops, int[][] grid, Intersection[] intersections, char dir, Object[] vertices, int[][] adjList) {
 		/**
@@ -54,32 +52,27 @@ public class RouteGenerator{
 		route.setLandmarks(lands);
 		
 		Stack<Pair<Integer, Character>> routeStack;
-		//Queue<RoutePair> routeSegment;
-		// all intersections with exception of the first and last pairs
 		
+		// all intersections with exception of the first and last pairs
 		for (int i = 1; i< routeStops.size(); i++) {
 			routeStack = dijkstra(route, vertices, adjList, routeStops.get(i-1), routeStops.get(i));
+			//convert stack to useful path/route points
 			Queue<RoutePair> routeSegment = makeSegment(routeStack, vertices);
 			if (routeSegment == null) {
 				System.out.println("ROUTE SEGMENT IS NULL LINE 68 in Route Generator");
 			}
-			//route.addSegment(routeSegment);
 			route.path.add(routeSegment);
-			route.addSegment();
-			//convert stack to useful path/route points
 		}
 		
-		return route; //Queue<Queue<RoutePair>>
+		return route; //type is Queue<Queue<RoutePair>>
 		
 	}
 	
 	private Queue<RoutePair> makeSegment(Stack<Pair<Integer, Character>> initStack, Object[] vertices) {
 		Queue<RoutePair> myQueue = new LinkedList<RoutePair>();
 		char prevDir = initStack.peek().getValue();// = 'L';
-		System.out.println("initial prevDir = " + prevDir);
 		while (!initStack.empty()) {
 			Pair<Integer, Character> stackPair = initStack.pop();
-			System.out.println(stackPair.getKey() + " +++++ " + stackPair.getValue());
 			int index = stackPair.getKey();
 
 			Point p = getPointfromIndex(vertices[index], stackPair.getValue(), prevDir);
@@ -87,18 +80,13 @@ public class RouteGenerator{
 			RoutePair r = new RoutePair(p, prevDir);
 			myQueue.add(r);
 		}
-		//if (myQueue == null) {
-		//	System.out.println("MYQUEUE IS NULL IN MAKE SEGMENT");
-		///}
 		return myQueue;
 	}
 	
 	
 		
 	
-	private Stack<Pair<Integer, Character>> dijkstra(Route route, Object[] vertices, int[][] adjList, Point start, Point end) {
-		// TODO Auto-generated method stub
-		
+	private Stack<Pair<Integer, Character>> dijkstra(Route route, Object[] vertices, int[][] adjList, Point start, Point end) {		
 		//instantiated the data structures necessary to run dijkstra's 
 		int V = vertices.length;
 		Map<Integer, Integer> marked = new HashMap<Integer, Integer>(); // visited nodes the key = current node; value = previous node
@@ -108,12 +96,8 @@ public class RouteGenerator{
 		int src = 0;
 		int fin = 0;
 		
-		System.out.println("In Dijkstra: start " + start +  " end " + end  );
 		src = findIndex(vertices, adjList, start);
 		fin = findIndex(vertices, adjList, end);
-		
-		System.out.println("start id: " + src);
-		System.out.println("end id: " + fin);
 		
 		Entry  v = new Entry(src, src); //edge
 		frontier.add(v);
@@ -134,18 +118,13 @@ public class RouteGenerator{
 						(u == fin && adjList[v.getKey()][u] == 2) || 
 						(u == src && adjList[v.getKey()][u] == 2)) {
 					if (uturnTest(v.getKey(), v.getValue(), u, vertices) == true) {
-						//System.out.println(u);
 						frontier.add(new Entry(u, v.getKey()));
 					}
 					
 				}
 			}
 		}
-		//this is a test print statement; it prints out everything in marked 
-		for (Map.Entry entry : marked.entrySet()) {
-			System.out.println(entry.getKey() + ", " + entry.getValue());
-		}
-		System.out.println("Done");
+
 		//constructs the route based off of dijkstra's
 		Stack<Pair<Integer, Character>> r = new Stack<Pair<Integer, Character>>();
 		if (r != null) {
@@ -200,14 +179,11 @@ public class RouteGenerator{
 	}
 	
 	public Stack<Pair<Integer, Character>> constructRoute(Object[] vertices, Map<Integer, Integer> marked, int src, int fin) {
-		//Route r = new Route();
 		Stack<Pair<Integer, Character>> s = new Stack<Pair<Integer, Character>>();
 		char direction = 'o';
 		int val = fin;
 		Point p1 = new Point();
 		Point p2 = new Point();
-		
-		System.out.println("size of marked = " + marked.size());
 		
 		Pair<Integer, Character> p = new Pair<Integer, Character>(fin, 'L');
 
@@ -285,8 +261,6 @@ public class RouteGenerator{
 				return 'W';
 			}
 		}  
-		System.out.println("old = " + old + " curr = " + curr);
-		System.out.println("IN THE DEAFULT CASE GET DIRECTION");
 		return ' ';
 	}
 	
@@ -458,7 +432,6 @@ public class RouteGenerator{
 				} else if (vertex instanceof Landmark) {
 					Landmark land = (Landmark) vertex;
 					if (land.getType() == LandmarkType.WEST) {
-						System.out.println("landmark type was WEST ++++ " + land.getLocationArray()[1]);
 						return new Point(land.getLocationArray()[1]);
 					} else if (land.getType() == LandmarkType.EAST){
 						return new Point(land.getLocationArray()[2]);
@@ -542,7 +515,6 @@ public class RouteGenerator{
 					}
 				}
 				default:
-					System.out.println("IN THE DEFAULT CASE");
 					return null;
 			}
 		}

@@ -29,21 +29,18 @@ public class VehicleGenerator {
 		
 		Random r = new Random();
 		type = r.nextInt(3);
-		System.out.println(type);
 	}
 	
 	public Vehicle generateVehicle() {
 		if (blocked) return null;
-		//System.out.println("direction is " + dir);
+		
 		if (currentTime < delay) {
 			currentTime++;	//increment time; progress in generator cycle
 			return null;	//delay cycle not complete, don't make a new vehicle
 		} else {
 			currentTime = 0; //reset generator cycle
-			// need a random generated number to get the vehicle type
-			//determine parameters of vehicle somehow
 			
-			//return new Vehicle(1, 3, 1, 1, dir, new Point(location), type);
+			// need a random generated number to get the vehicle type
 			if (type == 0) {
 				return new SledRider(dir, new Point(location));
 			} else if (type == 1) {

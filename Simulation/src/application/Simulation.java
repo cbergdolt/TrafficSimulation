@@ -41,7 +41,6 @@ public class Simulation extends Observable{
 		// Create vehicle generator for each entry/exit point
 		Point[] ee = m.getEntryExit();
 		for (int i = 0; i < ee.length; i++) {
-			System.out.println("location for generator: " + ee[i]);
 			if (ee[i].y == 0) {
 				vg[i] = new VehicleGenerator(i, new Point(ee[i]), 0, 'S');
 			}
@@ -141,21 +140,7 @@ public class Simulation extends Observable{
 			}
 		}
 	}
-/*
-	private void newVehicles() {
-		//generate new vehicles at each entry/exit point	
-		for (int i = 0; i < vg.length; i++) {
-			Vehicle v = vg[i].generateVehicle();
-			if (v != null) {
-				Route route = generateRoute(v.getLocation(), v.getDirection());
-				v.setRoute(route);
-				VehicleView vv = new VehicleView(v);
-				vehicles.add(vv);
-			}
-		}
-
-	}
-*/
+	
 	private void newVehicle() {
 		// Generate new vehicle from a randomly selected vehicle generator
 		Random r = new Random();
@@ -167,24 +152,8 @@ public class Simulation extends Observable{
 			VehicleView vv = new VehicleView(v);
 			vehicles.add(vv);
 		}
-		System.out.println("NEW VEHICLE: "+w);
 	}
-/*
-	private void checkBounds() {
-		//clean out vehicles that are out of bounds
-		for(Iterator<VehicleView> it = vehicles.iterator(); it.hasNext();){ 
-			VehicleView vv = it.next(); 
-			Point loc = vv.getVehicle().getLocation();
-			System.out.println("vv loc " + vv.getVehicle().getLocation() );
-			if (vv.getMoveCount() > 0) {
-				if (loc.x < 0 || loc.x > 49 || loc.y < 0 || loc.y > 49) { 
-					vv.setInSimulation(false);
-				}
-			}
-		}
-		
-	}
-*/
+
 	private Route generateRoute(Point start, char dir) {
 		return rg.generateRoute(4, start, m.getLandmarks(), m.getRouteGrid(), m.getIntersections(), dir, m.getVertices(), m.getAdjList());
 	}

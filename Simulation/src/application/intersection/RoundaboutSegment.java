@@ -27,9 +27,6 @@ public class RoundaboutSegment extends Observable{
 	RoundaboutSegment next;	//connect this segment to the next segment (1->2, 2->4, 4->3, 3->1)
 	RoundaboutSegment prev;	//connect this segment to the previous segment (1->3, 3->4, 4->2, 2->1)
 	int vehicleLocation;	//which point in position the car in the segment is at; -1 if segment is empty
-		//this will need to change if we are allowing more than one car in the segment at a time
-	//private int[] rotation = new int[4];	//the degrees of rotation being approximated by the four points in position
-		//may not be used, I'm not sure yet. This seems to be the best way to determine image rotation values (though are we rotating the image at all?)
 	Intersection intersection;
 	
 	public RoundaboutSegment(Point[] pos, int id) {
@@ -50,7 +47,6 @@ public class RoundaboutSegment extends Observable{
 	}
 	
 	public int getSegmentID() { return segmentID; }
-	//public void setSegmentID(int id) { segmentID = id; }
 	
 	public RoundaboutSegment getNext() { return next; }
 	public void setNext(RoundaboutSegment n) { next = n; }

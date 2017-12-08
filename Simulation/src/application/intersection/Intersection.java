@@ -42,10 +42,6 @@ public class Intersection extends Observable{
 	
 	public Intersection(Point[] loc, IntersectionType t, StopLight sl, TrafficSign ts) {
 		this(loc, t, sl, ts, null);
-		//location = loc; 
-		//light = sl;
-		//sign = ts;
-		//vehicleQueue = new LinkedList<Vehicle>();
 	}
 	
 	public void updateIntersection() {
@@ -55,7 +51,6 @@ public class Intersection extends Observable{
 			if (roundabout != null) {
 				roundabout.update();
 			}
-			//Vehicle next = vehicleQueue.remove();	//get the first/next vehicle to reach the intersection
 			Vehicle next = vehicleQueue.peek();
 			if (inIntersection == null) {	//only start the vehicle if there are no other cars in the intersection
 				next.start();
@@ -72,12 +67,7 @@ public class Intersection extends Observable{
 		Point loc = inIntersection.getLocation(); //location of vehicle in the intersection
 		//determine whether vehicle is out of intersection
 		if (loc.x < location[0].x || loc.x > location[3].x || loc.y < location[2].y || loc.y > location[1].y) {
-			//make vehicle observe roundabout so it will follow the roundabout
-			/*if (roundabout != null) {
-				roundabout.addObserver(inIntersection);
-			}*/
 			inIntersection = null;
-
 		}
 		//else, just leave inIntersection alone, the vehicle is still in the intersection
 	}
@@ -97,7 +87,7 @@ public class Intersection extends Observable{
 		else if (d == 1) blocked = 'E';
 		else if (d == 2) blocked = 'W';
 		else if (d == 3) blocked = 'N';
-		else System.out.println("Intersection::blockOppositeDirection: something has gone horribly wrong");
+		else System.out.println("Intersection::blockDirection: something has gone horribly wrong");
 	}
 	public void blockOppositeDirection(int d) {
 		switch (d) {

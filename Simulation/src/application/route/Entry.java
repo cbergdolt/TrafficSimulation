@@ -1,5 +1,6 @@
 package application.route;
 
+@SuppressWarnings("rawtypes")
 public class Entry implements Comparable {
 	 private int key;
 	 private int value;

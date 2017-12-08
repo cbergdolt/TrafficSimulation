@@ -1,7 +1,6 @@
 package application.vehicle;
 
 import java.awt.Point;
-import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Queue;
@@ -90,14 +89,6 @@ public class Vehicle extends Observable implements Observer{
 		}
 	}
 	
-	private void changeState() {
-		
-	}
-	
-	private void turn(String direcion) {
-		
-	}
-	
 	public void start() {
 		this.curVelocity = this.maxVelocity;
 		startRequested = true;
@@ -113,8 +104,6 @@ public class Vehicle extends Observable implements Observer{
 	public void setRoute(Route r) { 
 		route = r; 
 		curQueue = route.getNextPath();
-		if (curQueue == null) System.out.println("setRoute: curQueue is still null");
-		else System.out.println("well, curQueue wasn't null");
 	}
 	
 	public int getType() { return type; }
@@ -126,7 +115,7 @@ public class Vehicle extends Observable implements Observer{
 		//otherwise, do stuff with the old intersection, and then replace it with the new intersection
 		if (observedIntersection != null && observedIntersection.getRoundabout() != null) {	//old intersection is part of a roundabout
 			//if the vehicle just stopped observing a roundabout intersection, it needs to start observing 
-			// that intersection's roundabout (but not the new intersections's roundabout!
+			// that intersection's roundabout (but not the new intersections's roundabout!)
 			observedIntersection.addRoundaboutObserver(this);
 			if (observedRoundabout == null) {
 				observedRoundabout = observedIntersection.getRoundabout();
@@ -143,7 +132,6 @@ public class Vehicle extends Observable implements Observer{
 
 	@Override
 	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
 		if (o instanceof Vehicle) {
 			if (closer(observedVehicle, observedIntersection) instanceof Vehicle) {
 				//check what's up with the observed vehicle, and adjust speed accordingly
@@ -178,29 +166,8 @@ public class Vehicle extends Observable implements Observer{
 		} 
 	}
 
-	private void roundaboutResponse(RoundaboutSegment rab) {
-		//have the vehicle move to the next point in the roundabout, and transfer to the next segment if necessary
-		if (direction == 'R')  {
-			for (int i = 0; i < rab.getPosition().length; i++) {
-				if (rab.getPosition()[i] == location) {
-					if (i == 3) {
-						observedRoundabout = rab.getNext();
-						rab.deleteObserver(this);
-						location = observedRoundabout.getPosition()[0];
-					} else {
-						location = rab.getPosition()[i+1];
-					}
-				}
-			}
-		} else {	//vehicle should not be following the roundabout anymore
-			rab.deleteObserver(this); 
-			observedRoundabout = null;
-		}
-	}
-	
 	private void signResponse(TrafficSign sign, Point[] loc) {
 		//changes the vehicle's velocity based on its direction and proximity to the sign (and the sign type)
-		//SignType stype = sign.getType();
 		double dist = 0;
 		
 		switch (direction) { //South, East, West, North
@@ -289,23 +256,16 @@ public class Vehicle extends Observable implements Observer{
 	}
 
 	public void updateVehicle() {
-
-		//FOR SOME REASON, curQueue IS ALWAYS NULL AT THIS POINT WE DO NOT KNOW WHY, BUT WE ARE TIRED AND WILL LOOK AT THIS TOMORROW
 		//check if vehicle is in the next intersection in the route, adjust direction accordingly
-		if (curQueue == null) System.out.println("hey, curQueue was null. this is not good");
 		if (curQueue != null && curQueue.isEmpty() && curQueue.peek() != null) {
 			curQueue = route.getNextPath();
-			System.out.println("LANDMARK COUNTER " + route.getLandmarkCounter());
 		}
 		if (curQueue != null) {
 			RoutePair nextInt = curQueue.peek();
-			//System.out.println("point = " + nextInt.getPoint() + " direction = " + nextInt.getDirection());
 			if (nextInt != null) {	//if there is another intersection/direction pair in the path
 				Point intLoc = nextInt.getPoint();
-				System.out.println("in updateVehicle take 2");
 				if (location.equals(intLoc)) {
 					direction = nextInt.getDirection();
-					System.out.println(intLoc + " -------- " +direction);
 					curQueue.remove();
 				}
 			}
@@ -316,22 +276,18 @@ public class Vehicle extends Observable implements Observer{
 		case 'N':
 			observedRoundabout = null; //clearly doesn't need to observe a roundabout anymore
 			location.y -= this.curVelocity;
-			//location.translate(0, -1);
 			break;
 		case 'S':
 			observedRoundabout = null; //clearly doesn't need to observe a roundabout anymore
 			location.y += this.curVelocity;
-			//location.translate(0, 1);
 			break;
 		case 'E':
 			observedRoundabout = null; //clearly doesn't need to observe a roundabout anymore
 			location.x += this.curVelocity;
-			//location.translate(1, 0);
 			break;
 		case 'W':
 			observedRoundabout = null; //clearly doesn't need to observe a roundabout anymore
 			location.x -= this.curVelocity;
-			//location.translate(-1, 0);
 			break;
 		case 'R':
 			for (int i = 0; i < observedRoundabout.getPosition().length; i++) {
@@ -347,7 +303,6 @@ public class Vehicle extends Observable implements Observer{
 				}
 			}
 			if (location.equals(observedRoundabout.getPosition()[3])) {
-				//this is really convoluted, but I don't know of another way to do it... :/
 				//tell the intersection that it has a vehicle in it so that the vehicles observing that intersection
 				//	don't collide with the vehicle currently in it
 				observedRoundabout.getNext().getIntersection().setInIntersection(this);
@@ -355,7 +310,6 @@ public class Vehicle extends Observable implements Observer{
 			break;
 		case 'L':
 			if (landmarkTime == 0) {
-				System.out.println("landmarkTime was 0");
 				this.stop();	//don't move automatically until I tell you to again
 				location = route.getLandmark(route.getLandmarkCounter()).getLocation(); //move the vehicle to the exact landmark location
 			} else if (landmarkTime <= 3) {
@@ -382,7 +336,7 @@ public class Vehicle extends Observable implements Observer{
 		default:
 			System.out.println("vehicleUpdate: something has gone horribly wrong");	
 		}
-		System.out.println("location = " + location);
+		
 		setChanged();
 		notifyObservers();
 	}
@@ -395,7 +349,6 @@ public class Vehicle extends Observable implements Observer{
 		else if (this.direction == 'S') intloc = i.getLocation()[0];
 		else if (this.direction == 'E') intloc = i.getLocation()[1];
 		else if (this.direction == 'W') intloc = i.getLocation()[2];
-		//else if (this.direction == 'R') 
 		else {
 			System.out.println("Vehicle::closer: something has gone horribly wrong");
 			return null;
@@ -408,7 +361,6 @@ public class Vehicle extends Observable implements Observer{
 	}
 	
 	private double distance(Point pta, Point ptb) {
-		// TODO Auto-generated method stub
 		double xdiff = pta.x - ptb.x;
 		double ydiff = pta.y - ptb.y;
 		double square_sum = Math.pow(xdiff, 2) + Math.pow(ydiff, 2);
