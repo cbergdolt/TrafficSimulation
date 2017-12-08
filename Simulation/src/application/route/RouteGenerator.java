@@ -34,9 +34,6 @@ public class RouteGenerator{
 		Random rand = new Random();
 		int r;
 		Vector<Landmark> lands = new Vector<Landmark>();
-		routeStops.add(((Landmark)vertices[24]).getLocation());	//REMOVE
-		lands.add((Landmark)vertices[24]);
-		//routeStops.add(((Landmark)vertices[11]).getLocation());
 		while(routeStops.size() < numStops+1) {
 				r = rand.nextInt(36);
 				while (ids.contains(r)) {
@@ -127,7 +124,7 @@ public class RouteGenerator{
 			if (marked.containsValue(v.getKey())) continue;
 			
 			if (v.getKey() == fin) {
-				marked.put(v.getKey(), v.getValue());
+				marked.put(new Integer(v.getKey()), new Integer(v.getValue()));
 				break;
 			}
 			
@@ -215,16 +212,18 @@ public class RouteGenerator{
 		Pair<Integer, Character> p = new Pair<Integer, Character>(fin, 'L');
 
 		s.push(p);
-		if (marked.containsKey(val)){
-			val = marked.get(val);
-		} 
+
+		val = marked.get(val);
+			
 		while (val != src) {
 			p1 = getPoint(val, vertices);
 			direction = getDirection(p1, getPoint(s.peek().getKey(), vertices));
 			
 			Pair<Integer, Character> pair = new Pair<Integer, Character>(val, direction);
 			s.push(pair);
+
 			val = marked.get(val);
+
 			if (val == src) { //allows the starting location to be pushed down on the stack b/c while condition will terminate before it otherwise
 				p2 = getPoint(s.peek().getKey(), vertices);
 				if (vertices[val] instanceof Landmark) {

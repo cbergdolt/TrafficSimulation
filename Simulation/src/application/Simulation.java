@@ -82,7 +82,7 @@ public class Simulation extends Observable{
 			// Update other things, too, like the stoplights
 			m.updateMap();
 			
-			if (vehicles.size() < 1) {//vg.length) {
+			if (vehicles.size() < vg.length) {
 				newVehicle();
 			}
 			
