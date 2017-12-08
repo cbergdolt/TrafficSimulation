@@ -244,6 +244,8 @@ public class Simulation extends Observable{
 			else return false;
 		case 'R':
 			return false;	//I guess?
+		case 'L':
+			return false; //I guess?
 		default:
 			System.out.println("upcomingIntersection: something has gone horribly wrong");
 			return false;
@@ -297,6 +299,8 @@ public class Simulation extends Observable{
 			if (vb.getLocation().x < va.getLocation().x) return true;
 			else return false;
 		case 'R':
+			return false; //I guess?
+		case 'L': 
 			return false; //I guess?
 		default:
 			System.out.println("aheadOf: something has gone horribly wrong");

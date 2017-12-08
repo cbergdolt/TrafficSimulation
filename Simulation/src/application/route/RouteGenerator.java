@@ -53,12 +53,12 @@ public class RouteGenerator{
 		route.setLandmarks(lands);
 		
 		Stack<Pair<Integer, Character>> routeStack;
-		Queue<RoutePair> routeSegment;
+		//Queue<RoutePair> routeSegment;
 		// all intersections with exception of the first and last pairs
 		
 		for (int i = 1; i< routeStops.size(); i++) {
 			routeStack = dijkstra(route, vertices, adjList, routeStops.get(i-1), routeStops.get(i));
-			routeSegment = makeSegment(routeStack, vertices);
+			Queue<RoutePair> routeSegment = makeSegment(routeStack, vertices);
 			if (routeSegment == null) {
 				System.out.println("ROUTE SEGMENT IS NULL LINE 68 in Route Generator");
 			}
@@ -74,240 +74,23 @@ public class RouteGenerator{
 	
 	private Queue<RoutePair> makeSegment(Stack<Pair<Integer, Character>> initStack, Object[] vertices) {
 		Queue<RoutePair> myQueue = new LinkedList<RoutePair>();
-		char prevDir = 'L';
+		char prevDir;// = 'L';
 		while (!initStack.empty()) {
 			Pair<Integer, Character> stackPair = initStack.pop();
 			System.out.println(stackPair.getKey() + " +++++ " + stackPair.getValue());
 			int index = stackPair.getKey();
-			Point p = getPointfromIndex(vertices[index], stackPair.getValue(), prevDir);
 			prevDir = stackPair.getValue();
+			Point p = getPointfromIndex(vertices[index], stackPair.getValue(), prevDir);
+			RoutePair r = new RoutePair(p, prevDir);
+			myQueue.add(r);
 		}
-		if (myQueue == null) {
-			System.out.println("MYQUEUE IS NULL IN MAKE SEGMENT");
-		}
+		//if (myQueue == null) {
+		//	System.out.println("MYQUEUE IS NULL IN MAKE SEGMENT");
+		///}
 		return myQueue;
 	}
 	
-	private Point getPointfromIndex(Object vertex, char dir, char prevDir) {
-		switch(prevDir) {
-		case 'N':
-			if (vertex instanceof Intersection) {
-				Intersection inter = (Intersection) vertex;
-				switch(dir) {
-				case 'N':
-					return inter.getLocation()[3];
-				case 'S':
-					System.out.println("prevDir = N; No U-Turns Allowed!");
-					return null;
-				case 'E':
-					return inter.getLocation()[3];
-				case 'W':
-					return inter.getLocation()[2];
-				case 'R':
-					return inter.getRoundabout().getPosition()[0];
-				case 'L':
-					System.out.println("prevDir = N; intersection direction = L; this should not ever happen");
-					return null;
-				default:
-					System.out.println("prevDir = N; intersection direction was not a valid direction");
-					return null;
-				} 
-			}else if (vertex instanceof Landmark) {
-				Landmark land = (Landmark) vertex;
-				if (land.getType() == LandmarkType.NORTH) {
-					return land.getLocationArray()[1];
-				} else if (land.getType() == LandmarkType.SOUTH){
-					return land.getLocationArray()[2];
-				} else if (land.getType() == LandmarkType.EAST || land.getType() == LandmarkType.WEST){
-					System.out.println("prevDir = N; landmark type was " + land.getType().toString() + ", this cannot happen"); 
-					return null;
-				} else {
-					System.out.println("prevDir = N; landmark type was not recognizable"); 
-					return null;
-				}
-			} else {
-				return (Point) vertex;
-			}
-		case 'S':
-			if (vertex instanceof Intersection) {
-				Intersection inter = (Intersection) vertex;
-				switch(dir) {
-				case 'S':
-					return inter.getLocation()[0];
-				case 'N':
-					System.out.println("prevDir = S; No U-Turns Allowed!");
-					return null;
-				case 'W':
-					return inter.getLocation()[0];
-				case 'E':
-					return inter.getLocation()[1];
-				case 'R':
-					return inter.getRoundabout().getPosition()[0];
-				case 'L':
-					System.out.println("prevDir = S; intersection direction = L; this should not ever happen");
-					return null;
-				default:
-					System.out.println("prevDir = S; intersection direction was not a valid direction");
-					return null;
-				} 
-			}else if (vertex instanceof Landmark) {
-				Landmark land = (Landmark) vertex;
-				if (land.getType() == LandmarkType.SOUTH) {
-					return land.getLocationArray()[1];
-				} else if (land.getType() == LandmarkType.NORTH){
-					return land.getLocationArray()[2];
-				} else if (land.getType() == LandmarkType.EAST || land.getType() == LandmarkType.WEST){
-					System.out.println("prevDir = S; landmark type was " + land.getType().toString() + ", this cannot happen"); 
-					return null;
-				} else {
-					System.out.println("prevDir = S; landmark type was not recognizable"); 
-					return null;
-				}
-			} else {
-				return (Point) vertex;
-			}
-			case 'E':
-				if (vertex instanceof Intersection) {
-					Intersection inter = (Intersection) vertex;
-					switch(dir) {
-					case 'E':
-						return inter.getLocation()[1];
-					case 'W':
-						System.out.println("prevDir = E; No U-Turns Allowed!");
-						return null;
-					case 'S':
-						return inter.getLocation()[1];
-					case 'N':
-						return inter.getLocation()[3];
-					case 'R':
-						return inter.getRoundabout().getPosition()[0];
-					case 'L':
-						System.out.println("prevDir = E; intersection direction = L; this should not ever happen");
-						return null;
-					default:
-						System.out.println("prevDir = S; intersection direction was not a valid direction");
-						return null;
-					} 
-				}else if (vertex instanceof Landmark) {
-					Landmark land = (Landmark) vertex;
-					if (land.getType() == LandmarkType.EAST) {
-						return land.getLocationArray()[1];
-					} else if (land.getType() == LandmarkType.WEST){
-						return land.getLocationArray()[2];
-					} else if (land.getType() == LandmarkType.NORTH || land.getType() == LandmarkType.SOUTH){
-						System.out.println("prevDir = E; landmark type was " + land.getType().toString() + ", this cannot happen"); 
-						return null;
-					} else {
-						System.out.println("prevDir = E; landmark type was not recognizable"); 
-						return null;
-					}
-				} else {
-					return (Point) vertex;
-				}
-			case 'W':
-				if (vertex instanceof Intersection) {
-					Intersection inter = (Intersection) vertex;
-					switch(dir) {
-					case 'W':
-						return inter.getLocation()[2];
-					case 'E':
-						System.out.println("prevDir = W; No U-Turns Allowed!");
-						return null;
-					case 'N':
-						return inter.getLocation()[2];
-					case 'S':
-						return inter.getLocation()[0];
-					case 'R':
-						return inter.getRoundabout().getPosition()[0];
-					case 'L':
-						System.out.println("prevDir = W; intersection direction = L; this should not ever happen");
-						return null;
-					default:
-						System.out.println("prevDir = W; intersection direction was not a valid direction");
-						return null;
-					} 
-				} else if (vertex instanceof Landmark) {
-					Landmark land = (Landmark) vertex;
-					if (land.getType() == LandmarkType.WEST) {
-						return land.getLocationArray()[1];
-					} else if (land.getType() == LandmarkType.EAST){
-						return land.getLocationArray()[2];
-					} else if (land.getType() == LandmarkType.NORTH || land.getType() == LandmarkType.SOUTH){
-						System.out.println("prevDir = W; landmark type was " + land.getType().toString() + ", this cannot happen"); 
-						return null;
-					} else {
-						System.out.println("prevDir = W; landmark type was not recognizable"); 
-						return null;
-					}
-				} else {
-					return (Point) vertex;
-				}
-			case 'R':
-				if (vertex instanceof Intersection) {
-					Intersection inter = (Intersection) vertex;
-					if (dir == 'N'||dir == 'S'||dir == 'E'||dir == 'W') {
-						return inter.getRoundabout().getPrev().getPosition()[3];
-					} else if (dir == 'R') {
-						return inter.getRoundabout().getPosition()[0];
-					} else if (dir == 'L') {
-						System.out.println("prevDir = R; intersection direction = L, this should not ever happen");
-						return null;
-					} else {
-						System.out.println("prevDir = W; intersection direction was not a valid direction");
-						return null;
-					}
-				} else if (vertex instanceof Landmark) {
-					Landmark land = (Landmark) vertex;
-					System.out.println("prevDir = R; landmark type was " + land.getType().toString() + ", this cannot happen"); 
-					return null;
-				}
-			case 'L': //	FIRST THING OFF OF THE """"""STACK"""""""
-				if (vertex instanceof Landmark) {
-					Landmark land = (Landmark) vertex;
-					switch(land.getType()) {
-					case NORTH:
-						if (dir == 'N') {
-							return land.getLocationArray()[1];
-						} else {
-							return land.getLocationArray()[2];
-						}
-					case SOUTH:
-						if (dir == 'S') {
-							return land.getLocationArray()[1];
-						} else {
-							return land.getLocationArray()[2];
-						}
-					case EAST:
-						if (dir == 'E') {
-							return land.getLocationArray()[1];
-						} else {
-							return land.getLocationArray()[2];
-						}
-					case WEST:
-						if (dir == 'W') {
-							return land.getLocationArray()[1];
-						} else {
-							return land.getLocationArray()[2];
-						}
-					}
-				} else if (vertex instanceof Point) {
-					//Point p;
-					switch(dir) {
-					case 'N':
-						return new Point(((Point) vertex).x, ((Point) vertex).y-1);
-					case 'S':
-						return new Point(((Point) vertex).x, ((Point) vertex).y+1);
-					case 'E':
-						return new Point(((Point) vertex).x+1, ((Point) vertex).y);
-					case 'W':
-						return new Point(((Point) vertex).x-1, ((Point) vertex).y);
-					}
-				}
-				default:
-					System.out.println("IN THE DEFAULT CASE");
-					return null;
-			}
-		}
+	
 		
 	
 	private Stack<Pair<Integer, Character>> dijkstra(Route route, Object[] vertices, int[][] adjList, Point start, Point end) {
@@ -419,6 +202,8 @@ public class RouteGenerator{
 		Point p1 = new Point();
 		Point p2 = new Point();
 		
+		System.out.println("size of marked = " + marked.size());
+		
 		Pair<Integer, Character> p = new Pair<Integer, Character>(fin, 'L');
 
 		s.push(p);
@@ -461,18 +246,8 @@ public class RouteGenerator{
 		// if both points roundabout, return R
 		if (isRoundabout(old) && isRoundabout(curr)) {
 			return 'R';
-		} else if (old.x == curr.x) {
-			if (old.y < curr.y) {
-				return 'S';
-			} else if (old.y > curr.y) {
-				return 'N';
-			}
-		} else if (old.y == curr.y) {
-			if (old.x < curr.x) {
-				return 'E';
-			} else if (old.x > curr.x) {
-				return 'W';
-			}
+		} else if (old.y == curr.y && old.x == curr.x) {
+			return 'L';
 		} else if (old.y != curr.y && old.x != old.y) {
 			if (Math.abs(curr.x-old.x) > Math.abs(curr.y-old.y)) {
 				if (old.x < curr.x) {
@@ -487,7 +262,20 @@ public class RouteGenerator{
 					return 'N';
 				}
 			}	
-		}
+		} else if (old.x == curr.x) {
+			if (old.y < curr.y) {
+				return 'S';
+			} else if (old.y > curr.y) {
+				return 'N';
+			}
+		} else if (old.y == curr.y) {
+			if (old.x < curr.x) {
+				return 'E';
+			} else if (old.x > curr.x) {
+				return 'W';
+			}
+		}  
+		System.out.println("old = " + old + " curr = " + curr);
 		System.out.println("IN THE DEAFULT CASE GET DIRECTION");
 		return ' ';
 	}
@@ -499,5 +287,253 @@ public class RouteGenerator{
 			return false;
 		}
 	}
+	
+	private Point getPointfromIndex(Object vertex, char dir, char prevDir) {
+		switch(prevDir) {
+		case 'N':
+			if (vertex instanceof Intersection) {
+				Intersection inter = (Intersection) vertex;
+				switch(dir) {
+				case 'N':
+					return new Point(inter.getLocation()[3]);
+				case 'S':
+					System.out.println("prevDir = N; No U-Turns Allowed!");
+					return null;
+				case 'E':
+					return new Point(inter.getLocation()[3]);
+				case 'W':
+					return new Point(inter.getLocation()[2]);
+				case 'R':
+					return new Point(inter.getRoundabout().getPosition()[0]);
+				case 'L':
+					System.out.println("prevDir = N; intersection direction = L; this should not ever happen");
+					return null;
+				default:
+					System.out.println("prevDir = N; intersection direction was not a valid direction");
+					return null;
+				} 
+			}else if (vertex instanceof Landmark) {
+				Landmark land = (Landmark) vertex;
+				if (land.getType() == LandmarkType.NORTH) {
+					return new Point(land.getLocationArray()[1]);
+				} else if (land.getType() == LandmarkType.SOUTH){
+					return new Point(land.getLocationArray()[2]);
+				} else if (land.getType() == LandmarkType.EAST || land.getType() == LandmarkType.WEST){
+					System.out.println("prevDir = N; landmark type was " + land.getType().toString() + ", this cannot happen"); 
+					return null;
+				} else {
+					System.out.println("prevDir = N; landmark type was not recognizable"); 
+					return null;
+				}
+			} else if (vertex instanceof Point){
+				Point p = (Point) vertex;
+				if (dir == 'L') { //L means it's an exit
+					return new Point(p.x+1, p.y);
+				} else {	//not L means it's an entrace
+					System.out.println("prevDir = N; vertex was a point, and dir != L");
+					return new Point(p);
+					//return null;
+				}
+			}
+		case 'S':
+			if (vertex instanceof Intersection) {
+				Intersection inter = (Intersection) vertex;
+				switch(dir) {
+				case 'S':
+					return new Point(inter.getLocation()[0]);
+				case 'N':
+					System.out.println("prevDir = S; No U-Turns Allowed!");
+					return null;
+				case 'W':
+					return new Point(inter.getLocation()[0]);
+				case 'E':
+					return new Point(inter.getLocation()[1]);
+				case 'R':
+					return new Point(inter.getRoundabout().getPosition()[0]);
+				case 'L':
+					System.out.println("prevDir = S; intersection direction = L; this should not ever happen");
+					return null;
+				default:
+					System.out.println("prevDir = S; intersection direction was not a valid direction");
+					return null;
+				} 
+			}else if (vertex instanceof Landmark) {
+				Landmark land = (Landmark) vertex;
+				if (land.getType() == LandmarkType.SOUTH) {
+					return new Point(land.getLocationArray()[1]);
+				} else if (land.getType() == LandmarkType.NORTH){
+					return new Point(land.getLocationArray()[2]);
+				} else if (land.getType() == LandmarkType.EAST || land.getType() == LandmarkType.WEST){
+					System.out.println("prevDir = S; landmark type was " + land.getType().toString() + ", this cannot happen"); 
+					return null;
+				} else {
+					System.out.println("prevDir = S; landmark type was not recognizable"); 
+					return null;
+				}
+			} else {
+				Point p = (Point) vertex;
+				if (dir == 'L') {
+					return new Point(p.x-1, p.y);
+				} else {
+					System.out.println("prevDir = S; vertex was a point, and dir != L");
+					return new Point(p);
+				}
+			}
+			case 'E':
+				if (vertex instanceof Intersection) {
+					Intersection inter = (Intersection) vertex;
+					switch(dir) {
+					case 'E':
+						return new Point(inter.getLocation()[1]);
+					case 'W':
+						System.out.println("prevDir = E; No U-Turns Allowed!");
+						return null;
+					case 'S':
+						return new Point(inter.getLocation()[1]);
+					case 'N':
+						return new Point(inter.getLocation()[3]);
+					case 'R':
+						return new Point(inter.getRoundabout().getPosition()[0]);
+					case 'L':
+						System.out.println("prevDir = E; intersection direction = L; this should not ever happen");
+						return null;
+					default:
+						System.out.println("prevDir = E; intersection direction was not a valid direction");
+						return null;
+					} 
+				}else if (vertex instanceof Landmark) {
+					Landmark land = (Landmark) vertex;
+					if (land.getType() == LandmarkType.EAST) {
+						return new Point(land.getLocationArray()[1]);
+					} else if (land.getType() == LandmarkType.WEST){
+						return new Point(land.getLocationArray()[2]);
+					} else if (land.getType() == LandmarkType.NORTH || land.getType() == LandmarkType.SOUTH){
+						System.out.println("prevDir = E; landmark type was " + land.getType().toString() + ", this cannot happen"); 
+						return null;
+					} else {
+						System.out.println("prevDir = E; landmark type was not recognizable"); 
+						return null;
+					}
+				} else {
+					Point p = (Point) vertex;
+					if (dir == 'L') {
+						return new Point(p.x, p.y+1);
+					} else {
+						System.out.println("prevDir = E; vertex was a point, and dir != L");
+						return new Point(p);
+					}
+				}
+			case 'W':
+				if (vertex instanceof Intersection) {
+					Intersection inter = (Intersection) vertex;
+					switch(dir) {
+					case 'W':
+						return new Point(inter.getLocation()[2]);
+					case 'E':
+						System.out.println("prevDir = W; No U-Turns Allowed!");
+						return null;
+					case 'N':
+						return new Point(inter.getLocation()[2]);
+					case 'S':
+						return new Point(inter.getLocation()[0]);
+					case 'R':
+						return new Point(inter.getRoundabout().getPosition()[0]);
+					case 'L':
+						System.out.println("prevDir = W; intersection direction = L; this should not ever happen");
+						return null;
+					default:
+						System.out.println("prevDir = W; intersection direction was not a valid direction");
+						return null;
+					} 
+				} else if (vertex instanceof Landmark) {
+					Landmark land = (Landmark) vertex;
+					if (land.getType() == LandmarkType.WEST) {
+						return new Point(land.getLocationArray()[1]);
+					} else if (land.getType() == LandmarkType.EAST){
+						return new Point(land.getLocationArray()[2]);
+					} else if (land.getType() == LandmarkType.NORTH || land.getType() == LandmarkType.SOUTH){
+						System.out.println("prevDir = W; landmark type was " + land.getType().toString() + ", this cannot happen"); 
+						return null;
+					} else {
+						System.out.println("prevDir = W; landmark type was not recognizable"); 
+						return null;
+					}
+				} else {
+					Point p = (Point) vertex;
+					if (dir == 'L') {
+						return new Point(p.x, p.y-1);
+					} else {
+						System.out.println("prevDir = W; vertex was a point, and dir != L");
+						return new Point(p);
+					}
+				}
+			case 'R':
+				if (vertex instanceof Intersection) {
+					Intersection inter = (Intersection) vertex;
+					if (dir == 'N'||dir == 'S'||dir == 'E'||dir == 'W') {
+						return new Point(inter.getRoundabout().getPrev().getPosition()[3]);
+					} else if (dir == 'R') {
+						return new Point(inter.getRoundabout().getPosition()[0]);
+					} else if (dir == 'L') {
+						System.out.println("prevDir = R; intersection direction = L, this should not ever happen");
+						return null;
+					} else {
+						System.out.println("prevDir = W; intersection direction was not a valid direction");
+						return null;
+					}
+				} else if (vertex instanceof Landmark) {
+					Landmark land = (Landmark) vertex;
+					System.out.println("prevDir = R; landmark type was " + land.getType().toString() + ", this cannot happen"); 
+					return null;
+				} else if (vertex instanceof Point){ 
+					System.out.println("prevDir = R; vertex was a point; cannot exit map from roundabout"); 
+				} 
+			case 'L': //	FIRST THING OFF OF THE """"""STACK"""""""
+				if (vertex instanceof Landmark) {
+					Landmark land = (Landmark) vertex;
+					switch(land.getType()) {
+					case NORTH:
+						if (dir == 'N') {
+							return new Point(land.getLocationArray()[1]);
+						} else {
+							return new Point(land.getLocationArray()[2]);
+						}
+					case SOUTH:
+						if (dir == 'S') {
+							return new Point(land.getLocationArray()[1]);
+						} else {
+							return new Point(land.getLocationArray()[2]);
+						}
+					case EAST:
+						if (dir == 'E') {
+							return new Point(land.getLocationArray()[1]);
+						} else {
+							return new Point(land.getLocationArray()[2]);
+						}
+					case WEST:
+						if (dir == 'W') {
+							return new Point(land.getLocationArray()[1]);
+						} else {
+							return new Point(land.getLocationArray()[2]);
+						}
+					}
+				} else if (vertex instanceof Point) {
+					//Point p;
+					switch(dir) {
+					case 'N':
+						return new Point(((Point) vertex).x, ((Point) vertex).y-1);
+					case 'S':
+						return new Point(((Point) vertex).x, ((Point) vertex).y+1);
+					case 'E':
+						return new Point(((Point) vertex).x+1, ((Point) vertex).y);
+					case 'W':
+						return new Point(((Point) vertex).x-1, ((Point) vertex).y);
+					}
+				}
+				default:
+					System.out.println("IN THE DEFAULT CASE");
+					return null;
+			}
+		}
 	
 }

@@ -227,6 +227,9 @@ public class Vehicle extends Observable implements Observer{
 		case 'R':	//roundabout
 			System.out.println("signResponse: the direction is 'R'");
 			break;
+		case 'L':
+			System.out.println("signResponse: the direction is 'L'");
+			break;
 		default:
 			System.out.println("signResponse: something has gone horribly wrong");	
 		}
@@ -277,12 +280,16 @@ public class Vehicle extends Observable implements Observer{
 		case 'R':	//roundabout
 			System.out.println("lightResponse: the direction is 'R'");
 			break;
+		case 'L':	//roundabout
+			System.out.println("lightResponse: the direction is 'L'");
+			break;
 		default:
 			System.out.println("lightResponse: something has gone horribly wrong");	
 		}
 	}
 
 	public void updateVehicle() {
+
 		//FOR SOME REASON, curQueue IS ALWAYS NULL AT THIS POINT WE DO NOT KNOW WHY, BUT WE ARE TIRED AND WILL LOOK AT THIS TOMORROW
 		//check if vehicle is in the next intersection in the route, adjust direction accordingly
 		if (curQueue == null) System.out.println("hey, curQueue was null. this is not good");
@@ -292,8 +299,10 @@ public class Vehicle extends Observable implements Observer{
 		}
 		if (curQueue != null) {
 			RoutePair nextInt = curQueue.peek();
+			System.out.println("point = " + nextInt.getPoint() + " direction = " + nextInt.getDirection());
 			if (nextInt != null) {	//if there is another intersection/direction pair in the path
 				Point intLoc = nextInt.getPoint();
+				System.out.println("in updateVehicle take 2");
 				if (location.equals(intLoc)) {
 					direction = nextInt.getDirection();
 					System.out.println(intLoc + " -------- " +direction);
