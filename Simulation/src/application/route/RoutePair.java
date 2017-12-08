@@ -2,6 +2,13 @@ package application.route;
 
 import java.awt.Point;
 
+/**
+ * Simple class to hold location and direction pairs
+ * 
+ * @author Femgineers
+ *
+ */
+
 public class RoutePair {
 	Point point;
 	char direction;
