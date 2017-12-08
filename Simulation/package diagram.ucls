@@ -3,34 +3,240 @@
   associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
   <package id="1" language="java" name="application" project="Simulation" file="/Simulation/src/application" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="508" y="144"/>    
-    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+    <position height="408" width="402" x="686" y="199"/>    
+    <display autosize="false" stereotype="true" sort-features="false" accessors="true"/>  
   </package>  
   <package id="2" language="java" name="application.intersection" project="Simulation" 
     file="/Simulation/src/application/intersection" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="803" y="297"/>    
-    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+    <position height="234" width="271" x="383" y="25"/>    
+    <display autosize="false" stereotype="true" sort-features="false" accessors="true"/>  
   </package>  
   <package id="3" language="java" name="application.map" project="Simulation" file="/Simulation/src/application/map" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="974" y="155"/>    
-    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+    <position height="226" width="243" x="369" y="372"/>    
+    <display autosize="false" stereotype="true" sort-features="false" accessors="true"/>  
   </package>  
-  <package id="4" language="java" name="application.road" project="Simulation" file="/Simulation/src/application/road" 
+  <package id="4" language="java" name="application.route" project="Simulation" file="/Simulation/src/application/route" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1030" y="296"/>    
-    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+    <position height="387" width="322" x="17" y="329"/>    
+    <display autosize="false" stereotype="true" sort-features="false" accessors="true"/>  
   </package>  
-  <package id="5" language="java" name="application.route" project="Simulation" file="/Simulation/src/application/route" 
-    binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="201" y="310"/>    
-    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
-  </package>  
-  <package id="6" language="java" name="application.vehicle" project="Simulation" 
+  <package id="5" language="java" name="application.vehicle" project="Simulation" 
     file="/Simulation/src/application/vehicle" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="214" y="151"/>    
-    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+    <position height="289" width="328" x="14" y="21"/>    
+    <display autosize="false" stereotype="true" sort-features="false" accessors="true"/>  
   </package>  
+  <class id="6" language="java" name="application.Simulation" project="Simulation" 
+    file="/Simulation/src/application/Simulation.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="55" width="200" x="757" y="435"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="7" language="java" name="application.UserInterface" project="Simulation" 
+    file="/Simulation/src/application/UserInterface.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="55" width="181" x="892" y="264"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="8" language="java" name="application.intersection.Intersection" project="Simulation" 
+    file="/Simulation/src/application/intersection/Intersection.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="55" width="161" x="440" y="103"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="9" language="java" name="application.map.Map" project="Simulation" 
+    file="/Simulation/src/application/map/Map.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="56" width="142" x="399" y="433"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="10" language="java" name="application.map.Grid" project="Simulation" 
+    file="/Simulation/src/application/map/Grid.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="56" width="106" x="417" y="506"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="11" language="java" name="application.route.Route" project="Simulation" 
+    file="/Simulation/src/application/route/Route.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="56" width="143" x="29" y="384"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="12" language="java" name="application.route.RouteGenerator" project="Simulation" 
+    file="/Simulation/src/application/route/RouteGenerator.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="55" width="158" x="147" y="647"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="13" language="java" name="application.route.Landmark" project="Simulation" 
+    file="/Simulation/src/application/route/Landmark.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="55" width="117" x="179" y="495"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="14" language="java" name="application.vehicle.Vehicle" project="Simulation" 
+    file="/Simulation/src/application/vehicle/Vehicle.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="56" width="127" x="99" y="70"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="15" language="java" name="application.vehicle.VehicleGenerator" project="Simulation" 
+    file="/Simulation/src/application/vehicle/VehicleGenerator.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="55" width="145" x="152" y="242"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="16" language="java" name="application.vehicle.VehicleView" project="Simulation" 
+    file="/Simulation/src/application/vehicle/VehicleView.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="56" width="111" x="176" y="167"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <association id="17">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="18" name="m"/>      
+      <multiplicity id="19" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="9" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="20">    
+    <end type="SOURCE" refId="11" navigable="false">      
+      <attribute id="21" name="landmarks"/>      
+      <multiplicity id="22" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="23">    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="24" name="sim"/>      
+      <multiplicity id="25" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="26">    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="27" name="vehicle"/>      
+      <multiplicity id="28" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="29">    
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="30" name="inIntersection"/>      
+      <multiplicity id="31" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="32">    
+    <end type="SOURCE" refId="9" navigable="false">      
+      <attribute id="33" name="intersections"/>      
+      <multiplicity id="34" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="8" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="35">    
+    <end type="SOURCE" refId="14" navigable="false">      
+      <attribute id="36" name="route"/>      
+      <multiplicity id="37" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="11" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="38">    
+    <end type="SOURCE" refId="14" navigable="false">      
+      <attribute id="39" name="observedVehicle"/>      
+      <multiplicity id="40" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="41">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="42" name="rg"/>      
+      <multiplicity id="43" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="12" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="44">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="45" name="vg"/>      
+      <multiplicity id="46" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="15" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="47">    
+    <end type="SOURCE" refId="14" navigable="false">      
+      <attribute id="48" name="observedIntersection"/>      
+      <multiplicity id="49" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="8" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="50">    
+    <end type="SOURCE" refId="9" navigable="false">      
+      <attribute id="51" name="landmarks"/>      
+      <multiplicity id="52" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="53">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="54" name="vehicles"/>      
+      <multiplicity id="55" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="16" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="56">    
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="57" name="vehicleQueue"/>      
+      <multiplicity id="58" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     sort-features="false" accessors="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="true" static="true"/>    
