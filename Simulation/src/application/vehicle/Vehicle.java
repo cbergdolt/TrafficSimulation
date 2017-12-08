@@ -355,6 +355,7 @@ public class Vehicle extends Observable implements Observer{
 			break;
 		case 'L':
 			if (landmarkTime == 0) {
+				System.out.println("landmarkTime was 0");
 				this.stop();	//don't move automatically until I tell you to again
 				location = route.getLandmark(route.getLandmarkCounter()).getLocation(); //move the vehicle to the exact landmark location
 			} else if (landmarkTime <= 3) {
@@ -363,16 +364,25 @@ public class Vehicle extends Observable implements Observer{
 				//start the thing up again!
 				// look at next route move and put it in the right location for the next update
 				curQueue = route.getNextPath();
+				if (curQueue == null) {
+					if (location.x == 0) direction = 'W';
+					else if (location.x == 49) direction = 'E';
+					else if (location.y == 0) direction = 'N';
+					else if (location.y == 49) direction = 'S';
+					break;
+				}
 				RoutePair next = curQueue.peek();
 				location = next.getPoint();
+				direction = next.getDirection();
 				landmarkTime = 0;
 			}
+			
 			landmarkTime += 1; //increment the time that vehicle has been stopped at landmark
 			break;
 		default:
 			System.out.println("vehicleUpdate: something has gone horribly wrong");	
 		}
-		
+		System.out.println("location = " + location);
 		setChanged();
 		notifyObservers();
 	}

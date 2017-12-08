@@ -35,6 +35,8 @@ public class RouteGenerator{
 		int r;
 		Vector<Landmark> lands = new Vector<Landmark>();
 		routeStops.add(((Landmark)vertices[24]).getLocation());	//REMOVE
+		lands.add((Landmark)vertices[24]);
+		//routeStops.add(((Landmark)vertices[11]).getLocation());
 		while(routeStops.size() < numStops+1) {
 				r = rand.nextInt(36);
 				while (ids.contains(r)) {
@@ -149,7 +151,9 @@ public class RouteGenerator{
 		System.out.println("Done");
 		//constructs the route based off of dijkstra's
 		Stack<Pair<Integer, Character>> r = new Stack<Pair<Integer, Character>>();
-		r = constructRoute(vertices, marked, src, fin);
+		if (r != null) {
+			r = constructRoute(vertices, marked, src, fin);
+		}
 		return r;
 		}
 	
@@ -211,7 +215,9 @@ public class RouteGenerator{
 		Pair<Integer, Character> p = new Pair<Integer, Character>(fin, 'L');
 
 		s.push(p);
-		val = marked.get(val);
+		if (marked.containsKey(val)){
+			val = marked.get(val);
+		} 
 		while (val != src) {
 			p1 = getPoint(val, vertices);
 			direction = getDirection(p1, getPoint(s.peek().getKey(), vertices));

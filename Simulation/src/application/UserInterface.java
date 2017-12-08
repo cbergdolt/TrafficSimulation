@@ -87,7 +87,7 @@ public class UserInterface extends Application implements Observer{
 		obsList = root.getChildren();
 
         Scene scene2 = new Scene(root,dimensions*scale,dimensions*scale);
-		sim = new Simulation(25, 3, 500);	//runtime, delay, steplength
+		sim = new Simulation(runTime, delayTime, runTime);	//runtime, delay, steplength
 		sim.addObserver(this);	//make the UI observe the simulation
 		
 		intersectionViews = new ImageView[sim.m.getIntersections().length];
@@ -120,19 +120,19 @@ public class UserInterface extends Application implements Observer{
 		scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 		g.add(scenetitle, 0, 0, 2, 1);
 
-		Label runtime = new Label("Runtime:");
+		Label runtime = new Label("Runtime (Suggested 100):");
 		g.add(runtime, 0, 1);
 
 		TextField runtimeText = new TextField();
 		g.add(runtimeText, 1, 1);
 
-		Label delay = new Label("Delay:");
+		Label delay = new Label("Delay (Suggested 3):");
 		g.add(delay, 0, 2);
 
 		TextField delayText = new TextField();
 		g.add(delayText, 1, 2);
 		
-		Label step = new Label("Step Length:");
+		Label step = new Label("Step Length (Suggested 2):");
 		g.add(step, 0, 3);
 
 		TextField stepText = new TextField();
