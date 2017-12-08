@@ -3,9 +3,7 @@ package application;
 import java.awt.Point;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Random;
 import java.util.Vector;
-
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
@@ -37,7 +35,7 @@ import application.vehicle.*;
  * The UserInterface class is the main running class that controls the entire simulation. 
  * This is the class that must be run to start the simulation. 
  * The stop lights are each assigned images depending on which state it currently is in.
- * The routegrid from the Map class is used to determine what to render in the specified grid spot.
+ * The routeGrid from the Map class is used to determine what to render in the specified grid spot.
  * The updateVehicles class updates the ImageView of each VehicleView object contained in the vehicles array
  * It also deletes the VehicleView and removes its ImageView from the scene's child nodes if Vehicle is out of bounds
  *   
@@ -48,40 +46,35 @@ import application.vehicle.*;
 public class UserInterface extends Application implements Observer{
 	ImageView views[];
 	Image images[];
-	
 	ImageView RoadImageView;
 	Image RoadImage;
 	ImageView RoundaboutImageView;
 	Image RoundaboutImage;
-	boolean foundRAB = false;	// found roundabout; ignore other roundabout values
+	boolean foundRAB = false;	// determines where a roundabout was found; ignores other roundabout values
 	ImageView GrassImageView;
 	ImageView LandmarkImageView;
 	Image LandmarkStopImage;
 	Image GrassImage;
 	Image PortalImage;
-	Vector<ImageView> mapImageViews = new Vector<ImageView>();
-	
+	Image LandmarkImage;
 	Image RoadClosedImage;
 	ImageView RoadClosedImageViewA;
 	ImageView RoadClosedImageViewB;
-	
-	Image LandmarkImage;
 	Vector<ImageView> LandmarkImageViews = new Vector<ImageView>();
 	Vector<Image> HouseImages = new Vector<Image>();
 	Vector<ImageView> HouseImageViews = new Vector<ImageView>();
-
-	
-	
+	Vector<ImageView> mapImageViews = new Vector<ImageView>();
+	ImageView[] intersectionViews; //as many intersectionViews as 4-way intersections
+	// Images for Lights:
 	Image gns_rewImage;
 	Image yns_rewImage;
 	Image rns_gewImage;
 	Image rns_yewImage;
 	Image stopImage;
 	Image yieldImage;
-	ImageView[] intersectionViews;// = new ImageView[14]; //as many intersectionViews as 4-way intersections
 	
 	int dimensions = 50;
-	int scale = 20;//15;
+	int scale = 20; 
 	Simulation sim;
 	AnchorPane root;
 	Scene scene;
@@ -94,25 +87,22 @@ public class UserInterface extends Application implements Observer{
 		obsList = root.getChildren();
 
         Scene scene2 = new Scene(root,dimensions*scale,dimensions*scale);
-		//Simulation sim = new Simulation(25, 3, 500);	//runtime, delay, steplength
 		sim = new Simulation(25, 3, 500);	//runtime, delay, steplength
 		sim.addObserver(this);	//make the UI observe the simulation
 		
 		intersectionViews = new ImageView[sim.m.getIntersections().length];
 		
-		initializeImages();	//has to happen after the Simulation instantiation, because it depends on intersection locations		
+		initializeImages();	//Has to happen after the Simulation instantiation, because it depends on intersection locations		
 		updateImageViews();
 		
 		stage.setScene(scene2);
 		
 		stage.setTitle("Traffic Simulation");
-		stage.show();	//this should be the blank map, ready to go (TODO implement initialize)
-		
+		stage.show();	//Blank map, ready to go 
 		startAnimation();
 	}
 	
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		launch(args);
 	}
 
@@ -120,7 +110,6 @@ public class UserInterface extends Application implements Observer{
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		
-		//scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
         GridPane g = new GridPane();
 		g.setAlignment(Pos.CENTER);
 		g.setHgap(10);
@@ -166,7 +155,6 @@ public class UserInterface extends Application implements Observer{
 		    		final Text actiontarget = new Text();
 	    			actiontarget.setText("Please enter in an integer for all values.");
 	    	        g.add(actiontarget, 1, 6);
-		    		
 		    	} else {
 		    		try {
 		    			int stepInt = Integer.parseInt(stepText.getText());
@@ -174,18 +162,15 @@ public class UserInterface extends Application implements Observer{
 		    			int runtimeInt = Integer.parseInt(runtimeText.getText());
 		    			startSimulation(stepInt, delayInt, runtimeInt);
 		    			primaryStage.close();
-		    			
 		    		} catch (NumberFormatException err) {
-		    			
 		    			final Text actiontarget = new Text();
 		    			actiontarget.setText("Please enter in an integer for all values.");
 		    	        g.add(actiontarget, 1, 6);
-		    	
 		    		} 		
-		    	
-		    }
+		    	}
 		    }
 		});
+		
 		btn.setOnKeyPressed(new EventHandler<KeyEvent>() {
 		    @Override
 		    public void handle(KeyEvent keyEvent) {
@@ -194,7 +179,6 @@ public class UserInterface extends Application implements Observer{
 			    		final Text actiontarget = new Text();
 		    			actiontarget.setText("Please enter in an integer for all values.");
 		    	        g.add(actiontarget, 1, 6);
-			    		
 			    	} else {
 			    		try {
 			    			int stepInt = Integer.parseInt(stepText.getText());
@@ -202,16 +186,12 @@ public class UserInterface extends Application implements Observer{
 			    			int runtimeInt = Integer.parseInt(runtimeText.getText());
 			    			startSimulation(stepInt, delayInt, runtimeInt);
 			    			primaryStage.close();
-			    			
 			    		} catch (NumberFormatException err) {
-			    			
 			    			final Text actiontarget = new Text();
 			    			actiontarget.setText("Please enter in an integer for all values.");
 			    	        g.add(actiontarget, 1, 6);
-			    	
 			    		} 		
-			    	
-			    }
+			    	}
 		        }
 		    }
 		});
@@ -220,11 +200,7 @@ public class UserInterface extends Application implements Observer{
 		primaryStage.setScene(scene);
         primaryStage.setTitle("JavaFX Welcome");        
         primaryStage.show();
-        
-        //startSimulation(primaryStage);
-	
-		//once the sim finishes, close the stage
-		//
+
 	}
 
 
@@ -240,7 +216,6 @@ public class UserInterface extends Application implements Observer{
     }
     
 	private void initializeImages() {
-		//import/create images and image views, add to ObsList
 		//road, snow, and portal images
 		RoadImage = new Image("images/textures/RoadTextureTile_light.png", scale, scale, true, true);
 		GrassImage = new Image("images/textures/Snow.jpg", scale, scale, true, true);
@@ -255,16 +230,15 @@ public class UserInterface extends Application implements Observer{
 		HouseImages.add(new Image("images/sprites/Houses/House3.png", scale*1.5, scale*1.5, true, true));
 		HouseImages.add(new Image("images/sprites/Houses/House4.png", scale*1.25, scale*1.25, true, true));
 		
-		
 		//roundabout image and image view
 		RoundaboutImage = new Image("images/textures/Roundabout2.png", scale*6, scale*6, true, true);
 		RoundaboutImageView = new ImageView(RoundaboutImage);
-		
+
 		//road closure image
 		RoadClosedImage = new Image("images/textures/christmasTree1.png", scale*2, scale*2, true, true);
 		RoadClosedImageViewA = new ImageView(RoadClosedImage);
 		RoadClosedImageViewB = new ImageView(RoadClosedImage);
-		
+
 		//StopLight images
 		gns_rewImage = new Image("images/sprites/Lights/gns_rew.png", scale*2, scale*2, true, true);
 		yns_rewImage = new Image("images/sprites/Lights/yns_rew.png", scale*2, scale*2, true, true);
@@ -288,20 +262,18 @@ public class UserInterface extends Application implements Observer{
 				default:
 					System.out.println("initializeImages: something has gone horribly wrong");
 				}
-
-				//continue;	//eventually put stop signs in here... :/
 			}
 			else if (sim.m.getIntersections()[i].getLight() != null) {
 				intersectionViews[i] = new ImageView(gns_rewImage); //start as green N/S, red E/W. this will be updated before it's an issue
 			}
-			//add image view to root observable list
+			//Add ImageView to root observable list
 			root.getChildren().add(intersectionViews[i]);
-			//set correct location for the image view (this location will never change)
+			
+			//Set correct location for ImageView
 			intersectionViews[i].setX(loc.x*scale);
 			intersectionViews[i].setY(loc.y*scale);
 			
-			if (sim.m.getIntersections()[i].isBlocked()) {	//if the intersection has been artificially blocked
-//				Intersection in = sim.m.getIntersections()[i];
+			if (sim.m.getIntersections()[i].isBlocked()) {	//If the intersection has been blocked
 				if (!placedFirstRoadBlock) {	//place the RoadClosedImageViewA
 					placeRoadClosure(sim.m.getIntersections()[i], RoadClosedImageViewA);
 					root.getChildren().add(RoadClosedImageViewA);
@@ -323,9 +295,6 @@ public class UserInterface extends Application implements Observer{
 		
 		int landmarkCount = 0;
 		int imageViewCount = 0;
-//		int houseViewCount = 0;
-//		int r; 
-//		Random rand = new Random();
 		
 		for (int j = 0; j < dimensions; j++) {
 			for (int i = 0; i < dimensions; i++) {
@@ -344,7 +313,6 @@ public class UserInterface extends Application implements Observer{
 					
 					root.getChildren().add(LandmarkImageViews.get(landmarkCount));
 					landmarkCount += 1;
-				
 				} else if(sim.m.getRouteGrid()[j][i] == 2 || sim.m.getRouteGrid()[j][i] == 6) {
 					mapImageViews.add(new ImageView(RoadImage));	
 					if (sim.m.getRouteGrid()[j][i] == 6 && !foundRAB) {
@@ -360,23 +328,6 @@ public class UserInterface extends Application implements Observer{
 					mapImageViews.add(new ImageView(RoadImage));	
 				} else if (sim.m.getRouteGrid()[j][i] == 9) {
 					mapImageViews.add(new ImageView(GrassImage));
-//					r = rand.nextInt(5);					
-//					HouseImageViews.add(new ImageView(HouseImages.get(r)));
-//					if (sim.m.getRouteGrid()[j+1][i] == 2 || sim.m.getRouteGrid()[j+1][i] == 4 || sim.m.getRouteGrid()[j+1][i] == 5) {
-//						HouseImageViews.get(houseViewCount).setX((j-0.5)*scale);
-//					} else {
-//						HouseImageViews.get(houseViewCount).setX(j*scale);
-//					}
-//					
-//					if (sim.m.getRouteGrid()[j][i+1] == 2 || sim.m.getRouteGrid()[j][i+1] == 4 || sim.m.getRouteGrid()[j][i+1] == 5) {
-//						HouseImageViews.get(houseViewCount).setY((i-0.5)*scale);
-//					} else {
-//						HouseImageViews.get(houseViewCount).setY(i*scale);
-//					}
-//										
-//					root.getChildren().add(HouseImageViews.get(houseViewCount));
-//					
-//					houseViewCount += 1;
 				}
 				mapImageViews.get(imageViewCount).setX(j*scale);
 				mapImageViews.get(imageViewCount).setY(i*scale);
@@ -390,10 +341,6 @@ public class UserInterface extends Application implements Observer{
 			LandmarkImageViews.get(i).toFront();
 		}
 		
-//		for (int i = 0; i < houseViewCount; i++) {
-//			HouseImageViews.get(i).toFront();
-//		}
-		
 		RoundaboutImageView.toFront();
 		RoadClosedImageViewA.toFront();
 		RoadClosedImageViewB.toFront();
@@ -401,29 +348,28 @@ public class UserInterface extends Application implements Observer{
 	
 	private void placeRoadClosure(Intersection in, ImageView iv) {
 		switch (in.getBlocked()) {
-		case 'S':	//road closure south of intersection
+		case 'S':	// Road closure south of intersection
 			iv.setX((in.getLocation()[0].x)*scale);
 			iv.setY((in.getLocation()[0].y+2)*scale);
 			break;
-		case 'E':	//road closure east of intersection
+		case 'E':	// Road closure east of intersection
 			iv.setX((in.getLocation()[1].x+2)*scale);
 			iv.setY((in.getLocation()[1].y-1)*scale);
 			break;
-		case 'W':	//road closure west of intersection
+		case 'W':	// Road closure west of intersection
 			iv.setX((in.getLocation()[2].x-3)*scale);
 			iv.setY((in.getLocation()[2].y)*scale);
 			break;
-		case 'N':	//road closure north of intersection
+		case 'N':	// Road closure north of intersection
 			iv.setX((in.getLocation()[3].x-1)*scale);
 			iv.setY((in.getLocation()[3].y-3)*scale);
 			break;
-		default:	//this shouldn't ever happen
+		default:	// This shouldn't ever happen
 			System.out.println("InitializeImages: something has gone horribly wrong");
 		}
 	}
 	
 	private void placeGeneratorClosure(VehicleGenerator vg) {
-		//this places the tree over the generators, right on the edge of the map. this can easily change 
 		Point vloc = vg.getLocation();
 		switch(vg.getDirection()) {
 		case 'S':
@@ -444,15 +390,12 @@ public class UserInterface extends Application implements Observer{
 			break;
 		default: //this shouldn't ever happen
 			System.out.println("InitializeImages: something has gone horribly wrong");
-			
 		}
 	}
 	
     private void updateImageViews() {
-		// TODO Auto-generated method stub
-		//Updates the static image views in the scene (stopLights, ...?)
+		//Updates the static image views in the scene
     	for (int i = 0; i < intersectionViews.length; i++) {
-    		//since the image views were set up with indices corresponding to the intersection indices, we can assume that is still the case
     		switch(sim.m.getIntersections()[i].getState()) {
     		case GNS_REW:
     			intersectionViews[i].setImage(gns_rewImage);
@@ -478,24 +421,11 @@ public class UserInterface extends Application implements Observer{
 
 	@Override
 	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
-		//update the images/image views based on the status of everything in the Simulation (the Observable o)
-		
-		
-		//then, after everything is updated properly:
-		//display();
 		updateVehicleViews();
 		updateImageViews();
-		//System.out.println("updated UserInterface from Observable update");
 	}
 
-	private void updateVehicleViews() {
-		//sim.vehicles;
-		//Updates the ImageView of each VehicleView object contained in vehicles
-		//Also deletes the VehicleView and removes its ImageView from the scene's child nodes if Vehicle is out of map bounds
-		
-		//System.out.println("size of vehicles = " + sim.vehicles.size());
-		
+	private void updateVehicleViews() {		
 		for (int i = 0; i < sim.vehicles.size(); i++) {
 			VehicleView vv = sim.vehicles.get(i); 
 			if (vv.getImageView() == null) {
@@ -509,16 +439,12 @@ public class UserInterface extends Application implements Observer{
 				vv.setMyImage();
 				vImage = vv.getImage();
 				vv.getImageView().setImage(vImage);
-				//root.getChildren().add(vv.getImageView());
 			}
 			Point l = new Point((int) vv.getImageView().getX(), (int) vv.getImageView().getY());
 			if (vv.getMoveCount() > 1) {
 				if ((l.x < 0 || l.x > 49*scale || l.y < 0 || l.y > 49*scale)){
 					root.getChildren().remove(vv.getImageView());
 					sim.vehicles.remove(i);
-		
-					//System.out.println("size of vehicles after remove(i) = " + sim.vehicles.size());
-					//vehicles.remove(h);	//vehicle out of map bounds, remove from simulation
 				} 
 			}
 			vv.getImageView().setX(vv.getVehicle().getLocation().x*scale);
