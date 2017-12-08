@@ -22,14 +22,10 @@ public class VehicleView {
 	boolean inSimulation;
 	
 	public VehicleView(Vehicle veh) {
-		//int scale = 15; //hard coded to match the scale in UserInterface
 		vehicle = veh;
 		imageView = null;	
 		inSimulation = true;
 		moveCount = 0;
-		
-		//Image im = new Image("image.png", scale, scale, true, true);
-		//imageView = new ImageView(im);
 	}
 	
 	public Vehicle getVehicle() { return vehicle; }
@@ -62,10 +58,8 @@ public class VehicleView {
 			image = vehicle.rightImage;
 			break;
 		case 'R':
-			image = image;
 			break;
 		}
-		//imageView.setImage(image);
 	}
 	public Image getImage() {
 		return image;
